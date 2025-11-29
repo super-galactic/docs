@@ -1,7 +1,7 @@
 {
   "$schema": "https://mintlify.com/docs.json",
   "theme": "mint",
-  "name": "Mint Starter Kit",
+  "name": "Super Galactic Docs",
   "colors": {
     "primary": "#16A34A",
     "light": "#07C983",
@@ -9,62 +9,53 @@
   },
   "favicon": "/favicon.svg",
   "navigation": {
-    "tabs": [
+    "groups": [
       {
-        "tab": "Guides",
-        "groups": [
-          {
-            "group": "Getting started",
-            "pages": [
-              "index",
-              "quickstart",
-              "development"
-            ]
-          },
-          {
-            "group": "Customization",
-            "pages": [
-              "essentials/settings",
-              "essentials/navigation"
-            ]
-          },
-          {
-            "group": "Writing content",
-            "pages": [
-              "essentials/markdown",
-              "essentials/code",
-              "essentials/images",
-              "essentials/reusable-snippets"
-            ]
-          },
-          {
-            "group": "AI tools",
-            "pages": [
-              "ai-tools/cursor",
-              "ai-tools/claude-code",
-              "ai-tools/windsurf"
-            ]
-          }
+        "group": "Whitepaper",
+        "pages": [
+          "whitepaper/executive-summary"
         ]
       },
       {
-        "tab": "API reference",
-        "groups": [
-          {
-            "group": "API documentation",
-            "pages": [
-              "api-reference/introduction"
-            ]
-          },
-          {
-            "group": "Endpoint examples",
-            "pages": [
-              "api-reference/endpoint/get",
-              "api-reference/endpoint/create",
-              "api-reference/endpoint/delete",
-              "api-reference/endpoint/webhook"
-            ]
-          }
+        "group": "Getting started",
+        "pages": [
+          "index",
+          "quickstart",
+          "development"
+        ]
+      },
+      {
+        "group": "Customization",
+        "pages": [
+          "essentials/settings",
+          "essentials/navigation"
+        ]
+      },
+      {
+        "group": "Writing content",
+        "pages": [
+          "essentials/markdown",
+          "essentials/code",
+          "essentials/images",
+          "essentials/reusable-snippets"
+        ]
+      },
+      {
+        "group": "AI tools",
+        "pages": [
+          "ai-tools/cursor",
+          "ai-tools/claude-code",
+          "ai-tools/windsurf"
+        ]
+      },
+      {
+        "group": "API reference",
+        "pages": [
+          "api-reference/introduction",
+          "api-reference/endpoint/get",
+          "api-reference/endpoint/create",
+          "api-reference/endpoint/delete",
+          "api-reference/endpoint/webhook"
         ]
       }
     ],
@@ -102,15 +93,15 @@
   },
   "contextual": {
     "options": [
-     "copy",
-     "view",
-     "chatgpt",
-     "claude",
-     "perplexity",
-     "mcp",
-     "cursor",
-     "vscode"
-   ]
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
   },
   "footer": {
     "socials": {
