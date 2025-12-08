@@ -19,10 +19,10 @@
       }
     ]
   },
-  "logo": {
-    "light": "/logo/light.svg",
-    "dark": "/logo/dark.svg"
-  },
+"logo": {
+  "light": "/logo/super-galactic-logo.png",
+  "dark": "/logo/super-galactic-logo.png"
+},
   "navbar": {
     "links": [
       {
