@@ -8,34 +8,143 @@
     "dark": "#15803D"
   },
   "favicon": "/favicon.svg",
+
   "navigation": {
-    "groups": [
+    "anchors": [
       {
-        "group": "Whitepaper",
-        "pages": [
-          "whitepaper/executive-summary",
-          "whitepaper/background"
+        "anchor": "Game",
+        "icon": "gamepad-2",
+        "groups": [
+          {
+            "group": "Whitepaper",
+            "pages": [
+              "whitepaper/executive-summary",
+              "whitepaper/background"
+            ]
+          },
+          {
+            "group": "Overview",
+            "pages": [
+              "game/overview",
+              "game/getting-started"
+            ]
+          },
+          {
+            "group": "Gameplay",
+            "pages": [
+              "game/core-loop",
+              "game/classes-and-units",
+              "game/pve-and-pvp"
+            ]
+          },
+          {
+            "group": "Economy",
+            "pages": [
+              "game/economy-overview",
+              "game/uap-token",
+              "game/rewards-and-sinks"
+            ]
+          }
+        ]
+      },
+      {
+        "anchor": "Marketplace",
+        "icon": "store",
+        "groups": [
+          {
+            "group": "Marketplace overview",
+            "pages": [
+              "marketplace/overview",
+              "marketplace/getting-started"
+            ]
+          },
+          {
+            "group": "NFTs & trading",
+            "pages": [
+              "marketplace/buying-nfts",
+              "marketplace/selling-nfts",
+              "marketplace/breeding"
+            ]
+          },
+          {
+            "group": "UAP & rewards",
+            "pages": [
+              "marketplace/claiming-uap",
+              "marketplace/fees-and-royalties"
+            ]
+          }
+        ]
+      },
+      {
+        "anchor": "Multichain",
+        "icon": "network",
+        "groups": [
+          {
+            "group": "Multichain overview",
+            "pages": [
+              "multichain/overview",
+              "multichain/security-and-risks"
+            ]
+          },
+          {
+            "group": "Chains",
+            "pages": [
+              "multichain/ethereum",
+              "multichain/avalanche",
+              "multichain/bnb",
+              "multichain/solana"
+            ]
+          },
+          {
+            "group": "Bridging",
+            "pages": [
+              "multichain/bridging-assets",
+              "multichain/migration-history"
+            ]
+          }
         ]
       }
-    ]
+    ],
+    "global": {
+      "anchors": [
+        {
+          "anchor": "Main site",
+          "icon": "globe-2",
+          "href": "https://app.ufogaming.io/"
+        },
+        {
+          "anchor": "Twitter",
+          "icon": "twitter",
+          "href": "https://x.com/SuperGalactic51"
+        },
+        {
+          "anchor": "Telegram",
+          "icon": "send",
+          "href": "https://t.me/spacechat"
+        }
+      ]
+    }
   },
-"logo": {
-  "light": "/logo/super-galactic2-logo.png",
-  "dark": "/logo/super-galactic-logo.png"
-},
+
+  "logo": {
+    "light": "/logo/super-galactic2-logo.png",
+    "dark": "/logo/super-galactic-logo.png"
+  },
+
   "navbar": {
     "links": [
       {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
+        "label": "Main site",
+        "href": "https://app.ufogaming.io/"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "label": "Play Super Galactic",
+      "href": "https://into.space"
     }
   },
+
   "contextual": {
     "options": [
       "copy",
@@ -48,11 +157,12 @@
       "vscode"
     ]
   },
+
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "x": "https://x.com/your_handle_here",
+      "github": "https://github.com/your_repo_here",
+      "linkedin": "https://linkedin.com/company/your_company_here"
     }
   }
 }
