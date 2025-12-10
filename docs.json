@@ -10,10 +10,35 @@
   "favicon": "/favicon.svg",
 
   "navigation": {
-    "anchors": [
+    "global": {
+      "anchors": [
+        {
+          "anchor": "Main site",
+          "href": "https://example.com",
+          "icon": "globe"
+        },
+        {
+          "anchor": "Twitter",
+          "href": "https://twitter.com/yourhandle",
+          "icon": "twitter"
+        },
+        {
+          "anchor": "YouTube",
+          "href": "https://youtube.com/yourchannel",
+          "icon": "youtube"
+        },
+        {
+          "anchor": "Telegram",
+          "href": "https://t.me/yourchannel",
+          "icon": "telegram"
+        }
+      ]
+    },
+
+    "tabs": [
       {
-        "anchor": "Game",
-        "icon": "gamepad-2",
+        "tab": "Game",
+        "icon": "gamepad",
         "groups": [
           {
             "group": "Whitepaper",
@@ -21,109 +46,41 @@
               "whitepaper/executive-summary",
               "whitepaper/background"
             ]
-          },
-          {
-            "group": "Overview",
-            "pages": [
-              "game/overview",
-              "game/getting-started"
-            ]
-          },
-          {
-            "group": "Gameplay",
-            "pages": [
-              "game/core-loop",
-              "game/classes-and-units",
-              "game/pve-and-pvp"
-            ]
-          },
-          {
-            "group": "Economy",
-            "pages": [
-              "game/economy-overview",
-              "game/uap-token",
-              "game/rewards-and-sinks"
-            ]
           }
         ]
       },
       {
-        "anchor": "Marketplace",
+        "tab": "Marketplace",
         "icon": "store",
         "groups": [
           {
-            "group": "Marketplace overview",
+            "group": "Marketplace",
             "pages": [
               "marketplace/overview",
-              "marketplace/getting-started"
-            ]
-          },
-          {
-            "group": "NFTs & trading",
-            "pages": [
-              "marketplace/buying-nfts",
-              "marketplace/selling-nfts",
-              "marketplace/breeding"
-            ]
-          },
-          {
-            "group": "UAP & rewards",
-            "pages": [
-              "marketplace/claiming-uap",
-              "marketplace/fees-and-royalties"
+              "marketplace/nfts",
+              "marketplace/breeding",
+              "marketplace/claim-uap"
             ]
           }
         ]
       },
       {
-        "anchor": "Multichain",
-        "icon": "network",
+        "tab": "Multichain",
+        "icon": "layer-group",
         "groups": [
           {
-            "group": "Multichain overview",
+            "group": "Multichain",
             "pages": [
               "multichain/overview",
-              "multichain/security-and-risks"
-            ]
-          },
-          {
-            "group": "Chains",
-            "pages": [
               "multichain/ethereum",
+              "multichain/solana",
               "multichain/avalanche",
-              "multichain/bnb",
-              "multichain/solana"
-            ]
-          },
-          {
-            "group": "Bridging",
-            "pages": [
-              "multichain/bridging-assets",
-              "multichain/migration-history"
+              "multichain/bridging"
             ]
           }
         ]
       }
-    ],
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Main site",
-          "icon": "globe-2",
-          "href": "https://app.ufogaming.io/"
-        },
-        {
-          "anchor": "Twitter",
-          "icon": "X",
-          "href": "https://x.com/SuperGalactic51"
-        },
-        {
-          "anchor": "Telegram",
-          "icon": "send",
-          "href": "https://t.me/spacechat"
-        }
-      ]
-    }
+    ]
   },
 
   "logo": {
@@ -134,14 +91,14 @@
   "navbar": {
     "links": [
       {
-        "label": "Main site",
-        "href": "https://app.ufogaming.io/"
+        "label": "Support",
+        "href": "mailto:hi@mintlify.com"
       }
     ],
     "primary": {
       "type": "button",
-      "label": "Play Super Galactic",
-      "href": "https://into.space"
+      "label": "Dashboard",
+      "href": "https://dashboard.mintlify.com"
     }
   },
 
@@ -160,9 +117,9 @@
 
   "footer": {
     "socials": {
-      "x": "https://x.com/your_handle_here",
-      "github": "https://github.com/your_repo_here",
-      "linkedin": "https://linkedin.com/company/your_company_here"
+      "x": "https://x.com/yourhandle",
+      "github": "https://github.com/your-org",
+      "linkedin": "https://linkedin.com/company/your-company"
     }
   }
 }
