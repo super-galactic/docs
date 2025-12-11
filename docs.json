@@ -10,73 +10,98 @@
   "favicon": "/favicon.svg",
 
   "navigation": {
-    "global": {
-      "anchors": [
-        {
-          "anchor": "Main site",
-          "href": "https://example.com",
-          "icon": "globe"
-        },
-        {
-          "anchor": "Twitter",
-          "href": "https://twitter.com/yourhandle",
-          "icon": "twitter"
-        },
-        {
-          "anchor": "YouTube",
-          "href": "https://youtube.com/yourchannel",
-          "icon": "youtube"
-        },
-        {
-          "anchor": "Telegram",
-          "href": "https://t.me/yourchannel",
-          "icon": "telegram"
-        }
-      ]
-    },
-
     "tabs": [
       {
         "tab": "Game",
-        "icon": "gamepad",
         "groups": [
           {
-            "group": "Whitepaper",
+            "group": "Game",
             "pages": [
-              "whitepaper/executive-summary",
-              "whitepaper/background"
+              "game/overview/introduction",
+              "game/overview/super-galactic-at-a-glance",
+              "game/overview/industry-context",
+              {
+                "title": "How to Play",
+                "pages": [
+                  "game/how-to-play/supported-platforms",
+                  "game/how-to-play/game-access",
+                  "game/how-to-play/game-modes",
+                  "game/how-to-play/progression"
+                ]
+              },
+              {
+                "title": "Genesis Origin",
+                "pages": [
+                  "game/genesis-origin/the-originals",
+                  "game/genesis-origin/minting-acquisition",
+                  "game/genesis-origin/upgrading-genesis",
+                  "game/genesis-origin/breeding",
+                  "game/genesis-origin/renting-system",
+                  "game/genesis-origin/lore"
+                ]
+              },
+              {
+                "title": "Equipment & Lootboxes",
+                "pages": [
+                  "game/equipment-lootboxes/overview",
+                  "game/equipment-lootboxes/mystery-lootbox",
+                  "game/equipment-lootboxes/minting-equipment",
+                  "game/equipment-lootboxes/upgrading-weapons"
+                ]
+              },
+              {
+                "title": "Game Economy",
+                "pages": [
+                  "game/economy/overview",
+                  "game/economy/rewards-system",
+                  "game/economy/burn-mechanism",
+                  "game/economy/taxes-sinks",
+                  "game/economy/breeding-economy"
+                ]
+              },
+              {
+                "title": "Tokenomics (UAP)",
+                "pages": [
+                  "game/tokenomics/uap-token",
+                  "game/tokenomics/tge-details",
+                  "game/tokenomics/burn-tax-mechanisms",
+                  "game/tokenomics/smart-contracts-audit"
+                ]
+              },
+              {
+                "title": "Roadmap",
+                "pages": [
+                  "game/roadmap/upcoming-game-features"
+                ]
+              }
             ]
           }
         ]
       },
       {
         "tab": "Marketplace",
-        "icon": "store",
         "groups": [
           {
             "group": "Marketplace",
-            "pages": [
-              "marketplace/overview",
-              "marketplace/nfts",
-              "marketplace/breeding",
-              "marketplace/claim-uap"
-            ]
+            "pages": []
           }
         ]
       },
       {
         "tab": "Multichain",
-        "icon": "layer-group",
         "groups": [
           {
             "group": "Multichain",
-            "pages": [
-              "multichain/overview",
-              "multichain/ethereum",
-              "multichain/solana",
-              "multichain/avalanche",
-              "multichain/bridging"
-            ]
+            "pages": []
+          }
+        ]
+      },
+      {
+        "tab": "Resources",
+        "groups": [
+          {
+            "group": "Resources",
+            "pages": []
           }
         ]
       }
@@ -89,16 +114,10 @@
   },
 
   "navbar": {
-    "links": [
-      {
-        "label": "Support",
-        "href": "mailto:hi@mintlify.com"
-      }
-    ],
     "primary": {
       "type": "button",
-      "label": "Dashboard",
-      "href": "https://dashboard.mintlify.com"
+      "label": "Get started",
+      "href": "https://app.ufogaming.io/get-started"
     }
   },
 
@@ -117,9 +136,9 @@
 
   "footer": {
     "socials": {
-      "x": "https://x.com/yourhandle",
-      "github": "https://github.com/your-org",
-      "linkedin": "https://linkedin.com/company/your-company"
+      "x": "https://x.com/mintlify",
+      "github": "https://github.com/mintlify",
+      "linkedin": "https://linkedin.com/company/mintlify"
     }
   }
 }
