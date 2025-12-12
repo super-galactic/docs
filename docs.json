@@ -138,6 +138,9 @@
   "styling": {
     "icons": {
       "library": "lucide"
+    },
+    "sidebar": {
+      "showIcons": true
     }
   },
 
