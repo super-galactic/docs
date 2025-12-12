@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "maple",
+  "theme": "mint",
   "name": "Super Galactic",
   "colors": {
     "primary": "#16A34A",
@@ -33,7 +33,7 @@
     "tabs": [
       {
         "tab": "Game",
-        "icon": "gamepad-2",
+        "icon": "gamepad",
         "groups": [
           {
             "group": "Overview",
@@ -106,9 +106,7 @@
         "groups": [
           {
             "group": "Marketplace",
-            "pages": [
-              "marketplace/overview"
-            ]
+            "pages": ["marketplace/overview"]
           }
         ]
       },
@@ -119,9 +117,7 @@
         "groups": [
           {
             "group": "Multichain",
-            "pages": [
-              "multichain/overview"
-            ]
+            "pages": ["multichain/overview"]
           }
         ]
       },
@@ -132,13 +128,17 @@
         "groups": [
           {
             "group": "Resources",
-            "pages": [
-              "resources/overview"
-            ]
+            "pages": ["resources/overview"]
           }
         ]
       }
     ]
+  },
+
+  "styling": {
+    "icons": {
+      "library": "lucide"
+    }
   },
 
   "contextual": {
