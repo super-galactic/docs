@@ -47,141 +47,136 @@
         "tab": "Game",
         "groups": [
           {
-            "group": "Game",
+            "group": "Overview",
+            "pages": [
+              "game/overview/introduction",
+              "game/overview/super-galactic-at-a-glance",
+              "game/overview/industry-context"
+            ]
+          },
+          {
+            "group": "How to Play",
             "pages": [
               {
-                "group": "Overview",
-                "pages": [
-                  "game/overview/introduction",
-                  "game/overview/super-galactic-at-a-glance",
-                  "game/overview/industry-context"
-                ]
+                "title": "🖥️ Supported platforms",
+                "href": "game/how-to-play/supported-platforms"
               },
               {
-                "group": "How to Play",
-                "pages": [
-                  {
-                    "title": "🖥️ Supported platforms",
-                    "href": "game/how-to-play/supported-platforms"
-                  },
-                  {
-                    "title": "🔑 Game access",
-                    "href": "game/how-to-play/game-access"
-                  },
-                  {
-                    "title": "🎮 Game modes",
-                    "href": "game/how-to-play/game-modes"
-                  },
-                  {
-                    "title": "📈 Progression",
-                    "href": "game/how-to-play/progression"
-                  }
-                ]
+                "title": "🔑 Game access",
+                "href": "game/how-to-play/game-access"
               },
               {
-                "group": "Genesis Origin",
-                "pages": [
-                  {
-                    "title": "👽 The originals",
-                    "href": "game/genesis-origin/the-originals"
-                  },
-                  {
-                    "title": "🧬 Minting & acquisition",
-                    "href": "game/genesis-origin/minting-acquisition"
-                  },
-                  {
-                    "title": "⬆️ Upgrading genesis",
-                    "href": "game/genesis-origin/upgrading-genesis"
-                  },
-                  {
-                    "title": "🧪 Breeding",
-                    "href": "game/genesis-origin/breeding"
-                  },
-                  {
-                    "title": "🤝 Renting system",
-                    "href": "game/genesis-origin/renting-system"
-                  },
-                  {
-                    "title": "📜 Lore",
-                    "href": "game/genesis-origin/lore"
-                  }
-                ]
+                "title": "🎮 Game modes",
+                "href": "game/how-to-play/game-modes"
               },
               {
-                "group": "Equipment & Items",
-                "pages": [
-                  {
-                    "title": "🧰 Overview",
-                    "href": "game/equipment-lootboxes/overview"
-                  },
-                  {
-                    "title": "🎁 Mystery lootbox",
-                    "href": "game/equipment-lootboxes/mystery-lootbox"
-                  },
-                  {
-                    "title": "🛠️ Minting equipment",
-                    "href": "game/equipment-lootboxes/minting-equipment"
-                  },
-                  {
-                    "title": "⚔️ Upgrading weapons",
-                    "href": "game/equipment-lootboxes/upgrading-weapons"
-                  }
-                ]
+                "title": "📈 Progression",
+                "href": "game/how-to-play/progression"
+              }
+            ]
+          },
+          {
+            "group": "Genesis Origin",
+            "pages": [
+              {
+                "title": "👽 The originals",
+                "href": "game/genesis-origin/the-originals"
               },
               {
-                "group": "Game Economy",
-                "pages": [
-                  {
-                    "title": "💰 Overview",
-                    "href": "game/economy/overview"
-                  },
-                  {
-                    "title": "🏆 Rewards system",
-                    "href": "game/economy/rewards-system"
-                  },
-                  {
-                    "title": "🔥 Burn mechanism",
-                    "href": "game/economy/burn-mechanism"
-                  },
-                  {
-                    "title": "🧾 Taxes & sinks",
-                    "href": "game/economy/taxes-sinks"
-                  },
-                  {
-                    "title": "🧬 Breeding economy",
-                    "href": "game/economy/breeding-economy"
-                  }
-                ]
+                "title": "🧬 Minting & acquisition",
+                "href": "game/genesis-origin/minting-acquisition"
               },
               {
-                "group": "Tokenomics",
-                "pages": [
-                  {
-                    "title": "🪙 UAP token",
-                    "href": "game/tokenomics/uap-token"
-                  },
-                  {
-                    "title": "📊 TGE details",
-                    "href": "game/tokenomics/tge-details"
-                  },
-                  {
-                    "title": "🔁 Burn & tax mechanisms",
-                    "href": "game/tokenomics/burn-tax-mechanisms"
-                  },
-                  {
-                    "title": "🔐 Smart contracts & audit",
-                    "href": "game/tokenomics/smart-contracts-audit"
-                  }
-                ]
+                "title": "⬆️ Upgrading genesis",
+                "href": "game/genesis-origin/upgrading-genesis"
               },
               {
-                "group": "Roadmap",
-                "pages": [
-                  {
-                    "title": "🛣️ Upcoming game features",
-                    "href": "game/roadmap/upcoming-game-features"
-                  }
-                ]
+                "title": "🧪 Breeding",
+                "href": "game/genesis-origin/breeding"
+              },
+              {
+                "title": "🤝 Renting system",
+                "href": "game/genesis-origin/renting-system"
+              },
+              {
+                "title": "📜 Lore",
+                "href": "game/genesis-origin/lore"
+              }
+            ]
+          },
+          {
+            "group": "Equipment & Items",
+            "pages": [
+              {
+                "title": "🧰 Overview",
+                "href": "game/equipment-lootboxes/overview"
+              },
+              {
+                "title": "🎁 Mystery lootbox",
+                "href": "game/equipment-lootboxes/mystery-lootbox"
+              },
+              {
+                "title": "🛠️ Minting equipment",
+                "href": "game/equipment-lootboxes/minting-equipment"
+              },
+              {
+                "title": "⚔️ Upgrading weapons",
+                "href": "game/equipment-lootboxes/upgrading-weapons"
+              }
+            ]
+          },
+          {
+            "group": "Game Economy",
+            "pages": [
+              {
+                "title": "💰 Overview",
+                "href": "game/economy/overview"
+              },
+              {
+                "title": "🏆 Rewards system",
+                "href": "game/economy/rewards-system"
+              },
+              {
+                "title": "🔥 Burn mechanism",
+                "href": "game/economy/burn-mechanism"
+              },
+              {
+                "title": "🧾 Taxes & sinks",
+                "href": "game/economy/taxes-sinks"
+              },
+              {
+                "title": "🧬 Breeding economy",
+                "href": "game/economy/breeding-economy"
+              }
+            ]
+          },
+          {
+            "group": "Tokenomics",
+            "pages": [
+              {
+                "title": "🪙 UAP token",
+                "href": "game/tokenomics/uap-token"
+              },
+              {
+                "title": "📊 TGE details",
+                "href": "game/tokenomics/tge-details"
+              },
+              {
+                "title": "🔁 Burn & tax mechanisms",
+                "href": "game/tokenomics/burn-tax-mechanisms"
+              },
+              {
+                "title": "🔐 Smart contracts & audit",
+                "href": "game/tokenomics/smart-contracts-audit"
+              }
+            ]
+          },
+          {
+            "group": "Roadmap",
+            "pages": [
+              {
+                "title": "🛣️ Upcoming game features",
+                "href": "game/roadmap/upcoming-game-features"
               }
             ]
           }
