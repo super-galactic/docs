@@ -84,8 +84,8 @@
           {
             "group": "Tokenomics",
             "pages": [
-              "game/tokenomics/uap-token",
-              "game/tokenomics/tge-details",
+              "game/tokenomics/UAP-token",
+              "game/tokenomics/TGE-details",
               "game/tokenomics/burn-tax-mechanisms",
               "game/tokenomics/smart-contracts-audit"
             ]
