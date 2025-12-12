@@ -29,7 +29,6 @@
       { "anchor": "YouTube", "icon": "youtube", "href": "https://www.youtube.com/@UFOGaming" },
       { "anchor": "Telegram", "icon": "send", "href": "https://t.me/ufogaming" }
     ],
-
     "tabs": [
       {
         "tab": "Game",
@@ -93,55 +92,36 @@
           },
           {
             "group": "Roadmap",
-            "pages": [
-              "game/roadmap/upcoming-game-features"
-            ]
+            "pages": ["game/roadmap/upcoming-game-features"]
           }
         ]
       },
-
       {
         "tab": "Marketplace",
         "icon": "store",
         "groups": [
-          {
-            "group": "Marketplace",
-            "pages": ["marketplace/overview"]
-          }
+          { "group": "Marketplace", "pages": ["marketplace/overview"] }
         ]
       },
-
       {
         "tab": "Multichain",
         "icon": "shuffle",
         "groups": [
-          {
-            "group": "Multichain",
-            "pages": ["multichain/overview"]
-          }
+          { "group": "Multichain", "pages": ["multichain/overview"] }
         ]
       },
-
       {
         "tab": "Resources",
         "icon": "book-open",
         "groups": [
-          {
-            "group": "Resources",
-            "pages": ["resources/overview"]
-          }
+          { "group": "Resources", "pages": ["resources/overview"] }
         ]
       }
     ]
   },
 
-  "styling": {
-    "icons": {
-      "library": "lucide"
-    },
-    "sidebar": {
-      "showIcons": true
-    }
+  "icons": {
+    "library": "lucide"
   },
 
   "contextual": {
