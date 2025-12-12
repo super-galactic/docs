@@ -2,11 +2,13 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "maple",
   "name": "Super Galactic",
+
   "colors": {
     "primary": "#16A34A",
     "light": "#07C983",
     "dark": "#15803D"
   },
+
   "favicon": "/favicon.svg",
 
   "logo": {
@@ -29,6 +31,7 @@
       { "anchor": "YouTube", "icon": "youtube", "href": "https://www.youtube.com/@UFOGaming" },
       { "anchor": "Telegram", "icon": "send", "href": "https://t.me/ufogaming" }
     ],
+
     "tabs": [
       {
         "tab": "Game",
@@ -38,83 +41,91 @@
             "group": "Overview",
             "pages": [
               "game/overview/introduction",
-              "game/overview/super-galactic-at-a-glance",
-              "game/overview/industry-context"
+              "game/overview/market-opportunity-industry-growth",
+              "game/overview/competitive-landscape-lessons-learned",
+              "game/overview/sg-ecosystem-architecture"
             ]
           },
           {
-            "group": "How to Play",
+            "group": "Gameplay",
             "pages": [
-              "game/how-to-play/supported-platforms",
-              "game/how-to-play/game-access",
-              "game/how-to-play/game-modes",
-              "game/how-to-play/progression"
+              "game/gameplay/gameplay-overview",
+              "game/gameplay/progression-and-game-modes"
             ]
           },
           {
-            "group": "Genesis Origin",
+            "group": "NFTs & Assets",
             "pages": [
-              "game/genesis-origin/the-originals",
-              "game/genesis-origin/minting-acquisition",
-              "game/genesis-origin/upgrading-genesis",
-              "game/genesis-origin/breeding",
-              "game/genesis-origin/renting-system",
-              "game/genesis-origin/lore"
-            ]
-          },
-          {
-            "group": "Equipment & Items",
-            "pages": [
-              "game/equipment-lootboxes/overview",
-              "game/equipment-lootboxes/mystery-lootbox",
-              "game/equipment-lootboxes/minting-equipment",
-              "game/equipment-lootboxes/upgrading-weapons"
+              "game/nfts-assets/the-originals",
+              "game/nfts-assets/rarity-attributes-rating",
+              "game/nfts-assets/upgrades-and-progression",
+              "game/nfts-assets/equipment-and-weapons",
+              "game/nfts-assets/mystery-lootboxes",
+              "game/nfts-assets/breeding-system",
+              "game/nfts-assets/renting-system",
+              "game/nfts-assets/lore"
             ]
           },
           {
             "group": "Game Economy",
             "pages": [
-              "game/economy/overview",
+              "game/economy/economy-overview",
               "game/economy/rewards-system",
-              "game/economy/burn-mechanism",
-              "game/economy/taxes-sinks",
+              "game/economy/token-sinks",
+              "game/economy/burn-mechanisms",
               "game/economy/breeding-economy"
             ]
           },
           {
             "group": "Tokenomics",
             "pages": [
-              "game/tokenomics/UAP-token",
-              "game/tokenomics/TGE-details",
-              "game/tokenomics/burn-tax-mechanisms",
-              "game/tokenomics/smart-contracts-audit"
+              "game/tokenomics/uap-token-overview",
+              "game/tokenomics/smart-contract-audit",
+              "game/tokenomics/supply-and-allocation",
+              "game/tokenomics/tge-details",
+              "game/tokenomics/burn-tax-mechanics"
             ]
           },
           {
-            "group": "Roadmap",
-            "pages": ["game/roadmap/upcoming-game-features"]
+            "group": "Roadmap & Development",
+            "pages": [
+              "game/roadmap/product-roadmap",
+              "game/roadmap/development-updates"
+            ]
           }
         ]
       },
+
       {
         "tab": "Marketplace",
         "icon": "store",
         "groups": [
-          { "group": "Marketplace", "pages": ["marketplace/overview"] }
+          {
+            "group": "Marketplace",
+            "pages": ["marketplace/overview"]
+          }
         ]
       },
+
       {
         "tab": "Multichain",
         "icon": "shuffle",
         "groups": [
-          { "group": "Multichain", "pages": ["multichain/overview"] }
+          {
+            "group": "Multichain",
+            "pages": ["multichain/overview"]
+          }
         ]
       },
+
       {
         "tab": "Resources",
         "icon": "book-open",
         "groups": [
-          { "group": "Resources", "pages": ["resources/overview"] }
+          {
+            "group": "Resources",
+            "pages": ["resources/overview"]
+          }
         ]
       }
     ]
@@ -125,7 +136,16 @@
   },
 
   "contextual": {
-    "options": ["copy", "view", "chatgpt", "claude", "perplexity", "mcp", "cursor", "vscode"]
+    "options": [
+      "copy",
+      "view",
+      "chatgpt",
+      "claude",
+      "perplexity",
+      "mcp",
+      "cursor",
+      "vscode"
+    ]
   },
 
   "footer": {
