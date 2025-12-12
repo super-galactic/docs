@@ -9,105 +9,6 @@
   },
   "favicon": "/favicon.svg",
 
-  "navigation": {
-    "tabs": [
-      {
-        "tab": "Game",
-        "groups": [
-          {
-            "group": "Game",
-            "pages": [
-              "game/overview/introduction",
-              "game/overview/super-galactic-at-a-glance",
-              "game/overview/industry-context",
-              {
-                "title": "How to Play",
-                "pages": [
-                  "game/how-to-play/supported-platforms",
-                  "game/how-to-play/game-access",
-                  "game/how-to-play/game-modes",
-                  "game/how-to-play/progression"
-                ]
-              },
-              {
-                "title": "Genesis Origin",
-                "pages": [
-                  "game/genesis-origin/the-originals",
-                  "game/genesis-origin/minting-acquisition",
-                  "game/genesis-origin/upgrading-genesis",
-                  "game/genesis-origin/breeding",
-                  "game/genesis-origin/renting-system",
-                  "game/genesis-origin/lore"
-                ]
-              },
-              {
-                "title": "Equipment & Lootboxes",
-                "pages": [
-                  "game/equipment-lootboxes/overview",
-                  "game/equipment-lootboxes/mystery-lootbox",
-                  "game/equipment-lootboxes/minting-equipment",
-                  "game/equipment-lootboxes/upgrading-weapons"
-                ]
-              },
-              {
-                "title": "Game Economy",
-                "pages": [
-                  "game/economy/overview",
-                  "game/economy/rewards-system",
-                  "game/economy/burn-mechanism",
-                  "game/economy/taxes-sinks",
-                  "game/economy/breeding-economy"
-                ]
-              },
-              {
-                "title": "Tokenomics (UAP)",
-                "pages": [
-                  "game/tokenomics/uap-token",
-                  "game/tokenomics/tge-details",
-                  "game/tokenomics/burn-tax-mechanisms",
-                  "game/tokenomics/smart-contracts-audit"
-                ]
-              },
-              {
-                "title": "Roadmap",
-                "pages": [
-                  "game/roadmap/upcoming-game-features"
-                ]
-              }
-            ]
-          }
-        ]
-      },
-      {
-        "tab": "Marketplace",
-        "groups": [
-          {
-            "group": "Marketplace",
-            "pages": []
-          }
-        ]
-      },
-      {
-        "tab": "Multichain",
-        "groups": [
-          {
-            "group": "Multichain",
-            "pages": []
-          }
-        ]
-      },
-      {
-        "tab": "Resources",
-        "groups": [
-          {
-            "group": "Resources",
-            "pages": []
-          }
-        ]
-      }
-    ]
-  },
-
   "logo": {
     "light": "/logo/super-galactic2-logo.png",
     "dark": "/logo/super-galactic-logo.png"
@@ -121,24 +22,147 @@
     }
   },
 
-  "contextual": {
-    "options": [
-      "copy",
-      "view",
-      "chatgpt",
-      "claude",
-      "perplexity",
-      "mcp",
-      "cursor",
-      "vscode"
+  "navigation": {
+    "anchors": [
+      {
+        "anchor": "Main site",
+        "icon": "globe",
+        "href": "https://ufogaming.io"
+      },
+      {
+        "anchor": "Twitter",
+        "icon": "x",
+        "href": "https://x.com/ufogaming"
+      },
+      {
+        "anchor": "YouTube",
+        "icon": "youtube",
+        "href": "https://www.youtube.com/@UFOGaming"
+      },
+      {
+        "anchor": "Telegram",
+        "icon": "send",
+        "href": "https://t.me/ufogaming"
+      }
+    ],
+    "tabs": [
+      {
+        "tab": "Game",
+        "groups": [
+          {
+            "group": "Game",
+            "pages": [
+              {
+                "group": "Overview",
+                "pages": [
+                  "game/overview/introduction",
+                  "game/overview/super-galactic-at-a-glance",
+                  "game/overview/industry-context"
+                ]
+              },
+              {
+                "group": "How to Play",
+                "pages": [
+                  "game/how-to-play/supported-platforms",
+                  "game/how-to-play/game-access",
+                  "game/how-to-play/game-modes",
+                  "game/how-to-play/progression"
+                ]
+              },
+              {
+                "group": "Genesis Origin",
+                "pages": [
+                  "game/genesis-origin/the-originals",
+                  "game/genesis-origin/minting-acquisition",
+                  "game/genesis-origin/upgrading-genesis",
+                  "game/genesis-origin/breeding",
+                  "game/genesis-origin/renting-system",
+                  "game/genesis-origin/lore"
+                ]
+              },
+              {
+                "group": "Equipment & Lootboxes",
+                "pages": [
+                  "game/equipment-lootboxes/overview",
+                  "game/equipment-lootboxes/mystery-lootbox",
+                  "game/equipment-lootboxes/minting-equipment",
+                  "game/equipment-lootboxes/upgrading-weapons"
+                ]
+              },
+              {
+                "group": "Game Economy",
+                "pages": [
+                  "game/economy/overview",
+                  "game/economy/rewards-system",
+                  "game/economy/burn-mechanism",
+                  "game/economy/taxes-sinks",
+                  "game/economy/breeding-economy"
+                ]
+              },
+              {
+                "group": "Tokenomics (UAP)",
+                "pages": [
+                  "game/tokenomics/uap-token",
+                  "game/tokenomics/tge-details",
+                  "game/tokenomics/burn-tax-mechanisms",
+                  "game/tokenomics/smart-contracts-audit"
+                ]
+              },
+              {
+                "group": "Roadmap",
+                "pages": [
+                  "game/roadmap/upcoming-game-features"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Marketplace",
+        "groups": [
+          {
+            "group": "Marketplace",
+            "pages": [
+              "marketplace/overview"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Multichain",
+        "groups": [
+          {
+            "group": "Multichain",
+            "pages": [
+              "multichain/overview"
+            ]
+          }
+        ]
+      },
+      {
+        "tab": "Resources",
+        "groups": [
+          {
+            "group": "Resources",
+            "pages": [
+              "resources/overview"
+            ]
+          }
+        ]
+      }
     ]
+  },
+
+  "contextual": {
+    "options": ["copy", "view", "chatgpt", "claude", "perplexity", "mcp", "cursor", "vscode"]
   },
 
   "footer": {
     "socials": {
-      "x": "https://x.com/mintlify",
-      "github": "https://github.com/mintlify",
-      "linkedin": "https://linkedin.com/company/mintlify"
+      "x": "https://x.com/ufogaming",
+      "youtube": "https://www.youtube.com/@UFOGaming",
+      "telegram": "https://t.me/ufogaming"
     }
   }
 }
