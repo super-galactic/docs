@@ -41,9 +41,9 @@
             "group": "Overview",
             "pages": [
               "game/overview/introduction",
-              "game/overview/market-opportunity-industry-growth",
-              "game/overview/competitive-landscape-lessons-learned",
-              "game/overview/SG-Ecosystem-Architecture"
+              "game/overview/market-opportunity",
+              "game/overview/competitive-landscape",
+              "game/overview/Sg-ecosystem-Architecture"
             ]
           },
           {
