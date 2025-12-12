@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "maple",
+  "theme": "mint",
   "name": "Super Galactic",
   "colors": {
     "primary": "#16A34A",
@@ -8,12 +8,10 @@
     "dark": "#15803D"
   },
   "favicon": "/favicon.svg",
-
   "logo": {
     "light": "/logo/super-galactic2-logo.png",
     "dark": "/logo/super-galactic-logo.png"
   },
-
   "navbar": {
     "primary": {
       "type": "button",
@@ -21,7 +19,6 @@
       "href": "https://app.ufogaming.io/get-started"
     }
   },
-
   "navigation": {
     "anchors": [
       {
@@ -63,55 +60,127 @@
               {
                 "group": "How to Play",
                 "pages": [
-                  "game/how-to-play/supported-platforms",
-                  "game/how-to-play/game-access",
-                  "game/how-to-play/game-modes",
-                  "game/how-to-play/progression"
+                  {
+                    "title": "🖥️ Supported platforms",
+                    "href": "game/how-to-play/supported-platforms"
+                  },
+                  {
+                    "title": "🔑 Game access",
+                    "href": "game/how-to-play/game-access"
+                  },
+                  {
+                    "title": "🎮 Game modes",
+                    "href": "game/how-to-play/game-modes"
+                  },
+                  {
+                    "title": "📈 Progression",
+                    "href": "game/how-to-play/progression"
+                  }
                 ]
               },
               {
                 "group": "Genesis Origin",
                 "pages": [
-                  "game/genesis-origin/the-originals",
-                  "game/genesis-origin/minting-acquisition",
-                  "game/genesis-origin/upgrading-genesis",
-                  "game/genesis-origin/breeding",
-                  "game/genesis-origin/renting-system",
-                  "game/genesis-origin/lore"
+                  {
+                    "title": "👽 The originals",
+                    "href": "game/genesis-origin/the-originals"
+                  },
+                  {
+                    "title": "🧬 Minting & acquisition",
+                    "href": "game/genesis-origin/minting-acquisition"
+                  },
+                  {
+                    "title": "⬆️ Upgrading genesis",
+                    "href": "game/genesis-origin/upgrading-genesis"
+                  },
+                  {
+                    "title": "🧪 Breeding",
+                    "href": "game/genesis-origin/breeding"
+                  },
+                  {
+                    "title": "🤝 Renting system",
+                    "href": "game/genesis-origin/renting-system"
+                  },
+                  {
+                    "title": "📜 Lore",
+                    "href": "game/genesis-origin/lore"
+                  }
                 ]
               },
               {
-                "group": "Equipment & Lootboxes",
+                "group": "Equipment & Items",
                 "pages": [
-                  "game/equipment-lootboxes/overview",
-                  "game/equipment-lootboxes/mystery-lootbox",
-                  "game/equipment-lootboxes/minting-equipment",
-                  "game/equipment-lootboxes/upgrading-weapons"
+                  {
+                    "title": "🧰 Overview",
+                    "href": "game/equipment-lootboxes/overview"
+                  },
+                  {
+                    "title": "🎁 Mystery lootbox",
+                    "href": "game/equipment-lootboxes/mystery-lootbox"
+                  },
+                  {
+                    "title": "🛠️ Minting equipment",
+                    "href": "game/equipment-lootboxes/minting-equipment"
+                  },
+                  {
+                    "title": "⚔️ Upgrading weapons",
+                    "href": "game/equipment-lootboxes/upgrading-weapons"
+                  }
                 ]
               },
               {
                 "group": "Game Economy",
                 "pages": [
-                  "game/economy/overview",
-                  "game/economy/rewards-system",
-                  "game/economy/burn-mechanism",
-                  "game/economy/taxes-sinks",
-                  "game/economy/breeding-economy"
+                  {
+                    "title": "💰 Overview",
+                    "href": "game/economy/overview"
+                  },
+                  {
+                    "title": "🏆 Rewards system",
+                    "href": "game/economy/rewards-system"
+                  },
+                  {
+                    "title": "🔥 Burn mechanism",
+                    "href": "game/economy/burn-mechanism"
+                  },
+                  {
+                    "title": "🧾 Taxes & sinks",
+                    "href": "game/economy/taxes-sinks"
+                  },
+                  {
+                    "title": "🧬 Breeding economy",
+                    "href": "game/economy/breeding-economy"
+                  }
                 ]
               },
               {
-                "group": "Tokenomics (UAP)",
+                "group": "Tokenomics",
                 "pages": [
-                  "game/tokenomics/uap-token",
-                  "game/tokenomics/tge-details",
-                  "game/tokenomics/burn-tax-mechanisms",
-                  "game/tokenomics/smart-contracts-audit"
+                  {
+                    "title": "🪙 UAP token",
+                    "href": "game/tokenomics/uap-token"
+                  },
+                  {
+                    "title": "📊 TGE details",
+                    "href": "game/tokenomics/tge-details"
+                  },
+                  {
+                    "title": "🔁 Burn & tax mechanisms",
+                    "href": "game/tokenomics/burn-tax-mechanisms"
+                  },
+                  {
+                    "title": "🔐 Smart contracts & audit",
+                    "href": "game/tokenomics/smart-contracts-audit"
+                  }
                 ]
               },
               {
                 "group": "Roadmap",
                 "pages": [
-                  "game/roadmap/upcoming-game-features"
+                  {
+                    "title": "🛣️ Upcoming game features",
+                    "href": "game/roadmap/upcoming-game-features"
+                  }
                 ]
               }
             ]
@@ -123,9 +192,7 @@
         "groups": [
           {
             "group": "Marketplace",
-            "pages": [
-              "marketplace/overview"
-            ]
+            "pages": ["marketplace/overview"]
           }
         ]
       },
@@ -134,9 +201,7 @@
         "groups": [
           {
             "group": "Multichain",
-            "pages": [
-              "multichain/overview"
-            ]
+            "pages": ["multichain/overview"]
           }
         ]
       },
@@ -145,19 +210,15 @@
         "groups": [
           {
             "group": "Resources",
-            "pages": [
-              "resources/overview"
-            ]
+            "pages": ["resources/overview"]
           }
         ]
       }
     ]
   },
-
   "contextual": {
     "options": ["copy", "view", "chatgpt", "claude", "perplexity", "mcp", "cursor", "vscode"]
   },
-
   "footer": {
     "socials": {
       "x": "https://x.com/ufogaming",
