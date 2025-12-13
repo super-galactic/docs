@@ -55,7 +55,6 @@
           },
           {
             "group": "NFTs & Assets",
-            "collapsed": true,
             "pages": [
               "game/nfts-assets/the-originals",
               "game/nfts-assets/rarity-attributes-rating",
