@@ -1,7 +1,25 @@
 ---
-
-title: Economy Overview
-
-icon: coins
-
+title: "Economy Overview"
+icon: "coins"
 ---
+
+````
+## Economy Flow Overview
+
+```mermaid
+flowchart LR
+    Player[Player Activity]
+    UAP[UAP Earned]
+    Upgrade[Upgrades & Breeding]
+    Burn[Token Burn 50%]
+    Reserve[Reserve Wallet 50%]
+    Rewards[P2E Reward Pool]
+
+    Player --> UAP
+    UAP --> Upgrade
+    Upgrade --> Burn
+    Upgrade --> Reserve
+    Reserve --> Rewards
+````
+
+/
