@@ -22,37 +22,32 @@ import {
   Legend
 } from "recharts";
 
-export const TOTAL_SUPPLY = 420_000_000_000;
+export const TOTAL_SUPPLY = 420000000000;
 
-// Illustrative: supply is fixed, but circulating changes based on claims, holds, and burns
 export const circulatingSupplyExample = [
-  { period: "Week 1", circulating: 2_000_000_000, total: TOTAL_SUPPLY },
-  { period: "Week 2", circulating: 2_300_000_000, total: TOTAL_SUPPLY },
-  { period: "Week 3", circulating: 2_550_000_000, total: TOTAL_SUPPLY },
-  { period: "Week 4", circulating: 2_700_000_000, total: TOTAL_SUPPLY }
+  { period: "Week 1", circulating: 2000000000, total: TOTAL_SUPPLY },
+  { period: "Week 2", circulating: 2300000000, total: TOTAL_SUPPLY },
+  { period: "Week 3", circulating: 2550000000, total: TOTAL_SUPPLY },
+  { period: "Week 4", circulating: 2700000000, total: TOTAL_SUPPLY }
 ];
 
-// Burn model is deterministic: 50% burn, 50% reserve on every in-game spend
 export const burnSplit = [
   { name: "Burn (50%)", value: 50 },
   { name: "Reserve (50%)", value: 50 }
 ];
 
-// Illustrative: typical sink mix for a period (replace later with real analytics)
 export const sinkMixExample = [
   { name: "Upgrades", value: 55 },
   { name: "Breeding", value: 35 },
   { name: "Other Progression", value: 10 }
 ];
 
-// Illustrative: how higher activity and higher difficulty can increase total spend and therefore burns
 export const spendAndBurnByActivity = [
-  { period: "Low Activity", totalSpend: 1_000_000, burned: 500_000, reserved: 500_000 },
-  { period: "Normal Activity", totalSpend: 2_000_000, burned: 1_000_000, reserved: 1_000_000 },
-  { period: "High Activity", totalSpend: 3_500_000, burned: 1_750_000, reserved: 1_750_000 }
+  { period: "Low Activity", totalSpend: 1000000, burned: 500000, reserved: 500000 },
+  { period: "Normal Activity", totalSpend: 2000000, burned: 1000000, reserved: 1000000 },
+  { period: "High Activity", totalSpend: 3500000, burned: 1750000, reserved: 1750000 }
 ];
 
-// Your real difficulty rewards (you provided these)
 export const difficultyRewards = [
   { level: "Level 1", rewardUAP: 100 },
   { level: "Level 2", rewardUAP: 150 },
