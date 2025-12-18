@@ -3,70 +3,129 @@ title: "Economy Overview"
 icon: "coins"
 ---
 
-Super Galactic operates on a closed-loop, gameplay-driven economy powered by the **UAP token**.
+import {
+  MissionRewardsChart,
+  GenesisUpgradeCostByRarityChart,
+  WeaponsUpgradeSinkChart,
+  AggregateBurnVsTreasuryImpactChart,
+  GameplayFlywheelChart
+} from "/snippets/EconomyCharts";
 
-UAP has a fixed, capped supply with no ongoing minting. Unlike traditional play-to-earn models that rely on unlimited token emissions, UAP circulation is managed through gameplay rewards and in-game spending.
+Super Galactic operates on a **closed-loop, gameplay-driven economy** powered by the **UAP token**.\
+Unlike traditional play-to-earn models that rely on unlimited minting, Super Galactic is built around **scarcity, automated supply reduction, and usage-based rewards**.
 
-UAP is designed as an in-game utility asset, earned through active participation and spent on core progression systems such as upgrades and breeding. The economy is structured to encourage meaningful engagement while controlling token velocity and preventing uncontrolled inflation over time.
+Every UAP token entering or leaving circulation is tied to **real player activity**: completing missions, upgrading assets, and progressing through the game. This creates a self-regulating system where growth strengthens the economy instead of destabilizing it.
 
-By tying UAP flow directly to gameplay actions, Super Galactic maintains a balanced progression model that rewards activity without relying on passive or idle mechanics.
+## Capped Supply, No Ongoing Minting
 
-## UAP Issuance
+UAP has a **fixed, capped total supply**.\
+There is **no infinite emission** and no continuous minting tied to rewards.
 
-UAP enters circulation exclusively through gameplay.
+All UAP used within the Super Galactic ecosystem already exists within the capped supply. Gameplay does not inflate the token; instead, **circulating supply dynamically adjusts** based on how players earn, spend, and upgrade.
 
-- Earned via PvE missions and in-game activities
-- Subject to daily earning limits to prevent inflation
-- Not generated through passive, idle, or automated systems
+This design directly avoids the inflationary pitfalls seen in earlier Web3 games.
 
-This approach ensures that UAP distribution remains closely aligned with player activity and progression, while protecting the game economy from excessive inflation as participation scales.
+## Allocation Across Chains
 
-## UAP Utility
+To support scalability and low-cost gameplay:
 
-UAP is required for key in-game actions, including but not limited to:
+- **50% of the total UAP supply** is allocated for gameplay usage across **BNB Chain and Avalanche**
+- **50% remains on Ethereum**, supporting liquidity, trading, and long-term ecosystem participation
 
-- Asset and character upgrades
-- Breeding mechanics
-- Gameplay progression and enhancement systems
+Cross-chain deployment does **not** increase total supply. It only determines where UAP is used, earned, and spent.
 
-These utility sinks scale alongside player advancement, creating ongoing demand for UAP as players progress through the game.
+## Mission Rewards: Earned Through Skill and Activity
 
-## Burn and Reserve Mechanism
+Players earn UAP by completing missions with selectable difficulty levels.
 
-All UAP spent in-game follows a fixed allocation model:
+- Higher difficulty = higher potential rewards
+- Partial completion still yields proportional rewards
+- No idle or passive earning mechanics
 
-- **50% is permanently burned**, reducing circulating supply
-- **50% is allocated to a reserve wallet**
+Reward output is **activity-bound**, ensuring UAP enters circulation only through meaningful gameplay.
 
-The reserve wallet is used to support the broader ecosystem and may be applied toward:
+<MissionRewardsChart />
 
-- Gameplay reward balancing
-- Liquidity support
-- Supply management actions, including potential buybacks
+## Genesis Upgrades: Core Long-Term Token Sink
 
-Reserve usage is discretionary and determined based on ecosystem needs rather than predefined outcomes.
+Super Galactic launches with **10,000 Genesis Origin NFTs**.
 
-## Reserve Transparency
+Each Genesis:
 
-The reserve wallet is managed on-chain.\
-Wallet addresses will be made publicly available to provide transparency into reserve movements and usage.
+- Has **6 upgradeable body parts**
+- Each part can be upgraded across multiple levels
+- Upgrade costs scale by **rarity and progression depth**
 
-## Economic Design Principles
+Upgrades permanently consume UAP.\
+Every upgrade triggers the **automatic burn + treasury split**, directly reducing circulating supply.
 
-The Super Galactic economy is built around the following principles:
+If all Genesis assets are progressively upgraded over time, this creates **substantial, predictable token demand** driven entirely by gameplay.
 
-- Activity-based issuance, not passive accumulation
-- Predictable utility-driven sinks
-- Controlled token velocity through configurable limits
-- Deflationary pressure via consistent token burns
-- Flexible reserve management to support ecosystem health
+<GenesisUpgradeChart />
 
-## Economy Flow
+## Weapons Upgrades: Parallel Progression Sink
 
-```mermaid
-flowchart LR
-    Gameplay[Gameplay Activity] -->|Earn UAP| Player[Player Wallet]
-    Player -->|Spend UAP| Mechanics[Game Mechanics]
-    Mechanics -->|50%| Burn[Burned Supply]
-    Mechanics -->|50%| Reserve[Reserve Wallet]
-```
+In addition to Genesis characters, there are **10,000 weapons**, each following the same rarity distribution as Genesis assets.
+
+Weapons:
+
+- Are upgraded independently
+- Consume UAP at scaling costs
+- Follow the same automated burn mechanics
+
+This introduces a second major progression sink, ensuring that as players advance, **UAP consumption accelerates naturally**.
+
+<WeaponsUpgradeSinkChart />
+
+## Automated Burn and Treasury Mechanism
+
+Every time UAP is spent in-game:
+
+- **50% is permanently burned**
+- **50% is sent to the Treasury**
+
+This process is:
+
+- Automatic
+- Usage-based
+- Enforced at the system level
+- Fully transparent on-chain
+
+As player activity increases, total burns increase proportionally , without relying on manual intervention or scheduled events.
+
+<AggregateBurnVsTreasuryImpactChart />
+
+## The Gameplay Flywheel
+
+Super Galactic’s economy is designed as a **self-reinforcing loop**:
+
+1. Players complete missions → earn UAP
+2. Players upgrade Genesis characters and weapons → spend UAP
+3. Spending triggers automatic burns → circulating supply decreases
+4. Scarcity increases → progression becomes more valuable
+5. Stronger incentives attract more active players
+6. Activity increases → the cycle accelerates
+
+This flywheel ensures that **growth strengthens the economy** instead of diluting it.
+
+Unlike inflationary P2E systems, increased engagement in Super Galactic results in **higher demand and stronger supply control**, not runaway emissions.
+
+<GameplayFlywheelChart />
+
+## Why This Model Works
+
+Super Galactic avoids the structural failures seen in earlier Web3 games by ensuring:
+
+- No unlimited minting
+- No passive yield farming
+- No reward loops without sinks
+- No reliance on speculation alone
+
+Instead, the economy is driven by:
+
+- Skill-based gameplay
+- Long-term progression
+- Automated supply reduction
+- Transparent treasury management
+
+This creates an economy that is **playable, sustainable, and investable**.
