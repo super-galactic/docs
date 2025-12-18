@@ -1,10 +1,8 @@
 ---
-
 title: Breeding Economics
-
 icon: dna
-
 ---
+
 import {
   ResponsiveContainer,
   LineChart,
@@ -31,11 +29,6 @@ export const circulatingSupplyExample = [
   { period: "Week 4", circulating: 2700000000, total: TOTAL_SUPPLY }
 ];
 
-export const burnSplit = [
-  { name: "Burn (50%)", value: 50 },
-  { name: "Reserve (50%)", value: 50 }
-];
-
 export const sinkMixExample = [
   { name: "Upgrades", value: 55 },
   { name: "Breeding", value: 35 },
@@ -58,56 +51,64 @@ export const difficultyRewards = [
 
 ## Capped Supply vs Circulating Supply
 
-<ResponsiveContainer width="100%" height={320}>
-  <LineChart data={circulatingSupplyExample}>
-    <CartesianGrid />
-    <XAxis dataKey="period" />
-    <YAxis />
-    <Tooltip />
-    <Legend />
-    <Line type="monotone" dataKey="total" name="Total Supply (Fixed Cap)" dot={false} />
-    <Line type="monotone" dataKey="circulating" name="Circulating Supply (Example)" />
-  </LineChart>
-</ResponsiveContainer>
+<div style={{ width: "100%", height: 320 }}>
+  <ResponsiveContainer width="100%" height="100%">
+    <LineChart data={circulatingSupplyExample}>
+      <CartesianGrid />
+      <XAxis dataKey="period" />
+      <YAxis />
+      <Tooltip />
+      <Legend />
+      <Line type="monotone" dataKey="total" name="Total Supply (Fixed Cap)" dot={false} />
+      <Line type="monotone" dataKey="circulating" name="Circulating Supply (Example)" />
+    </LineChart>
+  </ResponsiveContainer>
+</div>
 
 *Note: Circulating supply is shown as an illustrative example. Total supply remains fixed.*
 
 ## In-Game Spending Drives Automatic Burns
 
-<ResponsiveContainer width="100%" height={320}>
-  <AreaChart data={spendAndBurnByActivity}>
-    <CartesianGrid />
-    <XAxis dataKey="period" />
-    <YAxis />
-    <Tooltip />
-    <Legend />
-    <Area type="monotone" dataKey="burned" name="Burned" stackId="1" />
-    <Area type="monotone" dataKey="reserved" name="Reserve" stackId="1" />
-  </AreaChart>
-</ResponsiveContainer>
+<div style={{ width: "100%", height: 320 }}>
+  <ResponsiveContainer width="100%" height="100%">
+    <AreaChart data={spendAndBurnByActivity}>
+      <CartesianGrid />
+      <XAxis dataKey="period" />
+      <YAxis />
+      <Tooltip />
+      <Legend />
+      <Area type="monotone" dataKey="burned" name="Burned" stackId="1" />
+      <Area type="monotone" dataKey="reserved" name="Reserve" stackId="1" />
+    </AreaChart>
+  </ResponsiveContainer>
+</div>
 
 This chart shows the fixed split on every in-game spend. Higher activity increases total burns because burns are triggered by usage.
 
 ## Where UAP Gets Spent
 
-<ResponsiveContainer width="100%" height={320}>
-  <PieChart>
-    <Pie data={sinkMixExample} dataKey="value" nameKey="name" outerRadius={110} label />
-    <Tooltip />
-  </PieChart>
-</ResponsiveContainer>
+<div style={{ width: "100%", height: 320 }}>
+  <ResponsiveContainer width="100%" height="100%">
+    <PieChart>
+      <Pie data={sinkMixExample} dataKey="value" nameKey="name" outerRadius={110} label />
+      <Tooltip />
+    </PieChart>
+  </ResponsiveContainer>
+</div>
 
 *Note: This is an illustrative sink mix. Replace values with live game analytics when available.*
 
 ## Mission Difficulty Rewards
 
-<ResponsiveContainer width="100%" height={320}>
-  <BarChart data={difficultyRewards}>
-    <CartesianGrid />
-    <XAxis dataKey="level" />
-    <YAxis />
-    <Tooltip />
-    <Legend />
-    <Bar dataKey="rewardUAP" name="UAP Reward" />
-  </BarChart>
-</ResponsiveContainer>
+<div style={{ width: "100%", height: 320 }}>
+  <ResponsiveContainer width="100%" height="100%">
+    <BarChart data={difficultyRewards}>
+      <CartesianGrid />
+      <XAxis dataKey="level" />
+      <YAxis />
+      <Tooltip />
+      <Legend />
+      <Bar dataKey="rewardUAP" name="UAP Reward" />
+    </BarChart>
+  </ResponsiveContainer>
+</div>
