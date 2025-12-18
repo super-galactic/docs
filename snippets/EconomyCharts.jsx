@@ -1,3 +1,11 @@
+return (
+  <div style={{ color: "white" }}>
+    ready: {String(ready)} | hasChart:{" "}
+    {String(typeof window !== "undefined" && !!window.Chart)}
+  </div>
+);
+
+
 import React, { useEffect, useRef, useState } from "react";
 
 export default function EconomyCharts() {
