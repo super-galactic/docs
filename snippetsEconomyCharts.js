@@ -2,6 +2,31 @@
 title: "Snippets Economy Charts"
 ---
 
+const TOTAL_SUPPLY = 420_000_000_000;
+
+const circulatingSupplyExample = [
+  { period: "Week 1", circulating: 2_000_000_000 },
+  { period: "Week 2", circulating: 2_300_000_000 },
+  { period: "Week 3", circulating: 2_550_000_000 },
+  { period: "Week 4", circulating: 2_700_000_000 }
+];
+
+const spendBurnReserveExample = [
+  { label: "Low Activity", burned: 500_000, reserve: 500_000 },
+  { label: "Normal Activity", burned: 1_000_000, reserve: 1_000_000 },
+  { label: "High Activity", burned: 1_750_000, reserve: 1_750_000 }
+];
+
+const sinkMixExample = {
+  labels: ["Upgrades", "Breeding", "Other Progression"],
+  values: [55, 35, 10]
+};
+
+const difficultyRewards = {
+  labels: ["L1", "L2", "L3", "L4", "L5"],
+  values: [100, 150, 250, 350, 500]
+};
+
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 declare global {
