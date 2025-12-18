@@ -1,3 +1,5 @@
+import React, { useEffect, useMemo, useRef, useState } from "react";
+
 export function GameplayFlywheelChart() {
   // Premium SVG flywheel (no external libs needed)
   return (
