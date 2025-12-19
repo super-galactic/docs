@@ -611,3 +611,15 @@ export default {
   AggregateBurnVsTreasuryImpactChart,
   GameplayFlywheelChart,
 };
+
+export function DebugChartEnv() {
+  const hasWindow = typeof window !== "undefined";
+  const hasChart = hasWindow && !!window.Chart;
+
+  return (
+    <div style={{ padding: 12, border: "2px dashed red" }}>
+      hasWindow: {String(hasWindow)} <br />
+      window.Chart: {String(hasChart)}
+    </div>
+  );
+}
