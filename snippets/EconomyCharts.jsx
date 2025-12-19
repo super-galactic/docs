@@ -1,4 +1,4 @@
-// /snippets/EconomyCharts.jsx
+"use client";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 /**
