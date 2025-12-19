@@ -7,8 +7,8 @@ export const GameplayFlywheelChart = () => {
   const cx = 460;
   const cy = 270;
 
-  const ringR = 190;     // where nodes sit
-  const nodeR = 62;      // node radius
+  const ringR = 220;     // where nodes sit
+  const nodeR = 54;      // node radius
 
   const nodes = [
     { a: -90, title: "Missions", sub: "Earn UAP by playing" },
@@ -197,7 +197,7 @@ export const GameplayFlywheelChart = () => {
               );
             })}
 
-            <text x="40" y="505" fill="rgba(229,231,235,.55)" fontSize="12">
+            <text x="40" y="492" fill="rgba(229,231,235,.55)" fontSize="12">
               Note: UAP supply is capped (no unlimited minting). Circulating supply is managed by sinks + automatic burns.
             </text>
           </svg>
