@@ -3,13 +3,6 @@
   "theme": "maple",
   "name": "Super Galactic",
 
-  "customScripts": [
-  {
-    "src": "https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js",
-    "strategy": "beforeInteractive"
-  }
-],
-
   "colors": {
     "primary": "#16A34A",
     "light": "#07C983",
