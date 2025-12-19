@@ -1,157 +1,16 @@
-export function DebugBox() {
-  return <div style={{ padding: 12, border: "1px solid red" }}>DEBUG RENDERING</div>;
-}
-
+// /snippets/EconomyCharts.jsx
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 /**
- * EconomyCharts.jsx
- * Requires Chart.js to be present on window.Chart (loaded via /chartjs-loader.js).
- * Exports:
- *  - MissionRewardsChart
- *  - GenesisUpgradeCostByRarityChart
- *  - WeaponsUpgradeSinkChart
- *  - AggregateBurnVsTreasuryImpactChart
- *  - GameplayFlywheelChart (custom SVG diagram, animated)
+ * Chart.js is loaded globally via docs.json customScripts:
+ * window.Chart (UMD build)
  */
 
-/* ----------------------------- helpers ----------------------------- */
-
-function useChartJsReady() {
-  const [ready, setReady] = useState(
-    typeof window !== "undefined" && !!window.Chart
-  );
-
-  useEffect(() => {
-    if (ready) return;
-    if (typeof window === "undefined") return;
-
-    const id = setInterval(() => {
-      if (window.Chart) {
-        setReady(true);
-        clearInterval(id);
-      }
-    }, 50);
-
-    return () => clearInterval(id);
-  }, [ready]);
-
-  return ready;
-}
-
-function ChartCard({ title, subtitle, children }) {
-  return (
-    <div
-      style={{
-        border: "1px solid rgba(255,255,255,0.08)",
-        borderRadius: 16,
-        padding: 16,
-        background: "rgba(0,0,0,0.25)",
-        boxShadow: "0 8px 30px rgba(0,0,0,0.35)",
-        margin: "18px 0",
-      }}
-    >
-      <div style={{ marginBottom: 10 }}>
-        <div style={{ fontSize: 18, fontWeight: 700 }}>{title}</div>
-        {subtitle ? (
-          <div style={{ opacity: 0.75, marginTop: 4, fontSize: 13 }}>
-            {subtitle}
-          </div>
-        ) : null}
-      </div>
-      {children}
-    </div>
-  );
-}
-
-function Canvas({ height = 340, canvasRef }) {
-  return (
-    <div style={{ width: "100%", height }}>
-      <canvas
-        ref={canvasRef}
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "block",
-        }}
-      />
-    </div>
-  );
-}
-
-function formatNumber(n) {
-  try {
-    return new Intl.NumberFormat("en-US").format(n);
-  } catch {
-    return String(n);
-  }
-}
-
-function destroyChart(chartRef) {
-  if (chartRef.current) {
-    try {
-      chartRef.current.destroy();
-    } catch {}
-    chartRef.current = null;
-  }
-}
-
-/* ----------------------------- mock data ----------------------------- */
-/**
- * You asked for “exact mock numbers” based on the new rarity distribution:
- * Common 68%, Uncommon 30%, Rare 1.8%, Epic 0.2%
- *
- * Assumptions for modeling (Phase 1, no breeding):
- * - 10,000 Genesis (6 body parts each)
- * - 10,000 Weapons
- * - Upgrade costs increase by rarity and by tier
- * - Every upgrade spend splits 50% Burn / 50% Treasury (Reserve)
- *
- * IMPORTANT: these are investor-friendly illustrative numbers (replace later with live econ tables/analytics).
- */
-
-const TOTAL_GENESIS = 10_000;
-const PARTS_PER_GENESIS = 6;
-const TOTAL_WEAPONS = 10_000;
-
-const RARITY = [
-  { key: "Common", pct: 0.68 },
-  { key: "Uncommon", pct: 0.30 },
-  { key: "Rare", pct: 0.018 },
-  { key: "Epic", pct: 0.002 },
-];
-
-function allocationByRarity(total) {
-  // integer allocation with rounding handled
-  const raw = RARITY.map((r) => ({
-    rarity: r.key,
-    count: Math.round(total * r.pct),
-  }));
-  // fix rounding drift
-  const sum = raw.reduce((a, b) => a + b.count, 0);
-  const drift = total - sum;
-  if (drift !== 0) raw[0].count += drift;
-  return raw;
-}
-
-// Upgrade tier costs (UAP) — tuned to create meaningful sinks
-// Genesis: per BODY PART, from Tier 1 -> Tier 5 (5 steps)
-const GENESIS_PART_TIER_COSTS = {
-  Common: [2_000, 3_000, 4_500, 6_500, 9_000],
-  Uncommon: [3_000, 4_500, 6_500, 9_500, 13_500],
-  Rare: [5_000, 7_500, 11_000, 16_000, 22_500],
-  Epic: [8_000, 12_000, 18_000, 26_000, 36_000],
+const RARITY_COUNTS = {
+  Genesis: { Common: 6800, Uncommon: 3000, Rare: 180, Epic: 20 },
+  Weapons: { Common: 6800, Uncommon: 3000, Rare: 180, Epic: 20 },
 };
 
-// Weapons: per weapon, 5 upgrade steps as well
-const WEAPON_TIER_COSTS = {
-  Common: [3_500, 5_000, 7_000, 10_000, 14_000],
-  Uncommon: [5_000, 7_500, 10_500, 15_000, 21_000],
-  Rare: [8_000, 12_000, 17_000, 24_000, 34_000],
-  Epic: [12_000, 18_000, 26_000, 37_000, 52_000],
-};
-
-// Mission rewards you provided
 const MISSION_REWARDS = [
   { level: "L1", reward: 100 },
   { level: "L2", reward: 150 },
@@ -160,550 +19,595 @@ const MISSION_REWARDS = [
   { level: "L5", reward: 500 },
 ];
 
-/* ----------------------------- charts ----------------------------- */
+const GENESIS_PART_TIER_COSTS = {
+  Common: [2000, 3000, 4500, 6500, 9000],
+  Uncommon: [3000, 4500, 6500, 9500, 13500],
+  Rare: [5000, 7500, 11000, 16000, 22500],
+  Epic: [8000, 12000, 18000, 26000, 36000],
+};
 
-export function MissionRewardsChart() {
-  const ready = useChartJsReady();
-  const canvasRef = useRef(null);
+const WEAPON_TIER_COSTS = {
+  Common: [3500, 5000, 7000, 10000, 14000],
+  Uncommon: [5000, 7500, 10500, 15000, 21000],
+  Rare: [8000, 12000, 17000, 24000, 34000],
+  Epic: [12000, 18000, 26000, 37000, 52000],
+};
+
+// Aggregate “max upgrade” sink math (EXACT)
+const GENESIS_TOTAL_SPEND_BY_RARITY = {
+  Common: 1020000000,
+  Uncommon: 666000000,
+  Rare: 66960000,
+  Epic: 12000000,
+};
+const WEAPONS_TOTAL_SPEND_BY_RARITY = {
+  Common: 268600000,
+  Uncommon: 177000000,
+  Rare: 17100000,
+  Epic: 2900000,
+};
+const PHASE1_TOTAL_SPEND = 2230560000;
+const PHASE1_BURN = 1115280000;
+const PHASE1_TREASURY = 1115280000;
+
+const ADOPTION_SCENARIOS = [
+  { label: "25%", total: 557640000, burn: 278820000, treasury: 278820000 },
+  { label: "50%", total: 1115280000, burn: 557640000, treasury: 557640000 },
+  { label: "100%", total: 2230560000, burn: 1115280000, treasury: 1115280000 },
+];
+
+function formatNumber(n) {
+  return new Intl.NumberFormat("en-US").format(n);
+}
+
+function formatCompact(n) {
+  return new Intl.NumberFormat("en-US", {
+    notation: "compact",
+    compactDisplay: "short",
+    maximumFractionDigits: 2,
+  }).format(n);
+}
+
+function Card({ title, subtitle, children }) {
+  return (
+    <div
+      style={{
+        border: "1px solid rgba(0,0,0,0.08)",
+        borderRadius: 16,
+        padding: 16,
+        margin: "12px 0 18px",
+        background: "rgba(255,255,255,0.7)",
+      }}
+    >
+      {title ? (
+        <div style={{ marginBottom: 10 }}>
+          <div style={{ fontSize: 16, fontWeight: 650 }}>{title}</div>
+          {subtitle ? (
+            <div style={{ fontSize: 13, opacity: 0.75, marginTop: 4 }}>{subtitle}</div>
+          ) : null}
+        </div>
+      ) : null}
+      {children}
+    </div>
+  );
+}
+
+function useChartJsReady() {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    function check() {
+      const ok = typeof window !== "undefined" && typeof window.Chart !== "undefined";
+      if (!cancelled) setReady(ok);
+    }
+
+    check();
+    const t = setInterval(check, 50);
+    const timeout = setTimeout(() => clearInterval(t), 4000);
+
+    return () => {
+      cancelled = true;
+      clearInterval(t);
+      clearTimeout(timeout);
+    };
+  }, []);
+
+  return ready;
+}
+
+function useChart(canvasRef, config) {
   const chartRef = useRef(null);
+  const ready = useChartJsReady();
 
   useEffect(() => {
     if (!ready) return;
     if (!canvasRef.current) return;
 
-    destroyChart(chartRef);
+    const Chart = window.Chart;
+    if (!Chart) return;
 
-    const ctx = canvasRef.current.getContext("2d");
-    chartRef.current = new window.Chart(ctx, {
+    // Cleanup any previous instance
+    if (chartRef.current) {
+      try {
+        chartRef.current.destroy();
+      } catch (_) {}
+      chartRef.current = null;
+    }
+
+    chartRef.current = new Chart(canvasRef.current.getContext("2d"), config);
+
+    return () => {
+      if (chartRef.current) {
+        try {
+          chartRef.current.destroy();
+        } catch (_) {}
+        chartRef.current = null;
+      }
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ready, canvasRef, JSON.stringify(config)]);
+}
+
+function ChartCanvas({ height = 320 }) {
+  return (
+    <div style={{ width: "100%", height }}>
+      <canvas style={{ width: "100%", height: "100%" }} />
+    </div>
+  );
+}
+
+function CanvasWithRef({ canvasRef, height = 320 }) {
+  return (
+    <div style={{ width: "100%", height }}>
+      <canvas ref={canvasRef} style={{ width: "100%", height: "100%" }} />
+    </div>
+  );
+}
+
+const baseOptions = {
+  responsive: true,
+  maintainAspectRatio: false,
+  animation: { duration: 450 },
+  plugins: {
+    legend: { position: "top" },
+    tooltip: {
+      callbacks: {
+        label: (ctx) => {
+          const v = ctx.parsed?.y ?? ctx.parsed;
+          if (typeof v === "number") return `${ctx.dataset.label}: ${formatNumber(v)}`;
+          return `${ctx.dataset.label}`;
+        },
+      },
+    },
+  },
+  scales: {
+    y: {
+      ticks: {
+        callback: (value) => formatCompact(value),
+      },
+    },
+  },
+};
+
+export function MissionRewardsChart() {
+  const canvasRef = useRef(null);
+
+  const labels = useMemo(() => MISSION_REWARDS.map((m) => m.level), []);
+  const data = useMemo(() => MISSION_REWARDS.map((m) => m.reward), []);
+
+  const config = useMemo(
+    () => ({
       type: "bar",
       data: {
-        labels: MISSION_REWARDS.map((x) => x.level),
+        labels,
         datasets: [
           {
-            label: "UAP Reward per Mission (by difficulty)",
-            data: MISSION_REWARDS.map((x) => x.reward),
+            label: "Reward (UAP)",
+            data,
             borderWidth: 1,
           },
         ],
       },
       options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        animation: { duration: 900 },
+        ...baseOptions,
         plugins: {
-          legend: { labels: { color: "rgba(255,255,255,0.85)" } },
+          ...baseOptions.plugins,
           tooltip: {
             callbacks: {
-              label: (ctx) => ` ${formatNumber(ctx.parsed.y)} UAP`,
+              label: (ctx) => `Reward: ${formatNumber(ctx.parsed.y)} UAP`,
             },
           },
         },
         scales: {
-          x: { ticks: { color: "rgba(255,255,255,0.75)" } },
+          ...baseOptions.scales,
           y: {
-            ticks: { color: "rgba(255,255,255,0.75)" },
-            grid: { color: "rgba(255,255,255,0.08)" },
+            ...baseOptions.scales.y,
+            title: { display: true, text: "UAP per mission completion" },
+          },
+          x: {
+            title: { display: true, text: "Mission level" },
           },
         },
       },
-    });
+    }),
+    [labels, data]
+  );
 
-    return () => destroyChart(chartRef);
-  }, [ready]);
+  useChart(canvasRef, config);
 
   return (
-    <ChartCard
-      title="Mission Rewards"
-      subtitle="Higher difficulty missions earn more UAP. Partial objective completion earns partial rewards."
-    >
-      {!ready ? <div>Loading charts…</div> : <Canvas height={320} canvasRef={canvasRef} />}
-    </ChartCard>
+    <Card title="Mission Rewards (Mock)" subtitle="Simple baseline rewards per mission level (UAP).">
+      <CanvasWithRef canvasRef={canvasRef} height={300} />
+    </Card>
   );
 }
 
 export function GenesisUpgradeCostByRarityChart() {
-  const ready = useChartJsReady();
   const canvasRef = useRef(null);
-  const chartRef = useRef(null);
 
-  const rarityCounts = useMemo(() => allocationByRarity(TOTAL_GENESIS), []);
+  const labels = useMemo(() => ["Tier1", "Tier2", "Tier3", "Tier4", "Tier5"], []);
+  const rarities = useMemo(() => ["Common", "Uncommon", "Rare", "Epic"], []);
 
-  const avgMaxCostPerGenesisByRarity = useMemo(() => {
-    // total cost to max ALL 6 parts for a single Genesis (by rarity)
-    // = sum(tiers) per part * 6
-    return rarityCounts.map(({ rarity }) => {
-      const perPart = GENESIS_PART_TIER_COSTS[rarity].reduce((a, b) => a + b, 0);
-      const perGenesisMax = perPart * PARTS_PER_GENESIS;
-      return { rarity, perGenesisMax };
-    });
-  }, [rarityCounts]);
+  const datasets = useMemo(
+    () =>
+      rarities.map((r) => ({
+        label: `${r} (per body part)`,
+        data: GENESIS_PART_TIER_COSTS[r],
+        tension: 0.25,
+        fill: false,
+        borderWidth: 2,
+        pointRadius: 2.5,
+      })),
+    [rarities]
+  );
 
-  useEffect(() => {
-    if (!ready) return;
-    if (!canvasRef.current) return;
-
-    destroyChart(chartRef);
-
-    const ctx = canvasRef.current.getContext("2d");
-    chartRef.current = new window.Chart(ctx, {
-      type: "bar",
-      data: {
-        labels: avgMaxCostPerGenesisByRarity.map((x) => x.rarity),
-        datasets: [
-          {
-            label: "UAP to max one Genesis (all 6 parts, illustrative)",
-            data: avgMaxCostPerGenesisByRarity.map((x) => x.perGenesisMax),
-            borderWidth: 1,
-          },
-        ],
-      },
+  const config = useMemo(
+    () => ({
+      type: "line",
+      data: { labels, datasets },
       options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        animation: { duration: 900 },
+        ...baseOptions,
         plugins: {
-          legend: { labels: { color: "rgba(255,255,255,0.85)" } },
+          ...baseOptions.plugins,
           tooltip: {
             callbacks: {
-              label: (ctx) => ` ${formatNumber(ctx.parsed.y)} UAP`,
+              label: (ctx) =>
+                `${ctx.dataset.label}: ${formatNumber(ctx.parsed.y)} UAP`,
             },
           },
         },
         scales: {
-          x: { ticks: { color: "rgba(255,255,255,0.75)" } },
+          ...baseOptions.scales,
           y: {
-            ticks: {
-              color: "rgba(255,255,255,0.75)",
-              callback: (v) => formatNumber(v),
-            },
-            grid: { color: "rgba(255,255,255,0.08)" },
+            ...baseOptions.scales.y,
+            title: { display: true, text: "UAP cost per tier (per body part)" },
+          },
+          x: {
+            title: { display: true, text: "Upgrade step" },
           },
         },
       },
-    });
+    }),
+    [labels, datasets]
+  );
 
-    return () => destroyChart(chartRef);
-  }, [ready, avgMaxCostPerGenesisByRarity]);
+  useChart(canvasRef, config);
+
+  const perPartSums = useMemo(() => {
+    const sum = (arr) => arr.reduce((a, b) => a + b, 0);
+    return {
+      Common: sum(GENESIS_PART_TIER_COSTS.Common), // 25,000
+      Uncommon: sum(GENESIS_PART_TIER_COSTS.Uncommon), // 37,000
+      Rare: sum(GENESIS_PART_TIER_COSTS.Rare), // 62,000
+      Epic: sum(GENESIS_PART_TIER_COSTS.Epic), // 100,000
+    };
+  }, []);
 
   return (
-    <ChartCard
-      title="Genesis Upgrade Cost by Rarity"
-      subtitle="Illustrative cost to fully upgrade all 6 body parts. Higher rarity = higher upgrade sink."
+    <Card
+      title="Genesis Upgrade Costs by Rarity"
+      subtitle="Per BODY PART tier costs (Tier1→Tier5)."
     >
-      {!ready ? <div>Loading charts…</div> : <Canvas height={320} canvasRef={canvasRef} />}
-    </ChartCard>
+      <CanvasWithRef canvasRef={canvasRef} height={320} />
+      <div style={{ marginTop: 10, fontSize: 13, opacity: 0.85, lineHeight: 1.45 }}>
+        <div>
+          <strong>Sum per part (maxing one part):</strong>{" "}
+          Common {formatNumber(perPartSums.Common)}, Uncommon {formatNumber(perPartSums.Uncommon)}, Rare{" "}
+          {formatNumber(perPartSums.Rare)}, Epic {formatNumber(perPartSums.Epic)} UAP
+        </div>
+        <div>
+          <strong>Maxing 1 Genesis (all 6 parts):</strong> Common {formatNumber(perPartSums.Common * 6)}, Uncommon{" "}
+          {formatNumber(perPartSums.Uncommon * 6)}, Rare {formatNumber(perPartSums.Rare * 6)}, Epic{" "}
+          {formatNumber(perPartSums.Epic * 6)} UAP
+        </div>
+      </div>
+    </Card>
   );
 }
 
 export function WeaponsUpgradeSinkChart() {
-  const ready = useChartJsReady();
   const canvasRef = useRef(null);
-  const chartRef = useRef(null);
 
-  const weaponCounts = useMemo(() => allocationByRarity(TOTAL_WEAPONS), []);
-  const maxCostPerWeaponByRarity = useMemo(() => {
-    return weaponCounts.map(({ rarity }) => {
-      const perWeaponMax = WEAPON_TIER_COSTS[rarity].reduce((a, b) => a + b, 0);
-      return { rarity, perWeaponMax };
-    });
-  }, [weaponCounts]);
+  const labels = useMemo(() => ["Common", "Uncommon", "Rare", "Epic"], []);
 
-  useEffect(() => {
-    if (!ready) return;
-    if (!canvasRef.current) return;
+  const totalByRarity = useMemo(
+    () => [
+      WEAPONS_TOTAL_SPEND_BY_RARITY.Common,
+      WEAPONS_TOTAL_SPEND_BY_RARITY.Uncommon,
+      WEAPONS_TOTAL_SPEND_BY_RARITY.Rare,
+      WEAPONS_TOTAL_SPEND_BY_RARITY.Epic,
+    ],
+    []
+  );
 
-    destroyChart(chartRef);
-
-    const ctx = canvasRef.current.getContext("2d");
-    chartRef.current = new window.Chart(ctx, {
+  const config = useMemo(
+    () => ({
       type: "bar",
       data: {
-        labels: maxCostPerWeaponByRarity.map((x) => x.rarity),
+        labels,
         datasets: [
           {
-            label: "UAP to max one weapon (illustrative)",
-            data: maxCostPerWeaponByRarity.map((x) => x.perWeaponMax),
+            label: "Weapons total spend if all 10,000 are maxed (UAP)",
+            data: totalByRarity,
             borderWidth: 1,
           },
         ],
       },
       options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        animation: { duration: 900 },
+        ...baseOptions,
         plugins: {
-          legend: { labels: { color: "rgba(255,255,255,0.85)" } },
+          ...baseOptions.plugins,
           tooltip: {
             callbacks: {
-              label: (ctx) => ` ${formatNumber(ctx.parsed.y)} UAP`,
+              label: (ctx) => `${formatNumber(ctx.parsed.y)} UAP`,
             },
           },
         },
         scales: {
-          x: { ticks: { color: "rgba(255,255,255,0.75)" } },
+          ...baseOptions.scales,
           y: {
-            ticks: {
-              color: "rgba(255,255,255,0.75)",
-              callback: (v) => formatNumber(v),
-            },
-            grid: { color: "rgba(255,255,255,0.08)" },
+            ...baseOptions.scales.y,
+            title: { display: true, text: "Total UAP sink (weapons)" },
+          },
+          x: {
+            title: { display: true, text: "Rarity" },
           },
         },
       },
-    });
+    }),
+    [labels, totalByRarity]
+  );
 
-    return () => destroyChart(chartRef);
-  }, [ready, maxCostPerWeaponByRarity]);
+  useChart(canvasRef, config);
+
+  const weaponSums = useMemo(() => {
+    const sum = (arr) => arr.reduce((a, b) => a + b, 0);
+    return {
+      Common: sum(WEAPON_TIER_COSTS.Common), // 39,500
+      Uncommon: sum(WEAPON_TIER_COSTS.Uncommon), // 59,000
+      Rare: sum(WEAPON_TIER_COSTS.Rare), // 95,000
+      Epic: sum(WEAPON_TIER_COSTS.Epic), // 145,000
+    };
+  }, []);
+
+  const totalWeapons = useMemo(
+    () =>
+      WEAPONS_TOTAL_SPEND_BY_RARITY.Common +
+      WEAPONS_TOTAL_SPEND_BY_RARITY.Uncommon +
+      WEAPONS_TOTAL_SPEND_BY_RARITY.Rare +
+      WEAPONS_TOTAL_SPEND_BY_RARITY.Epic,
+    []
+  );
 
   return (
-    <ChartCard
+    <Card
       title="Weapons Upgrade Sink"
-      subtitle="Weapons form a second major upgrade sink alongside Genesis progression."
+      subtitle="Total upgrade spend by rarity if all 10,000 weapons are maxed."
     >
-      {!ready ? <div>Loading charts…</div> : <Canvas height={320} canvasRef={canvasRef} />}
-    </ChartCard>
+      <CanvasWithRef canvasRef={canvasRef} height={300} />
+      <div style={{ marginTop: 10, fontSize: 13, opacity: 0.85, lineHeight: 1.45 }}>
+        <div>
+          <strong>Sum per weapon (maxing one weapon):</strong>{" "}
+          Common {formatNumber(weaponSums.Common)}, Uncommon {formatNumber(weaponSums.Uncommon)}, Rare{" "}
+          {formatNumber(weaponSums.Rare)}, Epic {formatNumber(weaponSums.Epic)} UAP
+        </div>
+        <div>
+          <strong>Weapons total:</strong> {formatNumber(totalWeapons)} UAP
+        </div>
+      </div>
+    </Card>
   );
 }
 
 export function AggregateBurnVsTreasuryImpactChart() {
-  const ready = useChartJsReady();
   const canvasRef = useRef(null);
-  const chartRef = useRef(null);
 
-  const {
-    totalGenesisSpend,
-    totalWeaponSpend,
-    totalSpend,
-    burned,
-    treasury,
-    scenarioRows,
-  } = useMemo(() => {
-    const genesisCounts = allocationByRarity(TOTAL_GENESIS);
-    const weaponCounts = allocationByRarity(TOTAL_WEAPONS);
+  const labels = useMemo(() => ADOPTION_SCENARIOS.map((s) => s.label), []);
+  const burnData = useMemo(() => ADOPTION_SCENARIOS.map((s) => s.burn), []);
+  const treasuryData = useMemo(() => ADOPTION_SCENARIOS.map((s) => s.treasury), []);
 
-    const perGenesisMaxByRarity = genesisCounts.map(({ rarity, count }) => {
-      const perPart = GENESIS_PART_TIER_COSTS[rarity].reduce((a, b) => a + b, 0);
-      const perGenesisMax = perPart * PARTS_PER_GENESIS;
-      return { rarity, count, perGenesisMax };
-    });
-
-    const perWeaponMaxByRarity = weaponCounts.map(({ rarity, count }) => {
-      const perWeaponMax = WEAPON_TIER_COSTS[rarity].reduce((a, b) => a + b, 0);
-      return { rarity, count, perWeaponMax };
-    });
-
-    const genesisMaxAll = perGenesisMaxByRarity.reduce(
-      (sum, r) => sum + r.count * r.perGenesisMax,
-      0
-    );
-    const weaponsMaxAll = perWeaponMaxByRarity.reduce(
-      (sum, r) => sum + r.count * r.perWeaponMax,
-      0
-    );
-
-    const total = genesisMaxAll + weaponsMaxAll;
-    const burned = Math.floor(total * 0.5);
-    const treasury = total - burned;
-
-    // Show 3 adoption scenarios (25% / 50% / 100% max-upgrade participation)
-    const scenarioRows = [0.25, 0.5, 1].map((p) => ({
-      scenario: `${Math.round(p * 100)}% Adoption`,
-      totalSpend: Math.floor(total * p),
-      burned: Math.floor(total * p * 0.5),
-      treasury: Math.floor(total * p * 0.5),
-    }));
-
-    return {
-      totalGenesisSpend: genesisMaxAll,
-      totalWeaponSpend: weaponsMaxAll,
-      totalSpend: total,
-      burned,
-      treasury,
-      scenarioRows,
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!ready) return;
-    if (!canvasRef.current) return;
-
-    destroyChart(chartRef);
-
-    const ctx = canvasRef.current.getContext("2d");
-    chartRef.current = new window.Chart(ctx, {
-      type: "line",
+  const config = useMemo(
+    () => ({
+      type: "bar",
       data: {
-        labels: scenarioRows.map((x) => x.scenario),
+        labels,
         datasets: [
           {
-            label: "Total UAP Spent (Upgrades)",
-            data: scenarioRows.map((x) => x.totalSpend),
-            tension: 0.35,
-            borderWidth: 2,
-            pointRadius: 3,
+            label: "Burned (UAP)",
+            data: burnData,
+            borderWidth: 1,
+            stack: "stack1",
           },
           {
-            label: "Burned (50%)",
-            data: scenarioRows.map((x) => x.burned),
-            tension: 0.35,
-            borderWidth: 2,
-            pointRadius: 3,
-          },
-          {
-            label: "Treasury (50%)",
-            data: scenarioRows.map((x) => x.treasury),
-            tension: 0.35,
-            borderWidth: 2,
-            pointRadius: 3,
+            label: "Treasury (UAP)",
+            data: treasuryData,
+            borderWidth: 1,
+            stack: "stack1",
           },
         ],
       },
       options: {
-        responsive: true,
-        maintainAspectRatio: false,
-        animation: { duration: 900 },
+        ...baseOptions,
         plugins: {
-          legend: { labels: { color: "rgba(255,255,255,0.85)" } },
+          ...baseOptions.plugins,
           tooltip: {
             callbacks: {
-              label: (ctx) => ` ${formatNumber(ctx.parsed.y)} UAP`,
+              label: (ctx) => `${ctx.dataset.label}: ${formatNumber(ctx.parsed.y)} UAP`,
+              footer: (items) => {
+                const i = items?.[0]?.dataIndex ?? 0;
+                const total = ADOPTION_SCENARIOS[i]?.total ?? 0;
+                return `Total: ${formatNumber(total)} UAP`;
+              },
             },
           },
         },
         scales: {
-          x: { ticks: { color: "rgba(255,255,255,0.75)" } },
+          ...baseOptions.scales,
+          x: { stacked: true, title: { display: true, text: "Adoption (share of players maxing upgrades)" } },
           y: {
-            ticks: {
-              color: "rgba(255,255,255,0.75)",
-              callback: (v) => formatNumber(v),
-            },
-            grid: { color: "rgba(255,255,255,0.08)" },
+            stacked: true,
+            ...baseOptions.scales.y,
+            title: { display: true, text: "UAP split (50% burn / 50% treasury)" },
           },
         },
       },
-    });
+    }),
+    [labels, burnData, treasuryData]
+  );
 
-    return () => destroyChart(chartRef);
-  }, [ready, scenarioRows]);
+  useChart(canvasRef, config);
 
   return (
-    <ChartCard
+    <Card
       title="Aggregate Burn vs Treasury Impact"
-      subtitle="Illustrative: upgrade spending splits 50% burn + 50% treasury. More player progression = more automatic supply reduction."
+      subtitle="Phase 1 upgrades (Genesis + Weapons) with a 50/50 burn vs reserve wallet split."
     >
-      <div style={{ marginBottom: 10, opacity: 0.85, fontSize: 13, lineHeight: 1.5 }}>
+      <CanvasWithRef canvasRef={canvasRef} height={320} />
+      <div style={{ marginTop: 10, fontSize: 13, opacity: 0.85, lineHeight: 1.45 }}>
         <div>
-          Estimated max-upgrade spend (Genesis + Weapons):{" "}
-          <b>{formatNumber(totalSpend)} UAP</b>
-        </div>
-        <div>
-          Split: <b>{formatNumber(burned)} UAP burned</b> +{" "}
-          <b>{formatNumber(treasury)} UAP to treasury</b>
+          <strong>100% adoption totals:</strong> Total {formatNumber(PHASE1_TOTAL_SPEND)} UAP • Burn{" "}
+          {formatNumber(PHASE1_BURN)} • Treasury {formatNumber(PHASE1_TREASURY)}
         </div>
       </div>
-
-      {!ready ? <div>Loading charts…</div> : <Canvas height={360} canvasRef={canvasRef} />}
-    </ChartCard>
+    </Card>
   );
 }
-
-/* ----------------------------- flywheel diagram ----------------------------- */
 
 export function GameplayFlywheelChart() {
-  // No Chart.js needed — this is a custom SVG that reads clean and looks “premium”.
-  // It animates the ring + arrows subtly.
-  const steps = [
-    { n: 1, t: "Complete missions", d: "Earn UAP" },
-    { n: 2, t: "Upgrade Genesis + Weapons", d: "Spend UAP" },
-    { n: 3, t: "Automatic split", d: "50% Burn + 50% Treasury" },
-    { n: 4, t: "Circulating supply reduces", d: "Scarcity strengthens" },
-    { n: 5, t: "Progression feels valuable", d: "More motivation to play" },
-    { n: 6, t: "Activity increases", d: "Flywheel accelerates" },
-  ];
-
+  // Simple SVG flywheel (no Chart.js needed)
   return (
-    <ChartCard
+    <Card
       title="The Gameplay Flywheel"
-      subtitle="Growth strengthens the economy: more gameplay → more spending → more automatic burns → stronger scarcity."
+      subtitle="Phase 1 loop: upgrades + missions driving spend (burn/treasury) and progression."
     >
-      <style>{`
-        @keyframes sg-spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        @keyframes sg-pulse { 0%,100% { opacity: .55 } 50% { opacity: .95 } }
-        .sg-ring { transform-origin: 50% 50%; animation: sg-spin 24s linear infinite; }
-        .sg-grid { animation: sg-pulse 3.2s ease-in-out infinite; }
-      `}</style>
-
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1.1fr 0.9fr",
-          gap: 14,
-          alignItems: "center",
-        }}
-      >
-        {/* Left: diagram */}
-        <div style={{ borderRadius: 16, overflow: "hidden" }}>
-          <svg
-            viewBox="0 0 920 520"
-            width="100%"
-            height="auto"
-            style={{
-              display: "block",
-              background:
-                "radial-gradient(circle at 50% 40%, rgba(0,255,255,0.08), rgba(0,0,0,0.25) 55%, rgba(0,0,0,0.35) 100%)",
-              border: "1px solid rgba(255,255,255,0.08)",
-              borderRadius: 16,
-            }}
-          >
-            {/* soft grid */}
-            <g className="sg-grid" opacity="0.65">
-              {Array.from({ length: 16 }).map((_, i) => (
-                <line
-                  key={`v-${i}`}
-                  x1={40 + i * 55}
-                  y1={20}
-                  x2={40 + i * 55}
-                  y2={500}
-                  stroke="rgba(255,255,255,0.06)"
-                />
-              ))}
-              {Array.from({ length: 10 }).map((_, i) => (
-                <line
-                  key={`h-${i}`}
-                  x1={20}
-                  y1={40 + i * 45}
-                  x2={900}
-                  y2={40 + i * 45}
-                  stroke="rgba(255,255,255,0.06)"
-                />
-              ))}
-            </g>
-
-            {/* ring */}
-            <g className="sg-ring">
-              <circle
-                cx="460"
-                cy="265"
-                r="155"
-                fill="none"
-                stroke="rgba(0,255,255,0.22)"
-                strokeWidth="14"
+      <div style={{ width: "100%", overflowX: "auto" }}>
+        <svg
+          width="980"
+          height="360"
+          viewBox="0 0 980 360"
+          role="img"
+          aria-label="Gameplay flywheel diagram"
+          style={{ display: "block", maxWidth: "100%" }}
+        >
+          {/* Nodes */}
+          {[
+            { x: 110, y: 85, t: "Play Missions", s: "Earn UAP rewards\n(L1–L5)" },
+            { x: 390, y: 45, t: "Upgrade Genesis", s: "6 body parts\nTier1→Tier5" },
+            { x: 680, y: 85, t: "Upgrade Weapons", s: "Tier1→Tier5\nrarity-scaled" },
+            { x: 680, y: 225, t: "Spend UAP", s: "50% burn\n50% treasury" },
+            { x: 390, y: 265, t: "Power + Progression", s: "Higher performance\nunlocks more" },
+            { x: 110, y: 225, t: "More Missions", s: "Repeat loop\nmore engagement" },
+          ].map((n, idx) => (
+            <g key={idx}>
+              <rect
+                x={n.x}
+                y={n.y}
+                rx="18"
+                ry="18"
+                width="220"
+                height="86"
+                fill="white"
+                stroke="rgba(0,0,0,0.14)"
               />
-              <circle
-                cx="460"
-                cy="265"
-                r="155"
-                fill="none"
-                stroke="rgba(255,255,255,0.10)"
-                strokeWidth="2"
-                strokeDasharray="8 10"
-              />
-              {/* arrows */}
-              {Array.from({ length: 8 }).map((_, i) => {
-                const angle = (i * Math.PI) / 4;
-                const x = 460 + Math.cos(angle) * 155;
-                const y = 265 + Math.sin(angle) * 155;
-                const x2 = 460 + Math.cos(angle + 0.28) * 155;
-                const y2 = 265 + Math.sin(angle + 0.28) * 155;
-                return (
-                  <line
-                    key={i}
-                    x1={x}
-                    y1={y}
-                    x2={x2}
-                    y2={y2}
-                    stroke="rgba(0,255,255,0.35)"
-                    strokeWidth="6"
-                    strokeLinecap="round"
-                  />
-                );
-              })}
+              <text x={n.x + 14} y={n.y + 30} fontSize="16" fontWeight="650">
+                {n.t}
+              </text>
+              {String(n.s)
+                .split("\n")
+                .map((line, i) => (
+                  <text key={i} x={n.x + 14} y={n.y + 52 + i * 18} fontSize="13" opacity="0.75">
+                    {line}
+                  </text>
+                ))}
             </g>
+          ))}
 
-            {/* center */}
-            <circle
-              cx="460"
-              cy="265"
-              r="92"
-              fill="rgba(0,0,0,0.55)"
-              stroke="rgba(255,255,255,0.10)"
+          {/* Arrows */}
+          <defs>
+            <marker
+              id="arrow"
+              viewBox="0 0 10 10"
+              refX="9"
+              refY="5"
+              markerWidth="7"
+              markerHeight="7"
+              orient="auto-start-reverse"
+            >
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(0,0,0,0.5)" />
+            </marker>
+          </defs>
+
+          {[
+            // missions -> upgrade genesis
+            { x1: 330, y1: 128, x2: 390, y2: 88 },
+            // upgrade genesis -> upgrade weapons
+            { x1: 610, y1: 88, x2: 680, y2: 128 },
+            // upgrade weapons -> spend
+            { x1: 790, y1: 171, x2: 790, y2: 225 },
+            // spend -> power
+            { x1: 680, y1: 268, x2: 610, y2: 308 },
+            // power -> more missions
+            { x1: 390, y1: 308, x2: 330, y2: 268 },
+            // more missions -> missions
+            { x1: 220, y1: 225, x2: 220, y2: 171 },
+          ].map((a, idx) => (
+            <path
+              key={idx}
+              d={`M ${a.x1} ${a.y1} L ${a.x2} ${a.y2}`}
+              fill="none"
+              stroke="rgba(0,0,0,0.5)"
+              strokeWidth="2.5"
+              markerEnd="url(#arrow)"
             />
-            <text
-              x="460"
-              y="252"
-              textAnchor="middle"
-              fill="rgba(255,255,255,0.92)"
-              fontSize="26"
-              fontWeight="700"
-            >
-              Super Galactic
-            </text>
-            <text
-              x="460"
-              y="286"
-              textAnchor="middle"
-              fill="rgba(255,255,255,0.70)"
-              fontSize="14"
-            >
-              Self-Reinforcing Economy
-            </text>
+          ))}
 
-            {/* nodes */}
-            {steps.map((s, i) => {
-              const a = (-Math.PI / 2) + (i * (2 * Math.PI)) / steps.length;
-              const x = 460 + Math.cos(a) * 250;
-              const y = 265 + Math.sin(a) * 190;
-
-              return (
-                <g key={s.n}>
-                  <circle
-                    cx={x}
-                    cy={y}
-                    r="52"
-                    fill="rgba(0,0,0,0.55)"
-                    stroke="rgba(0,255,255,0.22)"
-                    strokeWidth="2"
-                  />
-                  <text
-                    x={x}
-                    y={y - 8}
-                    textAnchor="middle"
-                    fill="rgba(255,255,255,0.92)"
-                    fontSize="16"
-                    fontWeight="700"
-                  >
-                    {s.n}
-                  </text>
-                  <text
-                    x={x}
-                    y={y + 16}
-                    textAnchor="middle"
-                    fill="rgba(255,255,255,0.75)"
-                    fontSize="12"
-                  >
-                    {s.d}
-                  </text>
-                </g>
-              );
-            })}
-          </svg>
-        </div>
-
-        {/* Right: legend text */}
-        <div style={{ opacity: 0.92 }}>
-          <div style={{ fontWeight: 800, fontSize: 16, marginBottom: 8 }}>
-            How the flywheel compounds
-          </div>
-          <ol style={{ margin: 0, paddingLeft: 18, lineHeight: 1.6 }}>
-            <li><b>Missions</b> distribute rewards based on activity.</li>
-            <li><b>Upgrades</b> convert rewards into progression (spend).</li>
-            <li><b>Every spend</b> triggers an automatic <b>Burn + Treasury</b> split.</li>
-            <li><b>Burns</b> steadily reduce circulating supply over time.</li>
-            <li><b>Scarcity</b> supports long-term economy health.</li>
-            <li><b>Growth</b> increases both gameplay and supply control.</li>
-          </ol>
-        </div>
+          {/* Caption */}
+          <text x="20" y="350" fontSize="12.5" opacity="0.7">
+            Notes: Upgrade spend uses the fixed mock sink totals (Genesis: {formatCompact(
+              GENESIS_TOTAL_SPEND_BY_RARITY.Common +
+                GENESIS_TOTAL_SPEND_BY_RARITY.Uncommon +
+                GENESIS_TOTAL_SPEND_BY_RARITY.Rare +
+                GENESIS_TOTAL_SPEND_BY_RARITY.Epic
+            )} UAP, Weapons: {formatCompact(
+              WEAPONS_TOTAL_SPEND_BY_RARITY.Common +
+                WEAPONS_TOTAL_SPEND_BY_RARITY.Uncommon +
+                WEAPONS_TOTAL_SPEND_BY_RARITY.Rare +
+                WEAPONS_TOTAL_SPEND_BY_RARITY.Epic
+            )} UAP).
+          </text>
+        </svg>
       </div>
-    </ChartCard>
+    </Card>
   );
 }
+
+// Named exports already done above; keep a default export optional for convenience.
+export default {
+  MissionRewardsChart,
+  GenesisUpgradeCostByRarityChart,
+  WeaponsUpgradeSinkChart,
+  AggregateBurnVsTreasuryImpactChart,
+  GameplayFlywheelChart,
+};
