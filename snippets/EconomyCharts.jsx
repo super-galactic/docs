@@ -7,8 +7,8 @@ export const GameplayFlywheelChart = () => {
   const cx = 460;
   const cy = 270;
 
-  const ringR = 220;     // where nodes sit
-  const nodeR = 54;      // node radius
+  const ringR = 250;     // where nodes sit
+  const nodeR = 50;      // node radius
 
   const nodes = [
     { a: -90, title: "Missions", sub: "Earn UAP by playing" },
