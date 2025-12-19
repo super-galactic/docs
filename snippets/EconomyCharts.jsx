@@ -1,7 +1,7 @@
 "use client";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React from "react";
 
-export function GameplayFlywheelChart() {
+export const GameplayFlywheelChart = () => {
   // Premium SVG flywheel (no external libs needed)
   return (
     <div style={{ marginTop: 16, marginBottom: 24 }}>
