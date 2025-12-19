@@ -1,3 +1,7 @@
+export function DebugBox() {
+  return <div style={{ padding: 12, border: "1px solid red" }}>DEBUG RENDERING</div>;
+}
+
 import React, { useEffect, useMemo, useRef, useState } from "react";
 
 /**
