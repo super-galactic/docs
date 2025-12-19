@@ -3,13 +3,14 @@ import React from "react";
 
 export const GameplayFlywheelChart = () => {
   const W = 920;
-  const H = 520;
-  const cx = 460;
-  const cy = 270;
+  const H = 560;
 
-  // Tuned for readability + spacing
-  const ringR = 220;  // push nodes outward
-  const nodeR = 58;   // slightly smaller nodes for center clarity
+  const cx = 460;
+  const cy = 310; // lowered to make room for title at top
+
+  // Bigger + more readable
+  const ringR = 245;
+  const nodeR = 70;
 
   const nodes = [
     { a: -90,  title: "Missions",       sub: "Earn UAP by playing" },
@@ -38,30 +39,22 @@ export const GameplayFlywheelChart = () => {
     <div style={{ marginTop: 16, marginBottom: 24 }}>
       <style>{`
         @keyframes sgSpin { from { transform: rotate(0deg);} to { transform: rotate(360deg);} }
-        @keyframes sgDash { to { stroke-dashoffset: -240; } }
-        @keyframes sgPulse { 0%,100% { transform: scale(1); opacity: .97; } 50% { transform: scale(1.03); opacity: 1; } }
+        @keyframes sgDash { to { stroke-dashoffset: -420; } }
+        @keyframes sgFlow { to { stroke-dashoffset: -520; } }
+        @keyframes sgPulse { 0%,100% { transform: scale(1); opacity: .98; } 50% { transform: scale(1.03); opacity: 1; } }
       `}</style>
 
       <div
         style={{
           border: "1px solid rgba(34,211,238,.18)",
           borderRadius: 16,
-          padding: 18,
+          padding: 10,
           background:
-            "radial-gradient(1200px 600px at 50% 30%, rgba(34,211,238,.08), transparent 55%), linear-gradient(180deg, rgba(2,6,23,.55), rgba(2,6,23,.25))",
+            "radial-gradient(1200px 700px at 50% 20%, rgba(34,211,238,.08), transparent 55%), linear-gradient(180deg, rgba(2,6,23,.58), rgba(2,6,23,.25))",
           boxShadow: "0 0 0 1px rgba(34,211,238,.06) inset",
         }}
       >
-        <div style={{ fontWeight: 800, fontSize: 16, marginBottom: 10 }}>
-          The Gameplay Flywheel
-        </div>
-
-        <div style={{ opacity: 0.78, marginBottom: 14, lineHeight: 1.45 }}>
-          A self-reinforcing loop where <b>activity increases demand</b> and{" "}
-          <b>automatic burns reduce circulating supply</b>.
-        </div>
-
-        <div style={{ width: "100%", height: 520 }}>
+        <div style={{ width: "100%", height: 600 }}>
           <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%">
             <defs>
               <linearGradient id="sgCyan" x1="0" y1="0" x2="1" y2="1">
@@ -73,7 +66,6 @@ export const GameplayFlywheelChart = () => {
                 <stop offset="1" stopColor="#22d3ee" />
               </linearGradient>
 
-              {/* Glow for shapes */}
               <filter id="sgGlow" x="-40%" y="-40%" width="180%" height="180%">
                 <feGaussianBlur stdDeviation="6" result="blur" />
                 <feColorMatrix
@@ -92,61 +84,51 @@ export const GameplayFlywheelChart = () => {
                 </feMerge>
               </filter>
 
-              {/* Subtle text shadow for readability */}
               <filter id="sgTextShadow" x="-20%" y="-20%" width="140%" height="140%">
                 <feDropShadow dx="0" dy="1" stdDeviation="2" floodColor="rgba(0,0,0,.65)" />
               </filter>
-
-              {/* BIGGER arrow marker so it’s visible */}
-              <marker
-                id="sgArrow"
-                viewBox="0 0 12 12"
-                refX="10"
-                refY="6"
-                markerWidth="10"
-                markerHeight="10"
-                orient="auto"
-                markerUnits="userSpaceOnUse"
-              >
-                <path d="M 0 0 L 12 6 L 0 12 z" fill="rgba(34,211,238,.95)" />
-              </marker>
             </defs>
 
-            {/* Dimmer grid (readability) */}
+            {/* Grid */}
             <g opacity="0.06">
-              {Array.from({ length: 15 }).map((_, i) => (
-                <line key={i} x1={40} y1={40 + i * 30} x2={880} y2={40 + i * 30} stroke="#fff" />
+              {Array.from({ length: 17 }).map((_, i) => (
+                <line key={i} x1={40} y1={60 + i * 30} x2={880} y2={60 + i * 30} stroke="#fff" />
               ))}
               {Array.from({ length: 21 }).map((_, i) => (
-                <line key={i} x1={40 + i * 40} y1={40} x2={40 + i * 40} y2={480} stroke="#fff" />
+                <line key={i} x1={40 + i * 40} y1={60} x2={40 + i * 40} y2={540} stroke="#fff" />
               ))}
             </g>
 
-            {/* Outer ring */}
-            <g transform={`translate(${cx} ${cy})`} opacity="0.9">
-              <g style={{ transformOrigin: "0px 0px", animation: "sgSpin 28s linear infinite" }}>
-                <circle
-                  cx="0"
-                  cy="0"
-                  r={ringR}
-                  fill="none"
-                  stroke="rgba(34,211,238,.18)"
-                  strokeWidth="2"
-                  strokeDasharray="16 12"
-                  style={{ animation: "sgDash 8s linear infinite" }}
-                />
-                <circle
-                  cx="0"
-                  cy="0"
-                  r={ringR + 18}
-                  fill="none"
-                  stroke="rgba(96,165,250,.10)"
-                  strokeWidth="12"
-                />
-              </g>
+            {/* TOP TITLE (outside wheel) */}
+            <g filter="url(#sgTextShadow)">
+              <text x={cx} y={44} textAnchor="middle" fill="#e5e7eb" fontSize="22" fontWeight="900">
+                Super Galactic Flywheel
+              </text>
+              <text x={cx} y={68} textAnchor="middle" fill="rgba(229,231,235,.82)" fontSize="13" fontWeight="600">
+                Activity → Spend → Burn → Scarcity → Stronger Incentives
+              </text>
             </g>
 
-            {/* FLOW ARCS (draw ABOVE ring so arrows show) */}
+            {/* OUTER RINGS */}
+            <g transform={`translate(${cx} ${cy})`} opacity="0.95">
+              {/* subtle static thick ring */}
+              <circle cx="0" cy="0" r={ringR + 22} fill="none" stroke="rgba(96,165,250,.10)" strokeWidth="16" />
+
+              {/* animated dashed ring (your “----- animates around the wheel”) */}
+              <circle
+                cx="0"
+                cy="0"
+                r={ringR + 2}
+                fill="none"
+                stroke="url(#sgCyan)"
+                strokeWidth="2.8"
+                strokeDasharray="18 14"
+                style={{ animation: "sgDash 7.5s linear infinite" }}
+                opacity="0.85"
+              />
+            </g>
+
+            {/* FLOW PATHS (animated dashes) */}
             {[
               [-90, -25],
               [-25, 25],
@@ -159,36 +141,38 @@ export const GameplayFlywheelChart = () => {
                 key={i}
                 d={arc(a1, a2)}
                 fill="none"
-                stroke="rgba(34,211,238,.75)"
-                strokeWidth="3.5"
+                stroke="url(#sgBlue)"
+                strokeWidth="4"
                 strokeLinecap="round"
-                markerEnd="url(#sgArrow)"
+                strokeDasharray="10 14"
+                style={{ animation: "sgFlow 3.5s linear infinite" }}
+                opacity="0.95"
               />
             ))}
 
-            {/* Center panel (more contrast) */}
+            {/* CENTER PANEL (slightly smaller now that title is on top) */}
             <g filter="url(#sgGlow)">
               <rect
-                x={cx - 190}
-                y={cy - 68}
-                width="380"
-                height="136"
+                x={cx - 175}
+                y={cy - 56}
+                width="350"
+                height="112"
                 rx="18"
                 fill="rgba(2,6,23,.86)"
-                stroke="rgba(34,211,238,.38)"
+                stroke="rgba(34,211,238,.32)"
               />
-              <text x={cx} y={cy - 18} textAnchor="middle" fill="#e5e7eb" fontSize="26" fontWeight="900" filter="url(#sgTextShadow)">
-                Super Galactic Flywheel
+              <text x={cx} y={cy - 10} textAnchor="middle" fill="#e5e7eb" fontSize="20" fontWeight="900">
+                Gameplay → Economy Momentum
               </text>
-              <text x={cx} y={cy + 14} textAnchor="middle" fill="rgba(229,231,235,.9)" fontSize="13" filter="url(#sgTextShadow)">
-                Activity → Spend → Burn → Scarcity → Stronger Incentives
+              <text x={cx} y={cy + 18} textAnchor="middle" fill="rgba(229,231,235,.85)" fontSize="12.5">
+                Spending triggers burns → scarcity strengthens progression value
               </text>
-              <text x={cx} y={cy + 38} textAnchor="middle" fill="rgba(229,231,235,.78)" fontSize="12" filter="url(#sgTextShadow)">
-                Growth strengthens the economy instead of diluting it
+              <text x={cx} y={cy + 40} textAnchor="middle" fill="rgba(229,231,235,.72)" fontSize="12">
+                More incentives → more activity → the loop accelerates
               </text>
             </g>
 
-            {/* Nodes (darker fill + bigger text) */}
+            {/* NODES (bigger + readable) */}
             {nodes.map((n, idx) => {
               const accent = idx % 2 === 0 ? "sgCyan" : "sgBlue";
               const boxW = nodeR * 2 - 14;
@@ -206,10 +190,9 @@ export const GameplayFlywheelChart = () => {
                     r={nodeR}
                     fill="rgba(2,6,23,.92)"
                     stroke={`url(#${accent})`}
-                    strokeWidth="3.5"
+                    strokeWidth="4"
                   />
 
-                  {/* Wrapped text INSIDE circles */}
                   <foreignObject x={n.x - boxW / 2} y={n.y - boxH / 2} width={boxW} height={boxH}>
                     <div
                       xmlns="http://www.w3.org/1999/xhtml"
@@ -228,18 +211,16 @@ export const GameplayFlywheelChart = () => {
                         filter: "drop-shadow(0 1px 2px rgba(0,0,0,.55))",
                       }}
                     >
-                      <div style={{ fontWeight: 900, fontSize: 14, marginBottom: 5 }}>{n.title}</div>
-                      <div style={{ fontSize: 11.5, opacity: 0.82 }}>{n.sub}</div>
+                      <div style={{ fontWeight: 900, fontSize: 15.5, marginBottom: 6 }}>{n.title}</div>
+                      <div style={{ fontSize: 12.5, opacity: 0.86 }}>{n.sub}</div>
                     </div>
                   </foreignObject>
                 </g>
               );
             })}
-
-            {/* Footer (moved up so it doesn’t clip) */}
-            <text x="40" y="492" fill="rgba(229,231,235,.65)" fontSize="12" filter="url(#sgTextShadow)">
-              Note: UAP supply is capped (no unlimited minting). Circulating supply is managed by sinks + automatic burns.
-            </text>
           </svg>
         </div>
       </div>
+    </div>
+  );
+};
