@@ -234,6 +234,16 @@ export const GameplayFlywheelChart = () => {
               >
                 Activity → Spend → Burn → Scarcity → Stronger Incentives
               </text>
+            
+              <text
+                x={cx}
+                y={66}
+                textAnchor="middle"
+                fill="rgba(229,231,235,.75)"
+                fontSize="13"
+                fontWeight="500"
+              >
+                Growth strengthens the economy instead of diluting it
             </g>
           </svg>
         </div>
