@@ -6,7 +6,7 @@ export const GameplayFlywheelChart = () => {
   const H = 700; // more top headroom so title can live in the "red space"
 
   const cx = 460;
-  const cy = 420; // DO NOT move the wheel (as requested)
+  const cy = 460; // DO NOT move the wheel (as requested)
 
   // Bigger + readable
   const ringR = 255;
