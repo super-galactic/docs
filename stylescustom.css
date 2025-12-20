@@ -1,0 +1,9 @@
+/* Hide the theme (light/dark) toggle */
+button[aria-label*="theme" i],
+button[title*="theme" i],
+button[aria-label*="dark" i],
+button[title*="dark" i],
+button[aria-label*="light" i],
+button[title*="light" i] {
+  display: none !important;
+}
