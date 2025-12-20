@@ -3,10 +3,10 @@ import React from "react";
 
 export const GameplayFlywheelChart = () => {
   const W = 920;
-  const H = 620;
+  const H = 700; // more top headroom so title can live in the "red space"
 
   const cx = 460;
-  const cy = 360; // keeps wheel centered
+  const cy = 360; // DO NOT move the wheel (as requested)
 
   // Bigger + readable
   const ringR = 255;
@@ -55,12 +55,18 @@ export const GameplayFlywheelChart = () => {
         }}
       >
         <div style={{ width: "100%", height: 680 }}>
-          <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%">
+          <svg
+            viewBox={`0 0 ${W} ${H}`}
+            width="100%"
+            height="100%"
+            preserveAspectRatio="xMidYMin meet"
+          >
             <defs>
               <linearGradient id="sgCyan" x1="0" y1="0" x2="1" y2="1">
                 <stop offset="0" stopColor="#22d3ee" />
                 <stop offset="1" stopColor="#0ea5e9" />
               </linearGradient>
+
               <linearGradient id="sgBlue" x1="0" y1="0" x2="1" y2="1">
                 <stop offset="0" stopColor="#60a5fa" />
                 <stop offset="1" stopColor="#22d3ee" />
@@ -89,17 +95,32 @@ export const GameplayFlywheelChart = () => {
               </filter>
             </defs>
 
-            {/* Softer grid (less distracting) */}
+            {/* Softer grid */}
             <g opacity="0.045">
               {Array.from({ length: 18 }).map((_, i) => (
-                <line key={i} x1={40} y1={90 + i * 30} x2={880} y2={90 + i * 30} stroke="#fff" />
+                <line key={i} x1={40} y1={110 + i * 30} x2={880} y2={110 + i * 30} stroke="#fff" />
               ))}
               {Array.from({ length: 21 }).map((_, i) => (
-                <line key={i} x1={40 + i * 40} y1={90} x2={40 + i * 40} y2={590} stroke="#fff" />
+                <line key={i} x1={40 + i * 40} y1={110} x2={40 + i * 40} y2={660} stroke="#fff" />
               ))}
             </g>
 
-            {/* Outer “halo” ring */}
+            {/* TOP TITLE — now sits in the "red space" */}
+            <g filter="url(#sgTextShadow)">
+              <text x={cx} y={52} textAnchor="middle" fill="#e5e7eb" fontSize="32" fontWeight="950">
+                Super Galactic Flywheel
+              </text>
+
+              <text x={cx} y={78} textAnchor="middle" fill="rgba(229,231,235,.92)" fontSize="17" fontWeight="750">
+                Activity → Spend → Burn → Scarcity → Stronger Incentives
+              </text>
+
+              <text x={cx} y={100} textAnchor="middle" fill="rgba(229,231,235,.78)" fontSize="14" fontWeight="550">
+                Growth strengthens the economy instead of diluting it
+              </text>
+            </g>
+
+            {/* Outer halo ring */}
             <circle
               cx={cx}
               cy={cy}
@@ -110,7 +131,7 @@ export const GameplayFlywheelChart = () => {
               opacity="0.9"
             />
 
-            {/* Animated dashed ring (the ----- that moves) */}
+            {/* Animated dashed ring */}
             <circle
               cx={cx}
               cy={cy}
@@ -145,7 +166,7 @@ export const GameplayFlywheelChart = () => {
               />
             ))}
 
-            {/* Center “energy core” */}
+            {/* Center energy core */}
             <g filter="url(#sgGlow)">
               <circle cx={cx} cy={cy} r="26" fill="rgba(34,211,238,.18)" />
               <circle cx={cx} cy={cy} r="10" fill="rgba(34,211,238,.65)" />
@@ -210,21 +231,6 @@ export const GameplayFlywheelChart = () => {
                 </g>
               );
             })}
-
-            {/* TOP TITLE ONLY — moved to bottom so it always renders on top */}
-            <g filter="url(#sgTextShadow)">
-              <text x={cx} y={6} textAnchor="middle" fill="#e5e7eb" fontSize="30" fontWeight="950">
-                Super Galactic Flywheel
-              </text>
-
-              <text x={cx} y={28} textAnchor="middle" fill="rgba(229,231,235,.92)" fontSize="17" fontWeight="750">
-                Activity → Spend → Burn → Scarcity → Stronger Incentives
-              </text>
-
-              <text x={cx} y={48} textAnchor="middle" fill="rgba(229,231,235,.78)" fontSize="14" fontWeight="550">
-                Growth strengthens the economy instead of diluting it
-              </text>
-            </g>
           </svg>
         </div>
       </div>
