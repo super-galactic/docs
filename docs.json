@@ -2,7 +2,11 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "maple",
   "name": "Super Galactic",
-  "mode": "dark",
+
+  "appearance": {
+    "default": "dark",
+    "toggle": false
+  },
 
   "colors": {
     "primary": "#16A34A",
