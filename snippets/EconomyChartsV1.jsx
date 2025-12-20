@@ -3,7 +3,7 @@ import React from "react";
 
 export const GameplayFlywheelChart = () => {
   const W = 920;
-  const H = 700; // more top headroom so title can live in the "red space"
+  const H = 820; // more top headroom so title can live in the "red space"
 
   const cx = 460;
   const cy = 460; // DO NOT move the wheel (as requested)
@@ -97,11 +97,11 @@ export const GameplayFlywheelChart = () => {
 
             {/* Softer grid */}
             <g opacity="0.045">
-              {Array.from({ length: 18 }).map((_, i) => (
-                <line key={i} x1={40} y1={110 + i * 30} x2={880} y2={110 + i * 30} stroke="#fff" />
+              {Array.from({ length: 25 }).map((_, i) => (
+                <line key={`h-${i}`} x1={40} y1={80 + i * 30} x2={880} y2={80 + i * 30} stroke="#fff" />
               ))}
               {Array.from({ length: 21 }).map((_, i) => (
-                <line key={i} x1={40 + i * 40} y1={110} x2={40 + i * 40} y2={660} stroke="#fff" />
+                <line key={`v-${i}`} x1={40 + i * 40} y1={80} x2={40 + i * 40} y2={800} stroke="#fff" />
               ))}
             </g>
 
