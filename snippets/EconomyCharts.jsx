@@ -3,12 +3,11 @@ import React from "react";
 
 export const GameplayFlywheelChart = () => {
   const W = 920;
-  const H = 700; // more top headroom so title can live in the "red space"
+  const H = 700; // headroom for title
 
   const cx = 460;
-  const cy = 360; // DO NOT move the wheel (as requested)
+  const cy = 450; // ✅ moved down to center wheel (TITLE STAYS PERFECT)
 
-  // Bigger + readable
   const ringR = 255;
   const nodeR = 82;
 
@@ -105,7 +104,7 @@ export const GameplayFlywheelChart = () => {
               ))}
             </g>
 
-            {/* TOP TITLE — now sits in the "red space" */}
+            {/* Title (unchanged) */}
             <g filter="url(#sgTextShadow)">
               <text x={cx} y={52} textAnchor="middle" fill="#e5e7eb" fontSize="32" fontWeight="950">
                 Super Galactic Flywheel
