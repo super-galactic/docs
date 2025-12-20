@@ -3,11 +3,12 @@ import React from "react";
 
 export const GameplayFlywheelChart = () => {
   const W = 920;
-  const H = 700; // headroom for title
+  const H = 820; // more top headroom so title can live in the "red space"
 
   const cx = 460;
-  const cy = 450; // ✅ moved down to center wheel (TITLE STAYS PERFECT)
+  const cy = 460; // DO NOT move the wheel (as requested)
 
+  // Bigger + readable
   const ringR = 255;
   const nodeR = 82;
 
@@ -96,25 +97,25 @@ export const GameplayFlywheelChart = () => {
 
             {/* Softer grid */}
             <g opacity="0.045">
-              {Array.from({ length: 18 }).map((_, i) => (
-                <line key={i} x1={40} y1={110 + i * 30} x2={880} y2={110 + i * 30} stroke="#fff" />
+              {Array.from({ length: 25 }).map((_, i) => (
+                <line key={`h-${i}`} x1={40} y1={80 + i * 30} x2={880} y2={80 + i * 30} stroke="#fff" />
               ))}
               {Array.from({ length: 21 }).map((_, i) => (
-                <line key={i} x1={40 + i * 40} y1={110} x2={40 + i * 40} y2={660} stroke="#fff" />
+                <line key={`v-${i}`} x1={40 + i * 40} y1={80} x2={40 + i * 40} y2={800} stroke="#fff" />
               ))}
             </g>
 
-            {/* Title (unchanged) */}
+            {/* TOP TITLE — now sits in the "red space" */}
             <g filter="url(#sgTextShadow)">
-              <text x={cx} y={52} textAnchor="middle" fill="#e5e7eb" fontSize="32" fontWeight="950">
+              <text x={cx} y={54} textAnchor="middle" fill="#e5e7eb" fontSize="30" fontWeight="900">
                 Super Galactic Flywheel
               </text>
 
-              <text x={cx} y={78} textAnchor="middle" fill="rgba(229,231,235,.92)" fontSize="17" fontWeight="750">
+              <text x={cx} y={78} textAnchor="middle" fill="rgba(229,231,235,.92)" fontSize="16" fontWeight="650">
                 Activity → Spend → Burn → Scarcity → Stronger Incentives
               </text>
 
-              <text x={cx} y={100} textAnchor="middle" fill="rgba(229,231,235,.78)" fontSize="14" fontWeight="550">
+              <text x={cx} y={98} textAnchor="middle" fill="rgba(229,231,235,.78)" fontSize="13" fontWeight="500">
                 Growth strengthens the economy instead of diluting it
               </text>
             </g>
