@@ -6,7 +6,7 @@ export const GameplayFlywheelChart = () => {
   const H = 620;
 
   const cx = 460;
-  const cy = 360; // gives room for title + keeps wheel centered
+  const cy = 360; // keeps wheel centered
 
   // Bigger + readable
   const ringR = 255;
@@ -145,7 +145,7 @@ export const GameplayFlywheelChart = () => {
               />
             ))}
 
-            {/* Center “energy core” instead of rectangle */}
+            {/* Center “energy core” */}
             <g filter="url(#sgGlow)">
               <circle cx={cx} cy={cy} r="26" fill="rgba(34,211,238,.18)" />
               <circle cx={cx} cy={cy} r="10" fill="rgba(34,211,238,.65)" />
@@ -213,36 +213,15 @@ export const GameplayFlywheelChart = () => {
 
             {/* TOP TITLE ONLY — moved to bottom so it always renders on top */}
             <g filter="url(#sgTextShadow)">
-              <text
-                x={cx}
-                y={24}
-                textAnchor="middle"
-                fill="#e5e7eb"
-                fontSize="26"
-                fontWeight="950"
-              >
+              <text x={cx} y={14} textAnchor="middle" fill="#e5e7eb" fontSize="30" fontWeight="950">
                 Super Galactic Flywheel
               </text>
-            
-              <text
-                x={cx}
-                y={46}
-                textAnchor="middle"
-                fill="rgba(229,231,235,.9)"
-                fontSize="15"
-                fontWeight="700"
-              >
+
+              <text x={cx} y={40} textAnchor="middle" fill="rgba(229,231,235,.92)" fontSize="17" fontWeight="750">
                 Activity → Spend → Burn → Scarcity → Stronger Incentives
               </text>
-            
-              <text
-                x={cx}
-                y={66}
-                textAnchor="middle"
-                fill="rgba(229,231,235,.75)"
-                fontSize="13"
-                fontWeight="500"
-              >
+
+              <text x={cx} y={62} textAnchor="middle" fill="rgba(229,231,235,.78)" fontSize="14" fontWeight="550">
                 Growth strengthens the economy instead of diluting it
               </text>
             </g>
