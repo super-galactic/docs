@@ -213,27 +213,27 @@ export const GameplayFlywheelChart = () => {
 
             {/* TOP TITLE ONLY — moved to bottom so it always renders on top */}
             <g filter="url(#sgTextShadow)">
-  <text
-    x={cx}
-    y={24}
-    textAnchor="middle"
-    fill="#e5e7eb"
-    fontSize="26"
-    fontWeight="950"
-  >
-    Super Galactic Flywheel
-  </text>
-
-  <text
-    x={cx}
-    y={46}
-    textAnchor="middle"
-    fill="rgba(229,231,235,.9)"
-    fontSize="15"
-    fontWeight="700"
-  >
-    Activity → Spend → Burn → Scarcity → Stronger Incentives
-  </text>
+              <text
+                x={cx}
+                y={24}
+                textAnchor="middle"
+                fill="#e5e7eb"
+                fontSize="26"
+                fontWeight="950"
+              >
+                Super Galactic Flywheel
+              </text>
+            
+              <text
+                x={cx}
+                y={46}
+                textAnchor="middle"
+                fill="rgba(229,231,235,.9)"
+                fontSize="15"
+                fontWeight="700"
+              >
+                Activity → Spend → Burn → Scarcity → Stronger Incentives
+              </text>
             </g>
           </svg>
         </div>
