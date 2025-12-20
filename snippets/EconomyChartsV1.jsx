@@ -3,14 +3,13 @@ import React from "react";
 
 export const GameplayFlywheelChart = () => {
   const W = 920;
-  const H = 820; // more top headroom so title can live in the "red space"
+  const H = 620;
 
   const cx = 460;
-  const cy = 460; // DO NOT move the wheel (as requested)
+  const cy = 320; // true center for the wheel inside this viewBox
 
-  // Bigger + readable
-  const ringR = 255;
-  const nodeR = 82;
+  const ringR = 245; // slightly smaller so it never clips
+  const nodeR = 84;
 
   const nodes = [
     { a: -90, title: "Missions", sub: "Earn UAP by playing" },
@@ -36,7 +35,7 @@ export const GameplayFlywheelChart = () => {
   };
 
   return (
-    <div style={{ marginTop: 16, marginBottom: 24 }}>
+    <div style={{ marginTop: 12, marginBottom: 18 }}>
       <style>{`
         @keyframes sgDash { to { stroke-dashoffset: -680; } }
         @keyframes sgFlow { to { stroke-dashoffset: -520; } }
@@ -48,19 +47,15 @@ export const GameplayFlywheelChart = () => {
         style={{
           border: "1px solid rgba(34,211,238,.18)",
           borderRadius: 16,
-          padding: 10,
+          padding: 12,
           background:
             "radial-gradient(1200px 760px at 50% 18%, rgba(34,211,238,.10), transparent 58%), linear-gradient(180deg, rgba(2,6,23,.60), rgba(2,6,23,.25))",
           boxShadow: "0 0 0 1px rgba(34,211,238,.06) inset",
         }}
       >
-        <div style={{ width: "100%", height: 680 }}>
-          <svg
-            viewBox={`0 0 ${W} ${H}`}
-            width="100%"
-            height="100%"
-            preserveAspectRatio="xMidYMin meet"
-          >
+        {/* Graphic only */}
+        <div style={{ width: "100%", height: 620 }}>
+          <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%">
             <defs>
               <linearGradient id="sgCyan" x1="0" y1="0" x2="1" y2="1">
                 <stop offset="0" stopColor="#22d3ee" />
@@ -89,35 +84,16 @@ export const GameplayFlywheelChart = () => {
                   <feMergeNode in="SourceGraphic" />
                 </feMerge>
               </filter>
-
-              <filter id="sgTextShadow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="1" stdDeviation="2.2" floodColor="rgba(0,0,0,.72)" />
-              </filter>
             </defs>
 
-            {/* Softer grid */}
+            {/* Softer grid behind everything */}
             <g opacity="0.045">
-              {Array.from({ length: 25 }).map((_, i) => (
-                <line key={`h-${i}`} x1={40} y1={80 + i * 30} x2={880} y2={80 + i * 30} stroke="#fff" />
+              {Array.from({ length: 18 }).map((_, i) => (
+                <line key={i} x1={40} y1={40 + i * 30} x2={880} y2={40 + i * 30} stroke="#fff" />
               ))}
               {Array.from({ length: 21 }).map((_, i) => (
-                <line key={`v-${i}`} x1={40 + i * 40} y1={80} x2={40 + i * 40} y2={800} stroke="#fff" />
+                <line key={i} x1={40 + i * 40} y1={40} x2={40 + i * 40} y2={580} stroke="#fff" />
               ))}
-            </g>
-
-            {/* TOP TITLE — now sits in the "red space" */}
-            <g filter="url(#sgTextShadow)">
-              <text x={cx} y={52} textAnchor="middle" fill="#e5e7eb" fontSize="32" fontWeight="950">
-                Super Galactic Flywheel
-              </text>
-
-              <text x={cx} y={78} textAnchor="middle" fill="rgba(229,231,235,.92)" fontSize="17" fontWeight="750">
-                Activity → Spend → Burn → Scarcity → Stronger Incentives
-              </text>
-
-              <text x={cx} y={100} textAnchor="middle" fill="rgba(229,231,235,.78)" fontSize="14" fontWeight="550">
-                Growth strengthens the economy instead of diluting it
-              </text>
             </g>
 
             {/* Outer halo ring */}
