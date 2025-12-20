@@ -3,7 +3,7 @@ import React from "react";
 
 export const GameplayFlywheelChart = () => {
   const W = 920;
-  const H = 680;
+  const H = 620;
 
   const cx = 460;
   const cy = 360; // gives room for title + keeps wheel centered
