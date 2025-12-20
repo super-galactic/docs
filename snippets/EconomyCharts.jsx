@@ -13,12 +13,12 @@ export const GameplayFlywheelChart = () => {
   const nodeR = 82;
 
   const nodes = [
-    { a: -90,  title: "Missions",       sub: "Earn UAP by playing" },
-    { a: -25,  title: "Spend UAP",      sub: "Upgrades + progression" },
-    { a:  25,  title: "Auto Burn",      sub: "Supply reduces via usage" },
-    { a:  90,  title: "Scarcity",       sub: "Higher value per UAP" },
-    { a: 155,  title: "Better Rewards", sub: "More reasons to play" },
-    { a: -155, title: "More Players",   sub: "Engagement increases" },
+    { a: -90, title: "Missions", sub: "Earn UAP by playing" },
+    { a: -25, title: "Spend UAP", sub: "Upgrades + progression" },
+    { a: 25, title: "Auto Burn", sub: "Supply reduces via usage" },
+    { a: 90, title: "Scarcity", sub: "Higher value per UAP" },
+    { a: 155, title: "Better Rewards", sub: "More reasons to play" },
+    { a: -155, title: "More Players", sub: "Engagement increases" },
   ].map((n) => {
     const rad = (n.a * Math.PI) / 180;
     return { ...n, x: cx + ringR * Math.cos(rad), y: cy + ringR * Math.sin(rad) };
@@ -99,16 +99,6 @@ export const GameplayFlywheelChart = () => {
               ))}
             </g>
 
-            {/* TOP TITLE ONLY */}
-            <g filter="url(#sgTextShadow)">
-              <text x={cx} y={58} textAnchor="middle" fill="#e5e7eb" fontSize="26" fontWeight="950">
-                Super Galactic Flywheel
-              </text>
-              <text x={cx} y={86} textAnchor="middle" fill="rgba(229,231,235,.88)" fontSize="14" fontWeight="650">
-                Activity → Spend → Burn → Scarcity → Stronger Incentives
-              </text>
-            </g>
-
             {/* Outer “halo” ring */}
             <circle
               cx={cx}
@@ -180,7 +170,10 @@ export const GameplayFlywheelChart = () => {
                 <g
                   key={idx}
                   filter="url(#sgGlow)"
-                  style={{ animation: "sgPulse 3.6s ease-in-out infinite", animationDelay: `${idx * 0.14}s` }}
+                  style={{
+                    animation: "sgPulse 3.6s ease-in-out infinite",
+                    animationDelay: `${idx * 0.14}s`,
+                  }}
                 >
                   <circle
                     cx={n.x}
@@ -211,12 +204,22 @@ export const GameplayFlywheelChart = () => {
                       }}
                     >
                       <div style={{ fontWeight: 950, fontSize: 18, marginBottom: 7 }}>{n.title}</div>
-                      <div style={{ fontSize: 14, opacity: 0.90 }}>{n.sub}</div>
+                      <div style={{ fontSize: 14, opacity: 0.9 }}>{n.sub}</div>
                     </div>
                   </foreignObject>
                 </g>
               );
             })}
+
+            {/* TOP TITLE ONLY — moved to bottom so it always renders on top */}
+            <g filter="url(#sgTextShadow)">
+              <text x={cx} y={30} textAnchor="middle" fill="#e5e7eb" fontSize="26" fontWeight="950">
+                Super Galactic Flywheel
+              </text>
+              <text x={cx} y={52} textAnchor="middle" fill="rgba(229,231,235,.9)" fontSize="15" fontWeight="700">
+                Activity → Spend → Burn → Scarcity → Stronger Incentives
+              </text>
+            </g>
           </svg>
         </div>
       </div>
