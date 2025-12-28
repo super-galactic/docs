@@ -1,22 +1,17 @@
 "use client";
 import React from "react";
 
-// Ecosystem Architecture Flowboard
-// Premium micro node system map with a traveling glow dot on the active connector
-// Mintlify safe: single file, inline styles, no external deps, no emoji
-
 export const SuperGalacticArchitectureFlow = () => {
   const [activeFlow, setActiveFlow] = React.useState("reward");
   const [step, setStep] = React.useState(0);
   const [playing, setPlaying] = React.useState(false);
-  const [mode, setMode] = React.useState("desktop"); // "desktop" | "mobile"
   const timerRef = React.useRef(null);
+  const [mode, setMode] = React.useState("desktop"); // desktop | mobile
 
-  // Responsive mode switch
   React.useEffect(() => {
     const decide = () => {
       if (typeof window === "undefined") return;
-      setMode(window.innerWidth < 820 ? "mobile" : "desktop");
+      setMode(window.innerWidth < 860 ? "mobile" : "desktop");
     };
     decide();
     window.addEventListener("resize", decide);
@@ -91,7 +86,6 @@ export const SuperGalacticArchitectureFlow = () => {
     setPlaying(true);
   }, []);
 
-  // Play once, then stop
   React.useEffect(() => {
     if (!playing) return;
 
@@ -101,7 +95,6 @@ export const SuperGalacticArchitectureFlow = () => {
     }
 
     if (step >= totalSteps - 1) {
-      // last step stays visible, then stop
       timerRef.current = setTimeout(() => {
         setPlaying(false);
         timerRef.current = null;
@@ -122,87 +115,77 @@ export const SuperGalacticArchitectureFlow = () => {
     };
   }, [playing, step, totalSteps]);
 
-  // Layouts are expressed in SVG coordinates for reliability in Mintlify
+  // Two edge sequence support for combined step
+  const [edgePhase, setEdgePhase] = React.useState(0);
+  React.useEffect(() => {
+    setEdgePhase(0);
+    if (activeStepId !== "edge_chain_to_hub_then_hub_to_gc") return;
+    const t = setTimeout(() => setEdgePhase(1), 850);
+    return () => clearTimeout(t);
+  }, [activeStepId, step, activeFlow]);
+
   const layout = React.useMemo(() => {
     if (mode === "mobile") {
-      const W = 720;
-      const H = 1120;
+      const W = 760;
+      const H = 1180;
 
-      const colW = 620;
-      const x0 = 50;
-      const yGame = 170;
-      const yHub = 490;
-      const yChain = 810;
+      const x0 = 60;
+      const w = 640;
+      const h = 280;
 
-      const card = {
-        w: colW,
-        h: 255,
-      };
+      const yGame = 190;
+      const yHub = 520;
+      const yChain = 850;
 
       const containers = {
-        game: { x: x0, y: yGame, w: card.w, h: card.h, title: "Game Client", sub: "Unity" },
-        hub: { x: x0, y: yHub, w: card.w, h: card.h, title: "Super Galactic Hub", sub: "Unified app layer" },
-        chain: {
-          x: x0,
-          y: yChain,
-          w: card.w,
-          h: card.h,
-          title: "Blockchain Layer",
-          sub: "Ethereum (origin), BNB and Avalanche (gameplay)",
-        },
+        game: { x: x0, y: yGame, w, h, title: "Game Client", sub: "Unity" },
+        hub: { x: x0, y: yHub, w, h, title: "Super Galactic Hub", sub: "Unified app layer" },
+        chain: { x: x0, y: yChain, w, h, title: "Blockchain Layer", sub: "Ethereum (origin), BNB and Avalanche (gameplay)" },
       };
 
-      // Micro tiles (x,y are within the svg coordinate system)
+      const tileW = w - 52;
       const micro = {
         game: [
-          { id: "gc_missions", label: "Missions and combat", x: x0 + 26, y: yGame + 82 },
-          { id: "gc_progression", label: "Progression and upgrades", x: x0 + 26, y: yGame + 124 },
-          { id: "gc_rewards", label: "Rewards generated (off chain)", x: x0 + 26, y: yGame + 166 },
-          { id: "gc_cache", label: "Local state cache", x: x0 + 26, y: yGame + 208 },
+          { id: "gc_missions", label: "Missions and combat", x: x0 + 26, y: yGame + 92, w: tileW, h: 38, icon: "mission" },
+          { id: "gc_progression", label: "Progression and upgrades", x: x0 + 26, y: yGame + 140, w: tileW, h: 38, icon: "upgrade" },
+          { id: "gc_rewards", label: "Rewards generated (off chain)", x: x0 + 26, y: yGame + 188, w: tileW, h: 38, icon: "reward" },
+          { id: "gc_cache", label: "Local state cache", x: x0 + 26, y: yGame + 236, w: tileW, h: 38, icon: "cache" },
         ],
         hub: [
-          { id: "hub_asset", label: "Asset manager", x: x0 + 26, y: yHub + 82 },
-          { id: "hub_balance", label: "UAP balance", x: x0 + 26, y: yHub + 124 },
-          { id: "hub_claim", label: "Claim service", x: x0 + 26, y: yHub + 166 },
-          { id: "hub_breeding", label: "Breeding and NFT actions", x: x0 + 26, y: yHub + 208 },
-          { id: "hub_sync", label: "Sync router", x: x0 + 330, y: yHub + 124 },
+          { id: "hub_asset", label: "Asset manager", x: x0 + 26, y: yHub + 92, w: tileW, h: 38, icon: "asset" },
+          { id: "hub_balance", label: "UAP balance", x: x0 + 26, y: yHub + 140, w: tileW, h: 38, icon: "balance" },
+          { id: "hub_claim", label: "Claim service", x: x0 + 26, y: yHub + 188, w: tileW, h: 38, icon: "claim" },
+          { id: "hub_breeding", label: "Breeding and NFT actions", x: x0 + 26, y: yHub + 236, w: tileW, h: 38, icon: "nft" },
+          { id: "hub_sync", label: "Sync router", x: x0 + 26, y: yHub + 284, w: tileW, h: 38, icon: "sync" },
         ],
         chain: [
-          { id: "chain_uap", label: "UAP token contract", x: x0 + 26, y: yChain + 82 },
-          { id: "chain_nft", label: "NFT ownership contract", x: x0 + 26, y: yChain + 124 },
-          { id: "chain_burn", label: "Burn execution", x: x0 + 26, y: yChain + 166 },
-          { id: "chain_treasury", label: "Treasury flows", x: x0 + 26, y: yChain + 208 },
-          { id: "chain_tx_verify", label: "Tx verification", x: x0 + 330, y: yChain + 124 },
+          { id: "chain_uap", label: "UAP token contract", x: x0 + 26, y: yChain + 92, w: tileW, h: 38, icon: "token" },
+          { id: "chain_nft", label: "NFT ownership contract", x: x0 + 26, y: yChain + 140, w: tileW, h: 38, icon: "nft" },
+          { id: "chain_burn", label: "Burn execution", x: x0 + 26, y: yChain + 188, w: tileW, h: 38, icon: "burn" },
+          { id: "chain_treasury", label: "Treasury flows", x: x0 + 26, y: yChain + 236, w: tileW, h: 38, icon: "treasury" },
+          { id: "chain_tx_verify", label: "Tx verification", x: x0 + 26, y: yChain + 284, w: tileW, h: 38, icon: "verify" },
         ],
       };
 
       const edge = {
-        gc_to_hub: `M ${x0 + card.w / 2} ${yGame + card.h} C ${x0 + card.w / 2} ${yGame + card.h + 40}, ${x0 + card.w / 2} ${
-          yHub - 40
-        }, ${x0 + card.w / 2} ${yHub}`,
-        hub_to_chain: `M ${x0 + card.w / 2} ${yHub + card.h} C ${x0 + card.w / 2} ${yHub + card.h + 40}, ${x0 + card.w / 2} ${
-          yChain - 40
-        }, ${x0 + card.w / 2} ${yChain}`,
-        chain_to_hub: `M ${x0 + card.w / 2 + 70} ${yChain} C ${x0 + card.w / 2 + 70} ${yChain - 40}, ${x0 + card.w / 2 + 70} ${
-          yHub + card.h + 40
-        }, ${x0 + card.w / 2 + 70} ${yHub + card.h}`,
-        hub_to_gc: `M ${x0 + card.w / 2 + 70} ${yHub} C ${x0 + card.w / 2 + 70} ${yHub - 40}, ${x0 + card.w / 2 + 70} ${
-          yGame + card.h + 40
-        }, ${x0 + card.w / 2 + 70} ${yGame + card.h}`,
+        gc_to_hub: `M ${x0 + w / 2} ${yGame + h} C ${x0 + w / 2} ${yGame + h + 40}, ${x0 + w / 2} ${yHub - 40}, ${x0 + w / 2} ${yHub}`,
+        hub_to_chain: `M ${x0 + w / 2} ${yHub + h} C ${x0 + w / 2} ${yHub + h + 40}, ${x0 + w / 2} ${yChain - 40}, ${x0 + w / 2} ${yChain}`,
+        chain_to_hub: `M ${x0 + w / 2 + 78} ${yChain} C ${x0 + w / 2 + 78} ${yChain - 40}, ${x0 + w / 2 + 78} ${yHub + h + 40}, ${x0 + w / 2 + 78} ${yHub + h}`,
+        hub_to_gc: `M ${x0 + w / 2 + 78} ${yHub} C ${x0 + w / 2 + 78} ${yHub - 40}, ${x0 + w / 2 + 78} ${yGame + h + 40}, ${x0 + w / 2 + 78} ${yGame + h}`,
       };
 
       return { W, H, containers, micro, edge };
     }
 
-    // Desktop
-    const W = 1100;
-    const H = 720;
+    // Desktop layout
+    const W = 1160;
+    const H = 760;
 
-    const margin = 40;
-    const gap = 30;
+    const margin = 46;
+    const gap = 34;
     const cardW = (W - margin * 2 - gap * 2) / 3;
-    const cardH = 360;
-    const y = 210;
+    const cardH = 400;
+    const y = 220;
 
     const xGame = margin;
     const xHub = margin + cardW + gap;
@@ -215,39 +198,37 @@ export const SuperGalacticArchitectureFlow = () => {
     };
 
     const tileW = cardW - 52;
-    const tileW2 = Math.max(170, Math.floor((tileW - 14) / 2));
+    const tileW2 = Math.floor((tileW - 14) / 2);
 
     const micro = {
       game: [
-        { id: "gc_missions", label: "Missions and combat", x: xGame + 26, y: y + 92, w: tileW, h: 34 },
-        { id: "gc_progression", label: "Progression and upgrades", x: xGame + 26, y: y + 136, w: tileW, h: 34 },
-        { id: "gc_rewards", label: "Rewards generated (off chain)", x: xGame + 26, y: y + 180, w: tileW, h: 34 },
-        { id: "gc_cache", label: "Local state cache", x: xGame + 26, y: y + 224, w: tileW, h: 34 },
+        { id: "gc_missions", label: "Missions and combat", x: xGame + 26, y: y + 98, w: tileW, h: 38, icon: "mission" },
+        { id: "gc_progression", label: "Progression and upgrades", x: xGame + 26, y: y + 148, w: tileW, h: 38, icon: "upgrade" },
+        { id: "gc_rewards", label: "Rewards generated (off chain)", x: xGame + 26, y: y + 198, w: tileW, h: 38, icon: "reward" },
+        { id: "gc_cache", label: "Local state cache", x: xGame + 26, y: y + 248, w: tileW, h: 38, icon: "cache" },
       ],
       hub: [
-        { id: "hub_asset", label: "Asset manager", x: xHub + 26, y: y + 92, w: tileW2, h: 34 },
-        { id: "hub_balance", label: "UAP balance", x: xHub + 26 + tileW2 + 14, y: y + 92, w: tileW2, h: 34 },
-        { id: "hub_claim", label: "Claim service", x: xHub + 26, y: y + 136, w: tileW2, h: 34 },
-        { id: "hub_breeding", label: "Breeding and NFT actions", x: xHub + 26 + tileW2 + 14, y: y + 136, w: tileW2, h: 34 },
-        { id: "hub_sync", label: "Sync router", x: xHub + 26, y: y + 180, w: tileW, h: 34 },
+        { id: "hub_asset", label: "Asset manager", x: xHub + 26, y: y + 98, w: tileW2, h: 38, icon: "asset" },
+        { id: "hub_balance", label: "UAP balance", x: xHub + 26 + tileW2 + 14, y: y + 98, w: tileW2, h: 38, icon: "balance" },
+        { id: "hub_claim", label: "Claim service", x: xHub + 26, y: y + 148, w: tileW2, h: 38, icon: "claim" },
+        { id: "hub_breeding", label: "Breeding and NFT actions", x: xHub + 26 + tileW2 + 14, y: y + 148, w: tileW2, h: 38, icon: "nft" },
+        { id: "hub_sync", label: "Sync router", x: xHub + 26, y: y + 198, w: tileW, h: 38, icon: "sync" },
       ],
       chain: [
-        { id: "chain_uap", label: "UAP token contract", x: xChain + 26, y: y + 92, w: tileW2, h: 34 },
-        { id: "chain_nft", label: "NFT ownership contract", x: xChain + 26 + tileW2 + 14, y: y + 92, w: tileW2, h: 34 },
-        { id: "chain_burn", label: "Burn execution", x: xChain + 26, y: y + 136, w: tileW2, h: 34 },
-        { id: "chain_treasury", label: "Treasury flows", x: xChain + 26 + tileW2 + 14, y: y + 136, w: tileW2, h: 34 },
-        { id: "chain_tx_verify", label: "Tx verification", x: xChain + 26, y: y + 180, w: tileW, h: 34 },
+        { id: "chain_uap", label: "UAP token contract", x: xChain + 26, y: y + 98, w: tileW2, h: 38, icon: "token" },
+        { id: "chain_nft", label: "NFT ownership contract", x: xChain + 26 + tileW2 + 14, y: y + 98, w: tileW2, h: 38, icon: "nft" },
+        { id: "chain_burn", label: "Burn execution", x: xChain + 26, y: y + 148, w: tileW2, h: 38, icon: "burn" },
+        { id: "chain_treasury", label: "Treasury flows", x: xChain + 26 + tileW2 + 14, y: y + 148, w: tileW2, h: 38, icon: "treasury" },
+        { id: "chain_tx_verify", label: "Tx verification", x: xChain + 26, y: y + 198, w: tileW, h: 38, icon: "verify" },
       ],
     };
 
-    // Global connectors are routed in the empty space between cards and above tiles
-    const midY = y + 250;
-
+    const midY = y + 300;
     const edge = {
-      gc_to_hub: `M ${xGame + cardW} ${midY} C ${xGame + cardW + 60} ${midY - 40}, ${xHub - 60} ${midY - 40}, ${xHub} ${midY}`,
-      hub_to_chain: `M ${xHub + cardW} ${midY} C ${xHub + cardW + 60} ${midY - 40}, ${xChain - 60} ${midY - 40}, ${xChain} ${midY}`,
-      chain_to_hub: `M ${xChain} ${midY + 34} C ${xChain - 60} ${midY + 70}, ${xHub + cardW + 60} ${midY + 70}, ${xHub + cardW} ${midY + 34}`,
-      hub_to_gc: `M ${xHub} ${midY + 34} C ${xHub - 60} ${midY + 70}, ${xGame + cardW + 60} ${midY + 70}, ${xGame + cardW} ${midY + 34}`,
+      gc_to_hub: `M ${xGame + cardW} ${midY} C ${xGame + cardW + 62} ${midY - 44}, ${xHub - 62} ${midY - 44}, ${xHub} ${midY}`,
+      hub_to_chain: `M ${xHub + cardW} ${midY} C ${xHub + cardW + 62} ${midY - 44}, ${xChain - 62} ${midY - 44}, ${xChain} ${midY}`,
+      chain_to_hub: `M ${xChain} ${midY + 34} C ${xChain - 62} ${midY + 74}, ${xHub + cardW + 62} ${midY + 74}, ${xHub + cardW} ${midY + 34}`,
+      hub_to_gc: `M ${xHub} ${midY + 34} C ${xHub - 62} ${midY + 74}, ${xGame + cardW + 62} ${midY + 74}, ${xGame + cardW} ${midY + 34}`,
     };
 
     return { W, H, containers, micro, edge };
@@ -255,7 +236,6 @@ export const SuperGalacticArchitectureFlow = () => {
 
   const isMicroActive = (id) => {
     if (activeStepId === id) return true;
-    // Combined step in spending flow
     if (activeStepId === "chain_burn_treasury" && (id === "chain_burn" || id === "chain_treasury")) return true;
     if (activeStepId === "hub_balance_claimable" && id === "hub_balance") return true;
     return false;
@@ -266,7 +246,6 @@ export const SuperGalacticArchitectureFlow = () => {
     for (let i = 0; i < group.length; i++) {
       if (isMicroActive(group[i].id)) return true;
     }
-    // Also glow container on edge steps that target it
     if (key === "hub" && (activeStepId === "edge_gc_to_hub" || activeStepId === "edge_chain_to_hub")) return true;
     if (key === "chain" && activeStepId === "edge_hub_to_chain") return true;
     if (key === "game" && (activeStepId === "edge_hub_to_gc" || activeStepId === "edge_chain_to_hub_then_hub_to_gc")) return true;
@@ -279,20 +258,9 @@ export const SuperGalacticArchitectureFlow = () => {
     if (activeStepId === "edge_hub_to_chain") return "hub_to_chain";
     if (activeStepId === "edge_chain_to_hub") return "chain_to_hub";
     if (activeStepId === "edge_hub_to_gc") return "hub_to_gc";
-    // Combined step plays two edges in sequence using internal sub-phase
     if (activeStepId === "edge_chain_to_hub_then_hub_to_gc") return "chain_to_hub_then_hub_to_gc";
     return null;
   }, [activeStepId]);
-
-  // Two edge sequence support for the combined step
-  const [edgePhase, setEdgePhase] = React.useState(0); // 0 or 1
-  React.useEffect(() => {
-    setEdgePhase(0);
-    if (activeStepId !== "edge_chain_to_hub_then_hub_to_gc") return;
-
-    const t = setTimeout(() => setEdgePhase(1), 850);
-    return () => clearTimeout(t);
-  }, [activeStepId, step, activeFlow]);
 
   const getActivePathD = () => {
     if (!activeEdgeKey) return null;
@@ -300,9 +268,7 @@ export const SuperGalacticArchitectureFlow = () => {
     if (activeEdgeKey === "hub_to_chain") return layout.edge.hub_to_chain;
     if (activeEdgeKey === "chain_to_hub") return layout.edge.chain_to_hub;
     if (activeEdgeKey === "hub_to_gc") return layout.edge.hub_to_gc;
-    if (activeEdgeKey === "chain_to_hub_then_hub_to_gc") {
-      return edgePhase === 0 ? layout.edge.chain_to_hub : layout.edge.hub_to_gc;
-    }
+    if (activeEdgeKey === "chain_to_hub_then_hub_to_gc") return edgePhase === 0 ? layout.edge.chain_to_hub : layout.edge.hub_to_gc;
     return null;
   };
 
@@ -331,8 +297,7 @@ export const SuperGalacticArchitectureFlow = () => {
       const pathEl = pathRef.current;
       const outer = outerRef.current;
       const inner = innerRef.current;
-
-      if (pathEl === null || outer === null || inner === null) return;
+      if (!pathEl || !outer || !inner) return;
 
       let length = 0;
       try {
@@ -342,7 +307,6 @@ export const SuperGalacticArchitectureFlow = () => {
       }
       if (length <= 0) return;
 
-      // Set immediate visible start point
       try {
         const startPt = pathEl.getPointAtLength(0);
         outer.setAttribute("cx", String(startPt.x));
@@ -354,7 +318,6 @@ export const SuperGalacticArchitectureFlow = () => {
       }
 
       let startTime;
-
       const tick = (t) => {
         if (startTime === undefined) startTime = t;
         const elapsed = t - startTime;
@@ -383,156 +346,232 @@ export const SuperGalacticArchitectureFlow = () => {
 
     return (
       <g>
-        <path
-          ref={pathRef}
-          d={d}
-          fill="none"
-          stroke="transparent"
-          strokeWidth="10"
-          vectorEffect="non-scaling-stroke"
-        />
+        <path ref={pathRef} d={d} fill="none" stroke="transparent" strokeWidth="10" vectorEffect="non-scaling-stroke" />
         <circle ref={outerRef} cx="0" cy="0" r="7" className="travelDotOuter" />
         <circle ref={innerRef} cx="0" cy="0" r="3.2" className="travelDotInner" />
       </g>
     );
   };
 
-  const IconGame = ({ active }) => (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="hdrIcon">
-      <path
-        d="M7.5 9.5h9A4.5 4.5 0 0 1 21 14v1.2A2.8 2.8 0 0 1 18.2 18H17l-1.2-1.2H8.2L7 18H5.8A2.8 2.8 0 0 1 3 15.2V14a4.5 4.5 0 0 1 4.5-4.5Z"
-        stroke={active ? "rgba(255,255,255,0.92)" : "rgba(255,255,255,0.70)"}
-        strokeWidth="2"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M8.2 13.7h2.2M9.3 12.6v2.2"
-        stroke={active ? "rgba(255,255,255,0.92)" : "rgba(255,255,255,0.70)"}
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M15.6 13.7h.01M17.5 12.8h.01"
-        stroke={active ? "rgba(255,255,255,0.92)" : "rgba(255,255,255,0.70)"}
-        strokeWidth="3"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
+  const iconSvg = (name, active) => {
+    const stroke = active ? "rgba(255,255,255,0.92)" : "rgba(255,255,255,0.70)";
+    const fill = "none";
 
-  const IconHub = ({ active }) => (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="hdrIcon">
-      <circle
-        cx="12"
-        cy="12"
-        r="4"
-        stroke={active ? "rgba(255,255,255,0.92)" : "rgba(255,255,255,0.70)"}
-        strokeWidth="2"
-      />
-      <path
-        d="M4 12c2.3-3.7 13.7-3.7 16 0"
-        stroke={active ? "rgba(255,255,255,0.92)" : "rgba(255,255,255,0.70)"}
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M4 12c2.3 3.7 13.7 3.7 16 0"
-        stroke={active ? "rgba(255,255,255,0.92)" : "rgba(255,255,255,0.70)"}
-        strokeWidth="2"
-        strokeLinecap="round"
-        opacity="0.9"
-      />
-    </svg>
-  );
+    const common = {
+      stroke,
+      fill,
+      strokeWidth: 2,
+      strokeLinecap: "round",
+      strokeLinejoin: "round",
+    };
 
-  const IconChain = ({ active }) => (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" className="hdrIcon">
-      <path
-        d="M10 13.5 8.4 15.1a3 3 0 0 1-4.2-4.2L5.8 9.3a3 3 0 0 1 4.2 0"
-        stroke={active ? "rgba(255,255,255,0.92)" : "rgba(255,255,255,0.70)"}
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M14 10.5l1.6-1.6a3 3 0 0 1 4.2 4.2L18.2 14.7a3 3 0 0 1-4.2 0"
-        stroke={active ? "rgba(255,255,255,0.92)" : "rgba(255,255,255,0.70)"}
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-      <path
-        d="M9.5 14.5 14.5 9.5"
-        stroke={active ? "rgba(255,255,255,0.92)" : "rgba(255,255,255,0.70)"}
-        strokeWidth="2"
-        strokeLinecap="round"
-        opacity="0.9"
-      />
-    </svg>
-  );
+    // Small, simple, consistent icon set
+    if (name === "mission") {
+      return (
+        <svg width="16" height="16" viewBox="0 0 24 24">
+          <path {...common} d="M12 2l3 7 7 3-7 3-3 7-3-7-7-3 7-3 3-7z" />
+        </svg>
+      );
+    }
+    if (name === "upgrade") {
+      return (
+        <svg width="16" height="16" viewBox="0 0 24 24">
+          <path {...common} d="M12 19V5" />
+          <path {...common} d="M6 11l6-6 6 6" />
+          <path {...common} d="M5 21h14" />
+        </svg>
+      );
+    }
+    if (name === "reward") {
+      return (
+        <svg width="16" height="16" viewBox="0 0 24 24">
+          <path {...common} d="M7 8h10v12H7z" />
+          <path {...common} d="M9 8V6a3 3 0 0 1 6 0v2" />
+          <path {...common} d="M12 12v4" />
+        </svg>
+      );
+    }
+    if (name === "cache") {
+      return (
+        <svg width="16" height="16" viewBox="0 0 24 24">
+          <path {...common} d="M4 7h16" />
+          <path {...common} d="M6 7v12" />
+          <path {...common} d="M18 7v12" />
+          <path {...common} d="M4 19h16" />
+        </svg>
+      );
+    }
+    if (name === "asset") {
+      return (
+        <svg width="16" height="16" viewBox="0 0 24 24">
+          <path {...common} d="M7 7h10v10H7z" />
+          <path {...common} d="M9 5h6" />
+          <path {...common} d="M9 19h6" />
+        </svg>
+      );
+    }
+    if (name === "balance") {
+      return (
+        <svg width="16" height="16" viewBox="0 0 24 24">
+          <path {...common} d="M4 7h16" />
+          <path {...common} d="M6 7v12h12V7" />
+          <path {...common} d="M8 11h8" />
+          <path {...common} d="M8 15h6" />
+        </svg>
+      );
+    }
+    if (name === "claim") {
+      return (
+        <svg width="16" height="16" viewBox="0 0 24 24">
+          <path {...common} d="M12 3v10" />
+          <path {...common} d="M8 9l4 4 4-4" />
+          <path {...common} d="M5 21h14" />
+        </svg>
+      );
+    }
+    if (name === "nft") {
+      return (
+        <svg width="16" height="16" viewBox="0 0 24 24">
+          <path {...common} d="M7 7h10v10H7z" />
+          <path {...common} d="M9 9h6v6H9z" />
+        </svg>
+      );
+    }
+    if (name === "sync") {
+      return (
+        <svg width="16" height="16" viewBox="0 0 24 24">
+          <path {...common} d="M7 7h6" />
+          <path {...common} d="M7 7l2-2" />
+          <path {...common} d="M7 7l2 2" />
+          <path {...common} d="M17 17h-6" />
+          <path {...common} d="M17 17l-2-2" />
+          <path {...common} d="M17 17l-2 2" />
+        </svg>
+      );
+    }
+    if (name === "token") {
+      return (
+        <svg width="16" height="16" viewBox="0 0 24 24">
+          <circle {...common} cx="12" cy="12" r="7" />
+          <path {...common} d="M9 12h6" />
+        </svg>
+      );
+    }
+    if (name === "burn") {
+      return (
+        <svg width="16" height="16" viewBox="0 0 24 24">
+          <path {...common} d="M12 22c4 0 7-3 7-7 0-4-3-7-7-11C8 8 5 11 5 15c0 4 3 7 7 7z" />
+        </svg>
+      );
+    }
+    if (name === "treasury") {
+      return (
+        <svg width="16" height="16" viewBox="0 0 24 24">
+          <path {...common} d="M6 9h12v12H6z" />
+          <path {...common} d="M8 9V7a4 4 0 0 1 8 0v2" />
+        </svg>
+      );
+    }
+    if (name === "verify") {
+      return (
+        <svg width="16" height="16" viewBox="0 0 24 24">
+          <path {...common} d="M20 7l-9 10-4-4" />
+          <path {...common} d="M12 2l8 4v6c0 5-3 9-8 10C7 21 4 17 4 12V6l8-4z" opacity="0.55" />
+        </svg>
+      );
+    }
+
+    return (
+      <svg width="16" height="16" viewBox="0 0 24 24">
+        <circle {...common} cx="12" cy="12" r="6" />
+      </svg>
+    );
+  };
+
+  const headerIcon = (kind, active) => {
+    const stroke = active ? "rgba(255,255,255,0.92)" : "rgba(255,255,255,0.70)";
+    if (kind === "game") {
+      return (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <path d="M7.5 9.5h9A4.5 4.5 0 0 1 21 14v1.2A2.8 2.8 0 0 1 18.2 18H17l-1.2-1.2H8.2L7 18H5.8A2.8 2.8 0 0 1 3 15.2V14a4.5 4.5 0 0 1 4.5-4.5Z" stroke={stroke} strokeWidth="2" strokeLinejoin="round" />
+          <path d="M8.2 13.7h2.2M9.3 12.6v2.2" stroke={stroke} strokeWidth="2" strokeLinecap="round" />
+          <path d="M15.6 13.7h.01M17.5 12.8h.01" stroke={stroke} strokeWidth="3" strokeLinecap="round" />
+        </svg>
+      );
+    }
+    if (kind === "hub") {
+      return (
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="4" stroke={stroke} strokeWidth="2" />
+          <path d="M4 12c2.3-3.7 13.7-3.7 16 0" stroke={stroke} strokeWidth="2" strokeLinecap="round" />
+          <path d="M4 12c2.3 3.7 13.7 3.7 16 0" stroke={stroke} strokeWidth="2" strokeLinecap="round" opacity="0.9" />
+        </svg>
+      );
+    }
+    return (
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
+        <path d="M10 13.5 8.4 15.1a3 3 0 0 1-4.2-4.2L5.8 9.3a3 3 0 0 1 4.2 0" stroke={stroke} strokeWidth="2" strokeLinecap="round" />
+        <path d="M14 10.5l1.6-1.6a3 3 0 0 1 4.2 4.2L18.2 14.7a3 3 0 0 1-4.2 0" stroke={stroke} strokeWidth="2" strokeLinecap="round" />
+        <path d="M9.5 14.5 14.5 9.5" stroke={stroke} strokeWidth="2" strokeLinecap="round" opacity="0.9" />
+      </svg>
+    );
+  };
 
   const MicroTile = ({ t, active }) => {
     const w = t.w || 260;
-    const h = t.h || 34;
+    const h = t.h || 38;
+
     return (
       <g>
-        <rect
-          x={t.x}
-          y={t.y}
-          width={w}
-          height={h}
-          rx="10"
-          ry="10"
-          className={active ? "tile tileActive" : "tile"}
-        />
-        <circle cx={t.x + 14} cy={t.y + h / 2} r="3" className={active ? "tileDot tileDotActive" : "tileDot"} />
-        <text x={t.x + 26} y={t.y + h / 2 + 4} className={active ? "tileText tileTextActive" : "tileText"}>
+        <rect x={t.x} y={t.y} width={w} height={h} rx="11" ry="11" className={active ? "tile tileActive" : "tile"} />
+        {active ? (
+          <rect
+            x={t.x + 1.5}
+            y={t.y + 1.5}
+            width={w - 3}
+            height={h - 3}
+            rx="10"
+            ry="10"
+            className="tileDash"
+          />
+        ) : null}
+        <g transform={`translate(${t.x + 12}, ${t.y + 11})`} className={active ? "tileIcon tileIconActive" : "tileIcon"}>
+          {iconSvg(t.icon, active)}
+        </g>
+        <text x={t.x + 36} y={t.y + h / 2 + 4} className={active ? "tileText tileTextActive" : "tileText"}>
           {t.label}
         </text>
       </g>
     );
   };
 
-  const Container = ({ k, c, headerIcon }) => {
+  const Container = ({ k, c }) => {
     const active = isContainerActive(k);
-    const titleX = c.x + 18;
-    const titleY = c.y + 32;
-    const subY = c.y + 54;
-    const dividerY = c.y + 72;
 
     return (
       <g>
-        {active ? (
-          <rect x={c.x - 6} y={c.y - 6} width={c.w + 12} height={c.h + 12} rx="22" ry="22" className="halo" />
-        ) : null}
+        {active ? <rect x={c.x - 6} y={c.y - 6} width={c.w + 12} height={c.h + 12} rx="22" ry="22" className="halo" /> : null}
 
         <rect x={c.x} y={c.y} width={c.w} height={c.h} rx="18" ry="18" className="card" />
 
-        <g transform={`translate(${c.x + 18}, ${c.y + 16})`}>{headerIcon}</g>
+        <g transform={`translate(${c.x + 18}, ${c.y + 16})`}>{headerIcon(k, active)}</g>
 
-        <text x={titleX + 26} y={titleY} className="cardTitle">
+        <text x={c.x + 46} y={c.y + 32} className="cardTitle">
           {c.title}
         </text>
-        <text x={titleX + 26} y={subY} className="cardSub">
+        <text x={c.x + 46} y={c.y + 54} className="cardSub">
           {c.sub}
         </text>
 
-        <line x1={c.x + 18} y1={dividerY} x2={c.x + c.w - 18} y2={dividerY} className="divider" />
+        <line x1={c.x + 18} y1={c.y + 72} x2={c.x + c.w - 18} y2={c.y + 72} className="divider" />
 
         {(layout.micro[k] || []).map((t) => (
           <MicroTile key={t.id} t={t} active={isMicroActive(t.id)} />
         ))}
 
-        {/* Badges */}
         {activeStepId === "hub_balance_claimable" && k === "hub" ? (
           <g>
-            <rect
-              x={c.x + c.w - 126}
-              y={c.y + 18}
-              width="108"
-              height="22"
-              rx="11"
-              ry="11"
-              className="badge"
-            />
+            <rect x={c.x + c.w - 126} y={c.y + 18} width="108" height="22" rx="11" ry="11" className="badge" />
             <text x={c.x + c.w - 72} y={c.y + 34} textAnchor="middle" className="badgeText">
               Claimable
             </text>
@@ -541,15 +580,7 @@ export const SuperGalacticArchitectureFlow = () => {
 
         {activeFlow === "sync" && activeStepId === "hub_breeding" && k === "hub" ? (
           <g>
-            <rect
-              x={c.x + c.w - 150}
-              y={c.y + 18}
-              width="132"
-              height="22"
-              rx="11"
-              ry="11"
-              className="badge"
-            />
+            <rect x={c.x + c.w - 150} y={c.y + 18} width="132" height="22" rx="11" ry="11" className="badge" />
             <text x={c.x + c.w - 84} y={c.y + 34} textAnchor="middle" className="badgeText">
               NFT state updated
             </text>
@@ -561,17 +592,15 @@ export const SuperGalacticArchitectureFlow = () => {
 
   const StagePaths = () => {
     const activeD = getActivePathD();
-    const showDot = activeD && (activeEdgeKey !== null);
+    const showDot = Boolean(activeD && activeEdgeKey);
 
     return (
       <g>
-        {/* Inactive global routes */}
         <path d={layout.edge.gc_to_hub} className={isEdgeBright("gc_to_hub") ? "route routeDim" : "route"} />
         <path d={layout.edge.hub_to_chain} className={isEdgeBright("hub_to_chain") ? "route routeDim" : "route"} />
         <path d={layout.edge.chain_to_hub} className={isEdgeBright("chain_to_hub") ? "route routeDim" : "route"} />
         <path d={layout.edge.hub_to_gc} className={isEdgeBright("hub_to_gc") ? "route routeDim" : "route"} />
 
-        {/* Active route */}
         {activeD ? <path d={activeD} className="routeActive" markerEnd="url(#arrowHead)" /> : null}
         {showDot ? <TravelDot d={activeD} durationMs={1150} /> : null}
       </g>
@@ -579,13 +608,11 @@ export const SuperGalacticArchitectureFlow = () => {
   };
 
   const onTabClick = (key) => {
-    // Reclick same tab restarts from step 1 and plays once
     setActiveFlow(key);
     startFromBeginning();
   };
 
   const onPlayClick = () => {
-    // Play runs the selected flow once from step 1
     startFromBeginning();
   };
 
@@ -631,6 +658,16 @@ export const SuperGalacticArchitectureFlow = () => {
             <button type="button" className="btnReset" onClick={onResetClick}>
               Reset
             </button>
+            <button
+              type="button"
+              className="btnPause"
+              onClick={() => {
+                if (playing) stop();
+                else startFromBeginning();
+              }}
+            >
+              {playing ? "Pause" : "Auto"}
+            </button>
           </div>
         </div>
       </div>
@@ -669,61 +706,48 @@ export const SuperGalacticArchitectureFlow = () => {
             </linearGradient>
           </defs>
 
-          {/* Stage background */}
           <rect x="0" y="0" width={layout.W} height={layout.H} rx="20" ry="20" fill="url(#bgGrad)" className="stageBg" />
 
-          {/* Column headers */}
           {mode === "desktop" ? (
             <g>
-              <text x={layout.containers.game.x + layout.containers.game.w / 2} y="160" textAnchor="middle" className="colHeader">
+              <text x={layout.containers.game.x + layout.containers.game.w / 2} y="170" textAnchor="middle" className="colHeader">
                 Gameplay layer
               </text>
-              <text x={layout.containers.hub.x + layout.containers.hub.w / 2} y="160" textAnchor="middle" className="colHeader">
+              <text x={layout.containers.hub.x + layout.containers.hub.w / 2} y="170" textAnchor="middle" className="colHeader">
                 Application layer
               </text>
-              <text x={layout.containers.chain.x + layout.containers.chain.w / 2} y="160" textAnchor="middle" className="colHeader">
+              <text x={layout.containers.chain.x + layout.containers.chain.w / 2} y="170" textAnchor="middle" className="colHeader">
                 On chain settlement
               </text>
             </g>
           ) : (
             <g>
-              <text x={layout.W / 2} y="140" textAnchor="middle" className="colHeader">
+              <text x={layout.W / 2} y="155" textAnchor="middle" className="colHeader">
                 System map
               </text>
             </g>
           )}
 
-          {/* Routes behind cards */}
           <StagePaths />
 
-          {/* Cards */}
-          <Container k="game" c={layout.containers.game} headerIcon={<IconGame active={isContainerActive("game")} />} />
-          <Container k="hub" c={layout.containers.hub} headerIcon={<IconHub active={isContainerActive("hub")} />} />
-          <Container k="chain" c={layout.containers.chain} headerIcon={<IconChain active={isContainerActive("chain")} />} />
+          <Container k="game" c={layout.containers.game} />
+          <Container k="hub" c={layout.containers.hub} />
+          <Container k="chain" c={layout.containers.chain} />
 
-          {/* Footer strip */}
           <g>
             <rect
-              x={mode === "mobile" ? 50 : 40}
-              y={mode === "mobile" ? layout.H - 120 : 600}
-              width={mode === "mobile" ? layout.W - 100 : layout.W - 80}
-              height={84}
+              x={mode === "mobile" ? 60 : 46}
+              y={mode === "mobile" ? layout.H - 128 : 644}
+              width={mode === "mobile" ? layout.W - 120 : layout.W - 92}
+              height={88}
               rx="16"
               ry="16"
               className="footer"
             />
-            <text
-              x={mode === "mobile" ? 70 : 62}
-              y={mode === "mobile" ? layout.H - 92 : 630}
-              className="footerTitle"
-            >
+            <text x={mode === "mobile" ? 84 : 68} y={mode === "mobile" ? layout.H - 98 : 676} className="footerTitle">
               Key principles
             </text>
-            <text
-              x={mode === "mobile" ? 70 : 62}
-              y={mode === "mobile" ? layout.H - 68 : 654}
-              className="footerText"
-            >
+            <text x={mode === "mobile" ? 84 : 68} y={mode === "mobile" ? layout.H - 74 : 700} className="footerText">
               Single source of truth • Bidirectional synchronization • No manual syncing • Clear separation of layers • Transparent verification
             </text>
           </g>
@@ -763,7 +787,7 @@ export const SuperGalacticArchitectureFlow = () => {
         .h2 {
           margin-top: 6px;
           font-size: 13px;
-          color: rgba(255, 255, 255, 0.72);
+          color: rgba(255, 255, 255, 0.74);
         }
 
         .chips {
@@ -777,9 +801,9 @@ export const SuperGalacticArchitectureFlow = () => {
           font-size: 11px;
           padding: 6px 10px;
           border-radius: 999px;
-          border: 1px solid rgba(255, 255, 255, 0.10);
-          background: rgba(255, 255, 255, 0.03);
-          color: rgba(255, 255, 255, 0.74);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          background: rgba(255, 255, 255, 0.04);
+          color: rgba(255, 255, 255, 0.80);
         }
 
         .rightControls {
@@ -794,29 +818,31 @@ export const SuperGalacticArchitectureFlow = () => {
         .tabs {
           display: flex;
           flex-wrap: wrap;
-          gap: 8px;
+          gap: 10px;
           justify-content: flex-end;
         }
 
+        /* Fix: always visible, not hover-only */
         .tab {
           font-size: 12px;
-          padding: 8px 10px;
+          padding: 9px 12px;
           border-radius: 12px;
-          border: 1px solid rgba(255, 255, 255, 0.14);
-          background: rgba(255, 255, 255, 0.03);
+          border: 1px solid rgba(255, 255, 255, 0.18);
+          background: rgba(255, 255, 255, 0.06);
           cursor: pointer;
-          color: rgba(255, 255, 255, 0.78);
+          color: rgba(255, 255, 255, 0.90);
+          opacity: 1;
         }
 
         .tab:hover {
-          border-color: rgba(255, 255, 255, 0.22);
-          color: rgba(255, 255, 255, 0.88);
+          border-color: rgba(255, 255, 255, 0.26);
+          background: rgba(255, 255, 255, 0.08);
         }
 
         .tabActive {
-          border-color: rgba(255, 255, 255, 0.28);
-          background: rgba(255, 255, 255, 0.06);
-          color: rgba(255, 255, 255, 0.92);
+          border-color: rgba(255, 255, 255, 0.30);
+          background: rgba(255, 255, 255, 0.10);
+          box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.06) inset;
         }
 
         .actions {
@@ -825,20 +851,22 @@ export const SuperGalacticArchitectureFlow = () => {
         }
 
         .btnPlay,
-        .btnReset {
+        .btnReset,
+        .btnPause {
           font-size: 12px;
-          padding: 8px 12px;
+          padding: 9px 12px;
           border-radius: 12px;
-          border: 1px solid rgba(255, 255, 255, 0.14);
+          border: 1px solid rgba(255, 255, 255, 0.18);
           cursor: pointer;
-          color: rgba(255, 255, 255, 0.88);
-          background: rgba(255, 255, 255, 0.03);
+          color: rgba(255, 255, 255, 0.92);
+          background: rgba(255, 255, 255, 0.06);
         }
 
         .btnPlay:hover,
-        .btnReset:hover {
-          border-color: rgba(255, 255, 255, 0.22);
-          background: rgba(255, 255, 255, 0.05);
+        .btnReset:hover,
+        .btnPause:hover {
+          border-color: rgba(255, 255, 255, 0.26);
+          background: rgba(255, 255, 255, 0.08);
         }
 
         .caption {
@@ -847,7 +875,7 @@ export const SuperGalacticArchitectureFlow = () => {
           gap: 12px;
           padding: 10px 12px;
           border-radius: 14px;
-          border: 1px solid rgba(255, 255, 255, 0.08);
+          border: 1px solid rgba(255, 255, 255, 0.10);
           background: rgba(0, 0, 0, 0.12);
           margin-bottom: 12px;
           flex-wrap: wrap;
@@ -855,20 +883,20 @@ export const SuperGalacticArchitectureFlow = () => {
 
         .captionLabel {
           font-size: 12px;
-          color: rgba(255, 255, 255, 0.72);
+          color: rgba(255, 255, 255, 0.78);
           white-space: nowrap;
         }
 
         .captionText {
           font-size: 12px;
-          font-weight: 650;
-          color: rgba(255, 255, 255, 0.92);
+          font-weight: 700;
+          color: rgba(255, 255, 255, 0.94);
         }
 
         .captionRight {
           margin-left: auto;
           font-size: 12px;
-          color: rgba(255, 255, 255, 0.62);
+          color: rgba(255, 255, 255, 0.70);
           white-space: nowrap;
         }
 
@@ -886,13 +914,9 @@ export const SuperGalacticArchitectureFlow = () => {
           display: block;
         }
 
-        .stageBg {
-          opacity: 1;
-        }
-
         .colHeader {
           font-size: 12px;
-          fill: rgba(255, 255, 255, 0.70);
+          fill: rgba(255, 255, 255, 0.74);
           letter-spacing: 0.2px;
         }
 
@@ -910,13 +934,13 @@ export const SuperGalacticArchitectureFlow = () => {
 
         .cardTitle {
           font-size: 15px;
-          font-weight: 720;
-          fill: rgba(255, 255, 255, 0.92);
+          font-weight: 740;
+          fill: rgba(255, 255, 255, 0.94);
         }
 
         .cardSub {
           font-size: 11px;
-          fill: rgba(255, 255, 255, 0.70);
+          fill: rgba(255, 255, 255, 0.74);
         }
 
         .divider {
@@ -931,27 +955,37 @@ export const SuperGalacticArchitectureFlow = () => {
         }
 
         .tileActive {
-          stroke: rgba(255, 255, 255, 0.30);
-          fill: rgba(124, 58, 237, 0.10);
+          fill: rgba(124, 58, 237, 0.12);
+          stroke: rgba(255, 255, 255, 0.28);
           filter: url(#softGlow);
         }
 
-        .tileDot {
-          fill: rgba(255, 255, 255, 0.34);
+        /* Animated dashed border around the active tile */
+        .tileDash {
+          fill: none;
+          stroke: rgba(255, 255, 255, 0.50);
+          stroke-width: 1.6;
+          stroke-dasharray: 8 5;
+          animation: dashMove 1.35s linear infinite;
+          pointer-events: none;
         }
 
-        .tileDotActive {
-          fill: rgba(255, 255, 255, 0.92);
+        .tileIcon {
+          opacity: 0.85;
+        }
+
+        .tileIconActive {
+          opacity: 1;
           filter: url(#softGlow);
         }
 
         .tileText {
           font-size: 11px;
-          fill: rgba(255, 255, 255, 0.80);
+          fill: rgba(255, 255, 255, 0.84);
         }
 
         .tileTextActive {
-          fill: rgba(255, 255, 255, 0.94);
+          fill: rgba(255, 255, 255, 0.96);
         }
 
         .badge {
@@ -962,8 +996,8 @@ export const SuperGalacticArchitectureFlow = () => {
 
         .badgeText {
           font-size: 10px;
-          font-weight: 650;
-          fill: rgba(255, 255, 255, 0.86);
+          font-weight: 700;
+          fill: rgba(255, 255, 255, 0.88);
         }
 
         .route {
@@ -1008,27 +1042,36 @@ export const SuperGalacticArchitectureFlow = () => {
 
         .footerTitle {
           font-size: 12px;
-          font-weight: 720;
-          fill: rgba(255, 255, 255, 0.86);
+          font-weight: 740;
+          fill: rgba(255, 255, 255, 0.88);
         }
 
         .footerText {
           font-size: 11px;
-          fill: rgba(255, 255, 255, 0.72);
+          fill: rgba(255, 255, 255, 0.74);
         }
 
         @keyframes routePulse {
           0% {
-            opacity: 0.68;
+            opacity: 0.70;
             stroke-width: 3.2;
           }
           50% {
             opacity: 1;
-            stroke-width: 4.3;
+            stroke-width: 4.2;
           }
           100% {
-            opacity: 0.68;
+            opacity: 0.70;
             stroke-width: 3.2;
+          }
+        }
+
+        @keyframes dashMove {
+          0% {
+            stroke-dashoffset: 0;
+          }
+          100% {
+            stroke-dashoffset: -26;
           }
         }
 
@@ -1044,29 +1087,30 @@ export const SuperGalacticArchitectureFlow = () => {
             color: rgba(0, 0, 0, 0.62);
           }
           .chip {
-            border: 1px solid rgba(0, 0, 0, 0.10);
+            border: 1px solid rgba(0, 0, 0, 0.12);
             background: rgba(0, 0, 0, 0.03);
-            color: rgba(0, 0, 0, 0.65);
+            color: rgba(0, 0, 0, 0.70);
           }
           .tab,
           .btnPlay,
-          .btnReset {
-            border: 1px solid rgba(0, 0, 0, 0.12);
-            background: rgba(0, 0, 0, 0.03);
-            color: rgba(0, 0, 0, 0.75);
+          .btnReset,
+          .btnPause {
+            border: 1px solid rgba(0, 0, 0, 0.14);
+            background: rgba(0, 0, 0, 0.04);
+            color: rgba(0, 0, 0, 0.80);
           }
           .caption {
             border: 1px solid rgba(0, 0, 0, 0.10);
             background: rgba(0, 0, 0, 0.03);
           }
           .captionLabel {
-            color: rgba(0, 0, 0, 0.65);
+            color: rgba(0, 0, 0, 0.68);
           }
           .captionText {
-            color: rgba(0, 0, 0, 0.82);
+            color: rgba(0, 0, 0, 0.84);
           }
           .captionRight {
-            color: rgba(0, 0, 0, 0.55);
+            color: rgba(0, 0, 0, 0.58);
           }
         }
       `}</style>
