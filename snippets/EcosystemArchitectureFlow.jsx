@@ -4,12 +4,14 @@ import React, { useState, useEffect } from "react";
 const GamepadIcon = () => (
   <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-blue-400">
     <rect x="3" y="5" width="18" height="14" rx="2"/>
-    <line x1="7" y1="9" x2="7" y2="9"/>
-    <line x1="17" y1="9" x2="17" y2="9"/>
-    <line x1="9" y1="15" x2="9" y2="15"/>
-    <line x1="15" y1="15" x2="15" y2="15"/>
-    <line x1="8" y1="12" x2="10" y2="12"/>
-    <line x1="14" y1="12" x2="16" y2="12"/>
+    <circle cx="8" cy="12" r="1"/>
+    <circle cx="16" cy="12" r="1"/>
+    <circle cx="10" cy="15" r="1"/>
+    <circle cx="14" cy="15" r="1"/>
+    <path d="M8 10h.01"/>
+    <path d="M12 8h.01"/>
+    <path d="M12 12h.01"/>
+    <path d="M16 10h.01"/>
   </svg>
 );
 
@@ -27,6 +29,10 @@ const BlocksIcon = () => (
     <rect width="7" height="7" x="14" y="14" rx="1"/>
     <rect width="7" height="7" x="3" y="3" rx="1"/>
     <rect width="7" height="7" x="3" y="14" rx="1"/>
+    <path d="M10 7h4"/>
+    <path d="M10 17h4"/>
+    <path d="M7 10v4"/>
+    <path d="M17 10v4"/>
   </svg>
 );
 
@@ -34,6 +40,7 @@ export const SuperGalacticArchitectureFlow = () => {
   const [selectedFlow, setSelectedFlow] = useState("reward");
   const [currentStep, setCurrentStep] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
+  const intervalRef = useRef(null);
 
   const flows = {
     reward: {
@@ -78,23 +85,39 @@ export const SuperGalacticArchitectureFlow = () => {
   const totalSteps = flow.steps.length;
 
   const playFlow = () => {
+    if (isPlaying) return;
     setIsPlaying(true);
-    setCurrentStep(0);
-    let stepIndex = 0;
-    const interval = setInterval(() => {
-      stepIndex += 1;
-      setCurrentStep(stepIndex);
-      if (stepIndex >= totalSteps) {
-        clearInterval(interval);
+    setCurrentStep(1);
+
+    if (intervalRef.current) clearInterval(intervalRef.current);
+
+    let step = 1;
+    intervalRef.current = setInterval(() => {
+      step += 1;
+      if (step > totalSteps) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
         setIsPlaying(false);
+        return;
       }
+      setCurrentStep(step);
     }, 3000);
   };
 
   const resetFlow = () => {
+    if (intervalRef.current) {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    }
     setIsPlaying(false);
     setCurrentStep(0);
   };
+
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, []);
 
   const isHighlighted = (id) => {
     if (currentStep === 0) return false;
@@ -109,8 +132,6 @@ export const SuperGalacticArchitectureFlow = () => {
     if (step.highlight.includes("path2")) return "path2";
     return null;
   };
-
-  const dashOffset = isPlaying && activePath() ? 200 - (Date.now() % 3000) / 3000 * 200 : 200;
 
   return (
     <div className="w-full max-w-6xl mx-auto py-8">
@@ -147,7 +168,6 @@ export const SuperGalacticArchitectureFlow = () => {
           stroke: rgba(148, 163, 184, 0.3);
           stroke-width: 3;
           fill: none;
-          transition: stroke 0.4s ease;
         }
         .connector.active {
           stroke: #60a5fa;
@@ -159,9 +179,15 @@ export const SuperGalacticArchitectureFlow = () => {
         }
         .pulse {
           stroke: #60a5fa;
-          stroke-width: 5;
+          stroke-width: 6;
           fill: none;
-          stroke-dasharray: 10 190;
+          stroke-dasharray: 15 185;
+          animation: dash 3s linear forwards;
+        }
+        @keyframes dash {
+          to {
+            stroke-dashoffset: -200;
+          }
         }
         .step-info {
           background: rgba(30, 41, 59, 0.7);
@@ -183,6 +209,7 @@ export const SuperGalacticArchitectureFlow = () => {
           }
           .connector.active {
             stroke: #3b82f6;
+            filter: drop-shadow(0 0 8px #3b82f6);
           }
           .pulse {
             stroke: #3b82f6;
@@ -247,14 +274,12 @@ export const SuperGalacticArchitectureFlow = () => {
             markerEnd="url(#arrow)"
           />
 
-          {activePath() && (
+          {activePath() && currentStep > 0 && (
             <path
+              key={currentStep}
               d={activePath() === "path1" ? "M 25% 45% Q 50% 20%, 75% 45%" : "M 25% 55% Q 50% 80%, 75% 55%"}
               className="pulse"
-              style={{ strokeDashoffset: dashOffset }}
-            >
-              <animate attributeName="stroke-dashoffset" values="200;0" dur="3s" repeatCount="indefinite" />
-            </path>
+            />
           )}
         </svg>
 
