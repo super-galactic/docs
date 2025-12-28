@@ -110,7 +110,7 @@ export const SuperGalacticArchitectureFlow = () => {
   const nodeHeight = 340;
   const node = {
     game: {
-      x: 60,
+      x: 35,
       y: 155,
       w: nodeWidth,
       h: nodeHeight,
@@ -118,20 +118,21 @@ export const SuperGalacticArchitectureFlow = () => {
       subtitle: "Unity",
     },
     hub: {
-      x: 405,
-      y: 135,
+      x: 390,
+      y: 155,
       w: nodeWidth,
       h: nodeHeight,
       title: "Super Galactic Hub",
       subtitle: "Unified app layer",
     },
     chain: {
-      x: 770,
+      x: 745,
       y: 155,
       w: nodeWidth,
       h: nodeHeight,
       title: "Blockchain Layer",
-      subtitle: "Settlement and source of truth",
+      /* Move chain grouping text into the subtitle instead of overlaying a separate block. */
+      subtitle: "Chains: Ethereum (origin) plus BNB and Avalanche (gameplay)",
     },
   };
 
@@ -183,7 +184,14 @@ export const SuperGalacticArchitectureFlow = () => {
     return (
       <g className="arrow">
         <path d={d} className={`arrowBase${active ? " arrowBaseDim" : ""}`} />
-        {active ? <path d={d} className="arrowActive" markerEnd="url(#arrowHead)" /> : null}
+        {active ? (
+          <path
+            d={d}
+            className="arrowActive"
+            markerStart="none"
+            markerEnd="url(#arrowHead)"
+          />
+        ) : null}
       </g>
     );
   };
@@ -273,24 +281,7 @@ export const SuperGalacticArchitectureFlow = () => {
           {pill(node.chain.x + 20, node.chain.y + 230, "Treasury flows")}
           {pill(node.chain.x + 20, node.chain.y + 275, "Tx verification")}
         </Card>
-        {/* Chain grouping label */}
-        <g className="chainGroup">
-          <rect
-            x={node.chain.x + 18}
-            y={node.chain.y + 18}
-            rx="12"
-            ry="12"
-            width={node.chain.w - 36}
-            height="60"
-            className="chainGroupRect"
-          />
-          <text x={node.chain.x + 34} y={node.chain.y + 43} className="chainGroupTitle">
-            Chains
-          </text>
-          <text x={node.chain.x + 34} y={node.chain.y + 63} className="chainGroupSub">
-            Ethereum (origin) plus BNB and Avalanche (gameplay)
-          </text>
-        </g>
+        {/* No separate chain grouping overlay; chain info is part of the subtitle */}
         {/* Reward edges and states */}
         <Arrow
           id="gc_to_hub_reward"
@@ -522,6 +513,9 @@ export const SuperGalacticArchitectureFlow = () => {
           fill: none;
           stroke: rgba(255, 255, 255, 0.20);
           stroke-width: 2;
+          /* ensure no markers on any portion of the base line */
+          marker-start: none;
+          marker-mid: none;
           marker-end: none;
         }
         .arrowBaseDim {
