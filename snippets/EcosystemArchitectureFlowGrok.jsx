@@ -147,66 +147,100 @@ export const SuperGalacticArchitectureFlow = () => {
     </g>
   );
 
-  const TravelDot = ({ d, durationMs }) => {
-    const pathRef = React.useRef(null);
-    const outerRef = React.useRef(null);
-    const innerRef = React.useRef(null);
-    const rafRef = React.useRef(null);
+const TravelDot = ({ d, durationMs }) => {
+  const pathRef = React.useRef(null);
+  const outerRef = React.useRef(null);
+  const innerRef = React.useRef(null);
+  const rafRef = React.useRef(null);
 
-    React.useEffect(() => {
-      const pathEl = pathRef.current;
-      const outer = outerRef.current;
-      const inner = innerRef.current;
-      if (pathEl === null || outer === null || inner === null) return;
+  React.useEffect(() => {
+    const pathEl = pathRef.current;
+    const outer = outerRef.current;
+    const inner = innerRef.current;
 
-      const length = pathEl.getTotalLength();
-      let start;
+    if (pathEl === null || outer === null || inner === null) return;
 
-      const tick = (t) => {
-        if (start === undefined) start = t;
-        const p = Math.min((t - start) / durationMs, 1);
-        const pt = pathEl.getPointAtLength(p * length);
+    let length = 0;
+    try {
+      length = pathEl.getTotalLength();
+    } catch (e) {
+      length = 0;
+    }
 
-        outer.setAttribute("cx", String(pt.x));
-        outer.setAttribute("cy", String(pt.y));
-        inner.setAttribute("cx", String(pt.x));
-        inner.setAttribute("cy", String(pt.y));
+    if (length <= 0) return;
 
-        if (p < 1) rafRef.current = requestAnimationFrame(tick);
-      };
+    // Set an immediate visible start position
+    let startPt;
+    try {
+      startPt = pathEl.getPointAtLength(0);
+      outer.setAttribute("cx", String(startPt.x));
+      outer.setAttribute("cy", String(startPt.y));
+      inner.setAttribute("cx", String(startPt.x));
+      inner.setAttribute("cy", String(startPt.y));
+    } catch (e) {
+      return;
+    }
 
-      rafRef.current = requestAnimationFrame(tick);
+    let startTime;
 
-      return () => {
-        if (rafRef.current) cancelAnimationFrame(rafRef.current);
-      };
-    }, [d, durationMs]);
+    const tick = (t) => {
+      if (startTime === undefined) startTime = t;
 
-    return (
-      <g>
-        <path ref={pathRef} d={d} fill="none" stroke="transparent" strokeWidth="10" />
-        <circle ref={outerRef} r="6" className="travelDotOuter" />
-        <circle ref={innerRef} r="2.8" className="travelDotInner" />
-      </g>
-    );
-  };
+      const elapsed = t - startTime;
+      const p = Math.min(elapsed / durationMs, 1);
+      let pt;
 
-  const Arrow = ({ id, d }) => {
-    if (!isEdgeVisible(id)) return null;
-    const active = isActive(id);
+      try {
+        pt = pathEl.getPointAtLength(p * length);
+      } catch (e) {
+        return;
+      }
 
-    return (
-      <g className="arrow">
-        <path d={d} className={`arrowBase${active ? " arrowBaseDim" : ""}`} />
-        {active ? (
-          <g key={activeStepId}>
-            <path d={d} className="arrowActive" markerEnd="url(#arrowHead)" />
-            <TravelDot d={d} durationMs={1200} />
-          </g>
-        ) : null}
-      </g>
-    );
-  };
+      outer.setAttribute("cx", String(pt.x));
+      outer.setAttribute("cy", String(pt.y));
+      inner.setAttribute("cx", String(pt.x));
+      inner.setAttribute("cy", String(pt.y));
+
+      if (p < 1) rafRef.current = requestAnimationFrame(tick);
+    };
+
+    rafRef.current = requestAnimationFrame(tick);
+
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [d, durationMs]);
+
+  return (
+    <g>
+      {/* Measurement path must have a strokeWidth for consistent geometry */}
+      <path
+        ref={pathRef}
+        d={d}
+        fill="none"
+        stroke="transparent"
+        strokeWidth="10"
+        vectorEffect="non-scaling-stroke"
+      />
+
+      {/* Give initial cx/cy so the dot is always valid */}
+      <circle
+        ref={outerRef}
+        cx="0"
+        cy="0"
+        r="6"
+        className="travelDotOuter"
+      />
+      <circle
+        ref={innerRef}
+        cx="0"
+        cy="0"
+        r="2.8"
+        className="travelDotInner"
+      />
+    </g>
+  );
+};
 
   const StateDot = ({ id, cx, cy, label }) => {
     if (!isStateVisible(id)) return null;
