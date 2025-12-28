@@ -3,7 +3,7 @@ import React from "react";
 
 export const SuperGalacticArchitectureFlow = () => {
   const W = 1100;
-  const H = 680;
+  const H = 650;
 
   const [activeFlow, setActiveFlow] = React.useState("sync"); // Start with sync to match screenshot
   const [step, setStep] = React.useState(0);
