@@ -2,121 +2,118 @@
 import React from "react";
 
 export const SuperGalacticArchitectureFlow = () => {
-  const [activeFlow, setActiveFlow] = React.useState("sync"); // Matches screenshot
-  const [step, setStep] = React.useState(2); // 2 = "Breeding initiated in Hub"
+  const [activeFlow, setActiveFlow] = React.useState<"reward" | "spend" | "sync">("sync");
+  const [currentStep, setCurrentStep] = React.useState(0);
 
+  // Define flows with precise step sequence and what to highlight
   const flows = {
     reward: {
       label: "Reward flow",
       steps: [
-        { id: "gc_to_hub_reward", caption: "Reward data sent to Hub" },
-        { id: "hub_claimable", caption: "UAP appears as claimable balance" },
+        { source: "game", row: 1, label: "Missions and combat completed" },
+        { source: "game", row: 3, label: "Reward generated off-chain (unclaimed)" },
+        { dest: "hub", row: 1, connector: "game_to_hub_reward", label: "Claimable balance visible in Hub" },
+        { source: "hub", row: 2, label: "Player claims reward" },
+        { dest: "chain", row: 4, connector: "hub_to_chain_claim", label: "Transaction verified on-chain" },
+        { source: "chain", dest: "hub", connector: "chain_to_hub_balance", label: "Balance updated in Hub" },
+        { dest: "game", row: 4, connector: "hub_to_game_balance", label: "Balance synced back to game client" },
       ],
-      edges: ["gc_to_hub_reward"],
-      states: ["hub_claimable"],
-    },
-    claim: {
-      label: "Claim flow",
-      steps: [
-        { id: "hub_to_chain_claim", caption: "Claim triggers on‑chain tx" },
-        { id: "chain_confirm_claim", caption: "Chain confirms transaction" },
-        { id: "chain_to_hub_balance", caption: "Balance updates across systems" },
-        { id: "hub_to_gc_balance", caption: "Game client reflects updated state" },
-      ],
-      edges: ["hub_to_chain_claim", "chain_confirm_claim", "chain_to_hub_balance", "hub_to_gc_balance"],
-      states: [],
     },
     spend: {
       label: "Spending and burn flow",
       steps: [
-        { id: "hub_to_chain_spend", caption: "Spend triggers on‑chain settlement" },
-        { id: "chain_burn", caption: "Automated burn executes" },
-        { id: "chain_treasury", caption: "Treasury allocation recorded" },
-        { id: "chain_to_hub_asset", caption: "Updated asset state syncs to Hub" },
-        { id: "hub_to_gc_asset", caption: "Updated state syncs to game client" },
+        { source: "game", row: 2, label: "Player initiates upgrade or breeding" },
+        { dest: "hub", row: 3, connector: "game_to_hub_action", label: "Action prepared in Hub" },
+        { source: "hub", dest: "chain", connector: "hub_to_chain_spend", label: "Settlement triggered on-chain" },
+        { source: "chain", row: 2, state: "burn", label: "Burn execution (50%)" },
+        { source: "chain", row: 3, state: "treasury", label: "Treasury allocation (50%)" },
+        { source: "chain", dest: "hub", connector: "chain_to_hub_asset", label: "Updated state synced to Hub" },
+        { dest: "game", row: 2, connector: "hub_to_game_asset", label: "Updated state reflected in game" },
       ],
-      edges: ["hub_to_chain_spend", "chain_burn", "chain_treasury", "chain_to_hub_asset", "hub_to_gc_asset"],
-      states: [],
     },
     sync: {
       label: "Asset synchronization",
       steps: [
-        { id: "gc_to_hub_stats", caption: "Upgrades performed in game" },
-        { id: "hub_nft_evolve", caption: "NFT stats and evolution update in Hub" },
-        { id: "hub_breed", caption: "Breeding initiated in Hub" },
-        { id: "hub_to_gc_newstate", caption: "Resulting NFT state reflects in game" },
+        { source: "game", row: 2, label: "Gameplay progression or upgrades" },
+        { dest: "hub", row: 4, connector: "game_to_hub_stats", label: "Asset state updated in Hub" },
+        { source: "hub", row: 3, state: "nft_evolve", label: "NFT evolution or breeding result processed" },
+        { source: "hub", dest: "game", connector: "hub_to_game_newstate", label: "Updated NFT & stats synced back" },
       ],
-      edges: ["gc_to_hub_stats", "hub_breed", "hub_to_gc_newstate"],
-      states: ["hub_nft_evolve"],
     },
   };
 
-  React.useEffect(() => {
-    const total = flows[activeFlow].steps.length;
-    setStep(0);
-    const interval = setInterval(() => {
-      setStep((s) => (s + 1) % total);
-    }, 2000);
-    return () => clearInterval(interval);
-  }, [activeFlow]);
+  const flow = flows[activeFlow];
 
-  const currentFlow = flows[activeFlow];
-  const caption = currentFlow.steps[step]?.caption || "";
+  // Auto-advance steps
+  React.useEffect(() => {
+    setCurrentStep(0);
+    const interval = setInterval(() => {
+      setCurrentStep((s) => {
+        if (s >= flow.steps.length - 1) {
+          clearInterval(interval);
+          return s;
+        }
+        return s + 1;
+      });
+    }, 2800); // Calm pacing: 2.8s per step
+
+    return () => clearInterval(interval);
+  }, [activeFlow, flow.steps.length]);
+
+  const step = flow.steps[currentStep] || {};
 
   // Layout
-  const card = { w: 320, h: 360, y: 160 };
-  const nodes = {
-    game: { x: 40 },
-    hub: { x: 395 },
-    chain: { x: 750 },
+  const card = { w: 320, h: 380, y: 170 };
+  const nodes = { game: 40, hub: 400, chain: 760 };
+  const pillY = (i: number) => card.y + 100 + i * 48;
+
+  const isHighlighted = (type: "card" | "row" | "connector" | "state", id: string) => {
+    if (!step) return false;
+    if (type === "card") return step.source === id || step.dest === id;
+    if (type === "row") return (step.source === "game" && step.row === id && id < 5) || 
+                              (step.source === "hub" && step.row === id && id < 5) ||
+                              (step.dest === "game" && step.row === id && id < 5) ||
+                              (step.dest === "hub" && step.row === id && id < 5) ||
+                              (step.source === "chain" && step.row === id && id < 5) ||
+                              (step.dest === "chain" && step.row === id && id < 5);
+    if (type === "connector") return step.connector === id;
+    if (type === "state") return step.state === id;
+    return false;
   };
 
-  const pillY = (index) => card.y + 95 + index * 45;
-
-  const isVisible = (type, id) => currentFlow[type].includes(id);
-  const isActive = (id) => currentFlow.steps[step]?.id === id;
-
-  const Pill = ({ x, y, text }) => (
-    <g>
-      <rect x={x} y={y} width="280" height="36" rx="12" className="pill-bg" />
-      <text x={x + 16} y={y + 23} className="pill-text">{text}</text>
+  const Pill = ({ x, y, text, index, card }) => (
+    <g className={isHighlighted("row", index + "_" + card) ? "pill highlighted" : "pill"}>
+      <rect x={x} y={y} width="280" height="38" rx="12" className="pill-bg" />
+      <text x={x + 16} y={y + 24} className="pill-text">{text}</text>
     </g>
   );
 
-  const Card = ({ x, title, subtitle, children }) => (
-    <g>
+  const Card = ({ x, title, subtitle, type, children }) => (
+    <g className={isHighlighted("card", type) ? "card highlighted" : "card"}>
       <rect x={x} y={card.y} width={card.w} height={card.h} rx="20" className="card-bg" />
-      <text x={x + 20} y={card.y + 36} className="card-title">{title}</text>
-      <text x={x + 20} y={card.y + 58} className="card-subtitle">{subtitle}</text>
-      <line x1={x + 20} y1={card.y + 78} x2={x + card.w - 20} y2={card.y + 78} className="divider" />
+      <text x={x + 20} y={card.y + 38} className="card-title">{title}</text>
+      <text x={x + 20} y={card.y + 60} className="card-subtitle">{subtitle}</text>
+      <line x1={x + 20} y1={card.y + 82} x2={x + card.w - 20} y2={card.y + 82} className="divider" />
       {children}
     </g>
   );
 
-  const AnimatedArrow = ({ id, d }) => {
-    if (!isVisible("edges", id)) return null;
-    const active = isActive(id);
-    return (
-      <g>
-        <path d={d} className="arrow-static" />
-        {active && <path d={d} className="arrow-animated" markerEnd="url(#arrowhead)" />}
-      </g>
-    );
-  };
+  const Connector = ({ id, d }) => (
+    <path
+      d={d}
+      className={isHighlighted("connector", id) ? "connector active" : "connector"}
+    />
+  );
 
-  const StateDot = ({ id, cx, cy, label }) => {
-    if (!isVisible("states", id)) return null;
-    const active = isActive(id);
-    return (
-      <g className={active ? "state-active" : "state-inactive"}>
-        <circle cx={cx} cy={cy} r="10" />
-        <text x={cx} y={cy + 28} textAnchor="middle" className="state-label">{label}</text>
-      </g>
-    );
-  };
+  const StateDot = ({ id, cx, cy, label }) => (
+    <g className={isHighlighted("state", id) ? "state-dot pulse" : "state-dot"}>
+      <circle cx={cx} cy={cy} r="10" />
+      <text x={cx} y={cy + 28} textAnchor="middle" className="state-label">{label}</text>
+    </g>
+  );
 
   return (
-    <div className="architecture-wrapper">
+    <div className="wrapper">
       <div className="header">
         <div className="title">
           <h1>Super Galactic Ecosystem Architecture</h1>
@@ -127,7 +124,7 @@ export const SuperGalacticArchitectureFlow = () => {
             <button
               key={key}
               className={activeFlow === key ? "tab active" : "tab"}
-              onClick={() => setActiveFlow(key)}
+              onClick={() => setActiveFlow(key as any)}
             >
               {f.label}
             </button>
@@ -135,95 +132,96 @@ export const SuperGalacticArchitectureFlow = () => {
         </div>
       </div>
 
-      <div className="highlight-bar">
-        <span className="label">Now highlighting</span>
-        <span className="text">{caption}</span>
+      <div className="caption">
+        <span className="label">Now highlighting:</span>
+        <span className="text">{step.label || "Select a flow to begin"}</span>
       </div>
 
-      <svg viewBox="0 0 1100 680" className="diagram">
+      <svg viewBox="0 0 1120 720" className="diagram">
         <defs>
-          <marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto">
-            <path d="M0,0 L10,5 L0,10 Z" fill="#fff" />
-          </marker>
-          <filter id="shadow">
-            <feDropShadow dx="0" dy="6" stdDeviation="8" floodOpacity="0.25" />
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="8" result="blur"/>
+            <feFlood floodColor="#ffffff" floodOpacity="0.4"/>
+            <feComposite in="blur" in2="SourceGraphic" operator="in"/>
+            <feMerge>
+              <feMergeNode/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
           </filter>
         </defs>
 
-        {/* Column headers */}
-        <text x="200" y="125" className="col-header">Gameplay logic</text>
-        <text x="555" y="125" className="col-header">Application layer</text>
-        <text x="910" y="125" className="col-header">On‑chain settlement</text>
+        <text x="200" y="130" className="col-header">Gameplay logic</text>
+        <text x="560" y="130" className="col-header">Application layer</text>
+        <text x="920" y="130" className="col-header">On‑chain settlement</text>
 
         {/* Cards */}
-        <Card x={nodes.game.x} title="Game Client" subtitle="Unity">
-          <Pill x={nodes.game.x + 20} y={pillY(0)} text="Player gameplay" />
-          <Pill x={nodes.game.x + 20} y={pillY(1)} text="Missions and combat" />
-          <Pill x={nodes.game.x + 20} y={pillY(2)} text="Progression and upgrades" />
-          <Pill x={nodes.game.x + 20} y={pillY(3)} text="Reward generation (off‑chain)" />
-          <Pill x={nodes.game.x + 20} y={pillY(4)} text="UAP earned (unclaimed)" />
+        <Card x={nodes.game} title="Game Client" subtitle="Unity" type="game">
+          <Pill x={nodes.game + 20} y={pillY(0)} text="Player gameplay" index={0} card="game" />
+          <Pill x={nodes.game + 20} y={pillY(1)} text="Missions and combat" index={1} card="game" />
+          <Pill x={nodes.game + 20} y={pillY(2)} text="Progression and upgrades" index={2} card="game" />
+          <Pill x={nodes.game + 20} y={pillY(3)} text="Reward generation (off‑chain)" index={3} card="game" />
+          <Pill x={nodes.game + 20} y={pillY(4)} text="UAP earned (unclaimed)" index={4} card="game" />
         </Card>
 
-        <Card x={nodes.hub.x} title="Super Galactic Hub" subtitle="Unified app layer">
-          <Pill x={nodes.hub.x + 20} y={pillY(0)} text="Asset management" />
-          <Pill x={nodes.hub.x + 20} y={pillY(1)} text="UAP balance visibility" />
-          <Pill x={nodes.hub.x + 20} y={pillY(2)} text="Reward claiming" />
-          <Pill x={nodes.hub.x + 20} y={pillY(3)} text="Breeding and NFT actions" />
-          <Pill x={nodes.hub.x + 20} y={pillY(4)} text="Progression and stats" />
+        <Card x={nodes.hub} title="Super Galactic Hub" subtitle="Unified app layer" type="hub">
+          <Pill x={nodes.hub + 20} y={pillY(0)} text="Asset management" index={0} card="hub" />
+          <Pill x={nodes.hub + 20} y={pillY(1)} text="UAP balance visibility" index={1} card="hub" />
+          <Pill x={nodes.hub + 20} y={pillY(2)} text="Reward claiming" index={2} card="hub" />
+          <Pill x={nodes.hub + 20} y={pillY(3)} text="Breeding and NFT actions" index={3} card="hub" />
+          <Pill x={nodes.hub + 20} y={pillY(4)} text="Progression and stats" index={4} card="hub" />
         </Card>
 
-        <Card x={nodes.chain.x} title="Blockchain Layer" subtitle="Chains: Ethereum (origin) plus BNB and Avalanche (gameplay)">
-          <Pill x={nodes.chain.x + 20} y={pillY(0)} text="UAP token contracts" />
-          <Pill x={nodes.chain.x + 20} y={pillY(1)} text="NFT ownership contracts" />
-          <Pill x={nodes.chain.x + 20} y={pillY(2)} text="Burn execution" />
-          <Pill x={nodes.chain.x + 20} y={pillY(3)} text="Treasury flows" />
-          <Pill x={nodes.chain.x + 20} y={pillY(4)} text="Tx verification" />
+        <Card x={nodes.chain} title="Blockchain Layer" subtitle="Ethereum (origin) + BNB & Avalanche (gameplay)" type="chain">
+          <Pill x={nodes.chain + 20} y={pillY(0)} text="UAP token contracts" index={0} card="chain" />
+          <Pill x={nodes.chain + 20} y={pillY(1)} text="NFT ownership contracts" index={1} card="chain" />
+          <Pill x={nodes.chain + 20} y={pillY(2)} text="Burn execution" index={2} card="chain" />
+          <Pill x={nodes.chain + 20} y={pillY(3)} text="Treasury flows" index={3} card="chain" />
+          <Pill x={nodes.chain + 20} y={pillY(4)} text="Tx verification" index={4} card="chain" />
         </Card>
 
-        {/* Arrows - Reward */}
-        <AnimatedArrow
-          id="gc_to_hub_reward"
-          d={`M ${nodes.game.x + card.w} ${pillY(3) + 18} C ${nodes.game.x + card.w + 80} ${pillY(3) + 18}, ${nodes.hub.x - 80} ${pillY(1) + 18}, ${nodes.hub.x} ${pillY(1) + 18}`}
-        />
-        <StateDot id="hub_claimable" cx={nodes.hub.x + 290} cy={pillY(1) + 18} label="claimable" />
+        {/* Static Connectors */}
+        <Connector id="game_to_hub_reward" d={`M ${nodes.game + card.w} ${pillY(3)+19} C ${nodes.game + card.w + 80} ${pillY(3)+19}, ${nodes.hub - 80} ${pillY(1)+19}, ${nodes.hub} ${pillY(1)+19}`} />
+        <Connector id="game_to_hub_stats" d={`M ${nodes.game + card.w} ${pillY(2)+19} C ${nodes.game + card.w + 80} ${pillY(2)+19}, ${nodes.hub - 80} ${pillY(4)+19}, ${nodes.hub} ${pillY(4)+19}`} />
+        <Connector id="game_to_hub_action" d={`M ${nodes.game + card.w} ${pillY(2)+19} C ${nodes.game + card.w + 80} ${pillY(2)+19}, ${nodes.hub - 80} ${pillY(3)+19}, ${nodes.hub} ${pillY(3)+19}`} />
 
-        {/* Arrows - Sync flow */}
-        <AnimatedArrow
-          id="gc_to_hub_stats"
-          d={`M ${nodes.game.x + card.w} ${pillY(2) + 18} C ${nodes.game.x + card.w + 80} ${pillY(2) + 18}, ${nodes.hub.x - 80} ${pillY(4) + 18}, ${nodes.hub.x} ${pillY(4) + 18}`}
-        />
-        <StateDot id="hub_nft_evolve" cx={nodes.hub.x + 290} cy={pillY(4) + 18} label="NFT state" />
+        <Connector id="hub_to_chain_claim" d={`M ${nodes.hub + card.w} ${pillY(2)+19} C ${nodes.hub + card.w + 80} ${pillY(2)+19}, ${nodes.chain - 80} ${pillY(4)+19}, ${nodes.chain} ${pillY(4)+19}`} />
+        <Connector id="hub_to_chain_spend" d={`M ${nodes.hub + card.w} ${pillY(3)+19} C ${nodes.hub + card.w + 80} ${pillY(3)+19}, ${nodes.chain - 80} ${pillY(2)+19}, ${nodes.chain} ${pillY(2)+19}`} />
 
-        {/* Curved breeding arrow - matches screenshot exactly */}
-        <AnimatedArrow
-          id="hub_breed"
-          d={`M ${nodes.hub.x + 160} ${pillY(3) + 18}
-              Q ${nodes.hub.x + 290} ${pillY(3) + 60}, ${nodes.hub.x + 290} ${pillY(3) + 100}
-              Q ${nodes.hub.x + 290} ${pillY(3) + 140}, ${nodes.hub.x + 160} ${pillY(3) + 140}`}
+        <Connector id="chain_to_hub_balance" d={`M ${nodes.chain} ${pillY(1)+19} C ${nodes.chain - 80} ${pillY(1)+19}, ${nodes.hub + card.w + 80} ${pillY(1)+19}, ${nodes.hub + card.w} ${pillY(1)+19}`} />
+        <Connector id="chain_to_hub_asset" d={`M ${nodes.chain} ${pillY(4)+19} C ${nodes.chain - 80} ${pillY(4)+19}, ${nodes.hub + card.w + 80} ${pillY(4)+19}, ${nodes.hub + card.w} ${pillY(4)+19}`} />
+
+        <Connector id="hub_to_game_balance" d={`M ${nodes.hub} ${pillY(1)+19} C ${nodes.hub - 80} ${pillY(1)+19}, ${nodes.game + card.w + 80} ${pillY(4)+19}, ${nodes.game + card.w} ${pillY(4)+19}`} />
+        <Connector id="hub_to_game_asset" d={`M ${nodes.hub} ${pillY(4)+19} C ${nodes.hub - 80} ${pillY(4)+19}, ${nodes.game + card.w + 80} ${pillY(2)+19}, ${nodes.game + card.w} ${pillY(2)+19}`} />
+        <Connector id="hub_to_game_newstate" d={`M ${nodes.hub} ${pillY(0)+19} C ${nodes.hub - 100} ${pillY(0)+19}, ${nodes.game + card.w + 100} ${pillY(0)+19}, ${nodes.game + card.w} ${pillY(0)+19}`} />
+
+        {/* Breeding loop in Hub */}
+        <path
+          d={`M ${nodes.hub + 160} ${pillY(3)+19} Q ${nodes.hub + 290} ${pillY(3)+80}, ${nodes.hub + 290} ${pillY(3)+130} Q ${nodes.hub + 290} ${pillY(3)+170}, ${nodes.hub + 160} ${pillY(3)+170}`}
+          className={isHighlighted("connector", "hub_breed_loop") || (activeFlow === "sync" && currentStep === 2) ? "connector active" : "connector"}
         />
 
-        <AnimatedArrow
-          id="hub_to_gc_newstate"
-          d={`M ${nodes.hub.x} ${pillY(0) + 18} C ${nodes.hub.x - 100} ${pillY(0) + 18}, ${nodes.game.x + card.w + 100} ${pillY(0) + 18}, ${nodes.game.x + card.w} ${pillY(0) + 18}`}
-        />
+        {/* State Dots */}
+        <StateDot id="nft_evolve" cx={nodes.hub + 290} cy={pillY(4) + 19} label="NFT state" />
+        <StateDot id="burn" cx={nodes.chain + 290} cy={pillY(2) + 19} label="burn" />
+        <StateDot id="treasury" cx={nodes.chain + 290} cy={pillY(3) + 19} label="treasury" />
 
         {/* Footer */}
         <g className="footer">
-          <rect x="60" y="540" width="980" height="100" rx="18" className="footer-bg" />
-          <text x="80" y="575" className="footer-title">Key principles</text>
-          <text x="80" y="605" className="footer-text">
+          <rect x="60" y="570" width="1000" height="100" rx="18" className="footer-bg" />
+          <text x="80" y="605" className="footer-title">Key principles</text>
+          <text x="80" y="635" className="footer-text">
             Single source of truth • Bidirectional synchronization • No manual syncing • Clear separation between gameplay, application, and on‑chain settlement
           </text>
         </g>
       </svg>
 
       <style jsx>{`
-        .architecture-wrapper {
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-          padding: 24px;
-          background: #0f0f1a;
-          border-radius: 20px;
+        .wrapper {
+          padding: 28px;
+          background: #0a0a12;
+          border-radius: 24px;
           border: 1px solid rgba(255,255,255,0.08);
+          font-family: system-ui, -apple-system, sans-serif;
         }
         .header {
           display: flex;
@@ -231,106 +229,71 @@ export const SuperGalacticArchitectureFlow = () => {
           align-items: flex-start;
           flex-wrap: wrap;
           gap: 20px;
-          margin-bottom: 16px;
+          margin-bottom: 20px;
         }
-        .title h1 {
-          font-size: 20px;
-          font-weight: 700;
-          color: #fff;
-          margin: 0;
-        }
-        .title p {
-          font-size: 14px;
-          color: #aaa;
-          margin: 6px 0 0;
-        }
-        .tabs {
-          display: flex;
-          gap: 10px;
-          flex-wrap: wrap;
-        }
+        h1 { font-size: 21px; font-weight: 700; color: #fff; margin: 0; }
+        p { font-size: 14px; color: #aaa; margin: 8px 0 0; }
+        .tabs { display: flex; gap: 12px; flex-wrap: wrap; }
         .tab {
-          padding: 8px 16px;
-          border-radius: 20px;
-          background: rgba(255,255,255,0.05);
-          border: 1px solid rgba(255,255,255,0.15);
-          color: #ddd;
-          font-size: 13px;
+          padding: 10px 18px;
+          border-radius: 24px;
+          background: rgba(255,255,255,0.04);
+          border: 1px solid rgba(255,255,255,0.12);
+          color: #ccc;
+          font-size: 14px;
           cursor: pointer;
-          transition: all 0.2s;
+          transition: all 0.3s ease;
         }
-        .tab:hover { background: rgba(255,255,255,0.1); }
+        .tab:hover { background: rgba(255,255,255,0.08); }
         .tab.active {
-          background: rgba(255,255,255,0.15);
+          background: rgba(255,255,255,0.14);
           border-color: rgba(255,255,255,0.3);
+          color: #fff;
           font-weight: 600;
         }
-        .highlight-bar {
+        .caption {
           display: flex;
           align-items: center;
           gap: 12px;
-          padding: 12px 18px;
-          background: rgba(0,0,0,0.3);
+          padding: 14px 20px;
+          background: rgba(255,255,255,0.03);
           border: 1px solid rgba(255,255,255,0.1);
           border-radius: 20px;
-          margin-bottom: 20px;
+          margin-bottom: 24px;
         }
-        .label {
-          font-size: 13px;
-          color: #aaa;
-        }
-        .text {
-          font-size: 14px;
-          font-weight: 600;
-          color: #fff;
-        }
-        .col-header {
-          fill: #888;
-          font-size: 13px;
-          text-anchor: middle;
-        }
-        .card-bg {
-          fill: rgba(255,255,255,0.06);
-          stroke: rgba(255,255,255,0.18);
-          filter: url(#shadow);
-        }
+        .label { font-size: 13px; color: #999; }
+        .text { font-size: 15px; font-weight: 600; color: #fff; }
+
+        .col-header { fill: #777; font-size: 13px; text-anchor: middle; }
+
+        .card-bg { fill: rgba(255,255,255,0.05); stroke: rgba(255,255,255,0.15); }
+        .card.highlighted .card-bg { fill: rgba(255,255,255,0.12); stroke: #fff; filter: url(#glow); }
         .card-title { fill: #fff; font-size: 17px; font-weight: 700; }
-        .card-subtitle { fill: #ccc; font-size: 13px; }
+        .card-subtitle { fill: #bbb; font-size: 13px; }
         .divider { stroke: rgba(255,255,255,0.12); }
-        .pill-bg {
-          fill: rgba(255,255,255,0.04);
-          stroke: rgba(255,255,255,0.15);
-          rx: 12;
-        }
+
+        .pill-bg { fill: rgba(255,255,255,0.04); stroke: rgba(255,255,255,0.12); }
+        .pill.highlighted .pill-bg { fill: rgba(255,255,255,0.18); stroke: #fff; filter: url(#glow); }
         .pill-text { fill: #ddd; font-size: 13px; }
-        .arrow-static {
-          fill: none;
-          stroke: rgba(255,255,255,0.18);
-          stroke-width: 2;
-        }
-        .arrow-animated {
-          fill: none;
-          stroke: #fff;
-          stroke-width: 3.5;
-          stroke-dasharray: 14 16;
-          animation: flow 1.8s linear infinite;
-        }
-        @keyframes flow {
-          to { stroke-dashoffset: -30; }
-        }
-        .state-inactive circle { fill: rgba(255,255,255,0.2); stroke: rgba(255,255,255,0.3); }
-        .state-active circle {
+
+        .connector { fill: none; stroke: rgba(255,255,255,0.18); stroke-width: 2; }
+        .connector.active { stroke: #fff; stroke-width: 3.5; filter: url(#glow); }
+
+        .state-dot circle { fill: rgba(255,255,255,0.18); stroke: rgba(255,255,255,0.3); }
+        .state-dot.pulse circle {
+          animation: pulse 1.2s ease-out;
           fill: #fff;
-          animation: pulse 1.8s ease-in-out infinite;
         }
         @keyframes pulse {
-          0%,100% { r: 10; opacity: 0.8; }
-          50% { r: 14; opacity: 1; }
+          0% { r: 10; opacity: 0.6; }
+          50% { r: 16; opacity: 1; }
+          100% { r: 10; opacity: 0.6; }
         }
-        .state-label { fill: #bbb; font-size: 11px; }
-        .footer-bg { fill: rgba(255,255,255,0.04); stroke: rgba(255,255,255,0.15); }
+        .state-label { fill: #aaa; font-size: 11px; }
+
+        .footer-bg { fill: rgba(255,255,255,0.04); stroke: rgba(255,255,255,0.12); }
         .footer-title { fill: #eee; font-size: 14px; font-weight: 700; }
-        .footer-text { fill: #ccc; font-size: 13px; }
+        .footer-text { fill: #bbb; font-size: 13px; }
       `}</style>
     </div>
   );
