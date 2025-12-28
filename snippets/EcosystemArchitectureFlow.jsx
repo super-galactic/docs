@@ -1,6 +1,5 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { Gamepad2, Globe, Blocks } from "lucide-react";
 
 export const SuperGalacticArchitectureFlow = () => {
   const [selectedFlow, setSelectedFlow] = useState("reward");
