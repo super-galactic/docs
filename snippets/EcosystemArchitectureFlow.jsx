@@ -105,28 +105,31 @@ export const SuperGalacticArchitectureFlow = () => {
   // positions and sizes of the Game Client, Hub, and Blockchain cards on
   // the SVG canvas.  Changing these values will reposition the entire
   // diagram.
+  // All three node cards share the same width and height for consistency.
+  const nodeWidth = 320;
+  const nodeHeight = 340;
   const node = {
     game: {
       x: 60,
       y: 155,
-      w: 300,
-      h: 300,
+      w: nodeWidth,
+      h: nodeHeight,
       title: "Game Client",
       subtitle: "Unity",
     },
     hub: {
       x: 405,
       y: 135,
-      w: 320,
-      h: 340,
+      w: nodeWidth,
+      h: nodeHeight,
       title: "Super Galactic Hub",
       subtitle: "Unified app layer",
     },
     chain: {
       x: 770,
       y: 155,
-      w: 270,
-      h: 300,
+      w: nodeWidth,
+      h: nodeHeight,
       title: "Blockchain Layer",
       subtitle: "Settlement and source of truth",
     },
@@ -416,11 +419,13 @@ export const SuperGalacticArchitectureFlow = () => {
           font-size: 18px;
           font-weight: 700;
           line-height: 1.2;
+          color: rgba(255, 255, 255, 0.92);
         }
         .h2 {
           margin-top: 6px;
           font-size: 13px;
           opacity: 0.8;
+          color: rgba(255, 255, 255, 0.75);
         }
         .controls {
           display: flex;
@@ -458,12 +463,14 @@ export const SuperGalacticArchitectureFlow = () => {
         }
         .captionLabel {
           font-size: 12px;
-          opacity: 0.75;
+          opacity: 1;
+          color: rgba(255, 255, 255, 0.8);
           white-space: nowrap;
         }
         .captionText {
           font-size: 12px;
           font-weight: 600;
+          color: rgba(255, 255, 255, 0.92);
         }
         .svg {
           width: 100%;
@@ -475,32 +482,40 @@ export const SuperGalacticArchitectureFlow = () => {
           opacity: 0.75;
           letter-spacing: 0.2px;
         }
+        /* Ensure all SVG text elements are visible on a dark background */
+        .svg text {
+          fill: rgba(255, 255, 255, 0.86);
+        }
         .card {
+          /* Slightly lighter background and stroke for better contrast */
           filter: url(#softShadow);
-          stroke: rgba(255, 255, 255, 0.12);
+          stroke: rgba(255, 255, 255, 0.18);
           stroke-width: 1;
-          fill: rgba(255, 255, 255, 0.03);
+          fill: rgba(255, 255, 255, 0.05);
         }
         .cardTitle {
           font-size: 16px;
           font-weight: 700;
+          fill: rgba(255, 255, 255, 0.9);
         }
         .cardSub {
           font-size: 12px;
-          opacity: 0.8;
+          opacity: 1;
+          fill: rgba(255, 255, 255, 0.8);
         }
         .divider {
           stroke: rgba(255, 255, 255, 0.12);
           stroke-width: 1;
         }
         .pillRect {
-          stroke: rgba(255, 255, 255, 0.12);
+          stroke: rgba(255, 255, 255, 0.18);
           stroke-width: 1;
-          fill: rgba(255, 255, 255, 0.02);
+          fill: rgba(255, 255, 255, 0.04);
         }
         .pillText {
           font-size: 12px;
-          opacity: 0.92;
+          opacity: 1;
+          fill: rgba(255, 255, 255, 0.86);
         }
         /* Base arrow line: no arrowheads; lighten when active */
         .arrowBase {
@@ -570,35 +585,40 @@ export const SuperGalacticArchitectureFlow = () => {
         }
         .dotLabel {
           font-size: 10px;
-          opacity: 0.85;
+          opacity: 1;
+          fill: rgba(255, 255, 255, 0.86);
         }
         .chainGroupRect {
-          fill: rgba(255, 255, 255, 0.02);
-          stroke: rgba(255, 255, 255, 0.10);
+          fill: rgba(255, 255, 255, 0.04);
+          stroke: rgba(255, 255, 255, 0.16);
           stroke-width: 1;
         }
         .chainGroupTitle {
           font-size: 12px;
           font-weight: 700;
-          opacity: 0.92;
+          opacity: 1;
+          fill: rgba(255, 255, 255, 0.86);
         }
         .chainGroupSub {
           font-size: 11px;
-          opacity: 0.78;
+          opacity: 1;
+          fill: rgba(255, 255, 255, 0.78);
         }
         .footerCard {
-          fill: rgba(255, 255, 255, 0.02);
-          stroke: rgba(255, 255, 255, 0.10);
+          fill: rgba(255, 255, 255, 0.04);
+          stroke: rgba(255, 255, 255, 0.16);
           stroke-width: 1;
         }
         .footerTitle {
           font-size: 13px;
           font-weight: 700;
-          opacity: 0.95;
+          opacity: 1;
+          fill: rgba(255, 255, 255, 0.88);
         }
         .footerText {
           font-size: 12px;
-          opacity: 0.82;
+          opacity: 1;
+          fill: rgba(255, 255, 255, 0.80);
         }
       `}</style>
     </div>
