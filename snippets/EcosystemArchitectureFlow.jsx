@@ -15,28 +15,34 @@ import React, { useState, useEffect } from "react";
 // colour to indicate focus during each step. Feel free to adjust
 // timings or colours to fit your documentation theme.
 export const SuperGalacticArchitectureFlow = () => {
-  // Define the flows and their step sequences. Each step contains a
-  // description and a map of highlighted elements: the nodes to
-  // highlight and any arrows to animate.
+  /**
+   * The definition of each flow. Every flow contains a human‑readable label
+   * and an ordered list of steps. Each step describes what is happening
+   * at that moment and which nodes and paths should be highlighted.
+   */
   const flows = {
     reward: {
       label: "Reward flow",
       steps: [
         {
-          desc: "Player completes mission in Game Client",
-          highlight: { game: true }
+          desc: "Player completes mission in the Game Client",
+          nodes: { game: true },
+          paths: []
         },
         {
           desc: "UAP reward is generated off chain",
-          highlight: { game: true }
+          nodes: { game: true },
+          paths: []
         },
         {
           desc: "Reward data is sent to the Super Galactic Hub",
-          highlight: { game: true, arrow: "game-hub" }
+          nodes: { game: true, hub: true },
+          paths: ["game-hub"]
         },
         {
-          desc: "UAP appears as claimable balance in Hub",
-          highlight: { hub: true }
+          desc: "UAP appears as claimable balance in the Hub",
+          nodes: { hub: true },
+          paths: []
         }
       ]
     },
@@ -45,19 +51,23 @@ export const SuperGalacticArchitectureFlow = () => {
       steps: [
         {
           desc: "Player claims UAP via the Hub",
-          highlight: { hub: true }
+          nodes: { hub: true },
+          paths: []
         },
         {
-          desc: "Claim triggers on‑chain transaction",
-          highlight: { hub: true, arrow: "hub-chain" }
+          desc: "Claim triggers an on‑chain transaction",
+          nodes: { hub: true, chain: true },
+          paths: ["hub-chain"]
         },
         {
           desc: "Blockchain confirms transaction",
-          highlight: { chain: true }
+          nodes: { chain: true },
+          paths: []
         },
         {
           desc: "UAP balance updates across systems",
-          highlight: { chain: true, arrow: "chain-hub", hub: true }
+          nodes: { chain: true, hub: true },
+          paths: ["chain-hub"]
         }
       ]
     },
@@ -66,19 +76,23 @@ export const SuperGalacticArchitectureFlow = () => {
       steps: [
         {
           desc: "Player spends UAP (upgrade, breeding, progression)",
-          highlight: { game: true }
+          nodes: { game: true },
+          paths: []
         },
         {
           desc: "Spend action triggers automated burn and treasury allocation",
-          highlight: { game: true, arrow: "game-hub" }
+          nodes: { game: true, hub: true },
+          paths: ["game-hub"]
         },
         {
           desc: "Blockchain state updates",
-          highlight: { hub: true, arrow: "hub-chain", chain: true }
+          nodes: { hub: true, chain: true },
+          paths: ["hub-chain"]
         },
         {
           desc: "Updated asset state syncs back to Hub and Game Client",
-          highlight: { chain: true, arrow: "chain-hub", hub: true, arrow2: "hub-game" }
+          nodes: { chain: true, hub: true, game: true },
+          paths: ["chain-hub", "hub-game"]
         }
       ]
     },
@@ -87,85 +101,104 @@ export const SuperGalacticArchitectureFlow = () => {
       steps: [
         {
           desc: "Upgrades performed in game",
-          highlight: { game: true }
+          nodes: { game: true },
+          paths: []
         },
         {
           desc: "NFT stats and evolution update in Hub",
-          highlight: { game: true, arrow: "game-hub", hub: true }
+          nodes: { game: true, hub: true },
+          paths: ["game-hub"]
         },
         {
           desc: "Breeding initiated in Hub",
-          highlight: { hub: true }
+          nodes: { hub: true },
+          paths: []
         },
         {
           desc: "Resulting NFT state reflects in Game Client",
-          highlight: { hub: true, arrow: "hub-game", game: true }
+          nodes: { hub: true, game: true },
+          paths: ["hub-game"]
         }
       ]
     }
   };
 
+  // State management for the currently selected flow, active step and
+  // playback. When playing, steps auto‑advance every few seconds.
   const [selectedFlow, setSelectedFlow] = useState("reward");
   const [stepIndex, setStepIndex] = useState(0);
   const [playing, setPlaying] = useState(false);
 
-  // When the selected flow changes, reset to the first step and stop
-  // playback.
+  // Reset step and stop playing when the flow changes.
   useEffect(() => {
     setStepIndex(0);
     setPlaying(false);
   }, [selectedFlow]);
 
-  // Auto advance through the steps when playing is true. The interval
-  // clears itself when the component unmounts or when playback stops.
+  // Auto advance steps while playing. When the last step is reached
+  // playback stops automatically.
   useEffect(() => {
     if (!playing) return;
-    const currentFlow = flows[selectedFlow];
     const interval = setInterval(() => {
       setStepIndex((idx) => {
-        if (idx < currentFlow.steps.length - 1) {
-          return idx + 1;
-        } else {
-          // Stop at the last step and reset playing
-          setPlaying(false);
-          return idx;
-        }
+        const max = flows[selectedFlow].steps.length - 1;
+        if (idx < max) return idx + 1;
+        setPlaying(false);
+        return idx;
       });
     }, 2500);
     return () => clearInterval(interval);
-  }, [playing, selectedFlow]);
+  }, [playing, selectedFlow, flows]);
 
+  // Extract the current step definition for convenience.
   const currentFlow = flows[selectedFlow];
   const currentStep = currentFlow.steps[stepIndex];
 
-  // Helper to decide whether a specific arrow should be active. We map
-  // secondary arrow names (arrow2) to their actual target. This allows
-  // multiple arrows in one step.
-  const isArrowActive = (name) => {
-    if (!currentStep || !currentStep.highlight) return false;
-    return currentStep.highlight.arrow === name || currentStep.highlight.arrow2 === name;
+  // Determine if a given node or path should be highlighted.
+  const isNodeActive = (name) => !!currentStep.nodes?.[name];
+  const isPathActive = (name) => currentStep.paths?.includes(name);
+
+  /**
+   * Colours for active and inactive elements on the dark background. These
+   * values can be adjusted to better align with your brand palette. The
+   * palette uses light blue highlights against a dark purple gradient.
+   */
+  const colours = {
+    nodeBgActive: "bg-[#20124d]", // deep purple for active nodes
+    nodeBgInactive: "bg-[#110a2d]", // darker purple for inactive nodes
+    nodeBorderActive: "border-[#5b35fc]", // violet border for active
+    nodeBorderInactive: "border-[#262254]", // subtle border for inactive
+    pathActive: "#7c3aed", // purple highlight for active path
+    pathInactive: "rgba(255,255,255,0.25)", // faint white for inactive path
+    textActive: "text-white",
+    textInactive: "text-gray-400"
   };
 
   return (
-    <div className="flex flex-col items-stretch gap-6">
-      {/* Controls */}
-      <div className="flex flex-wrap gap-3">
+    <div className="w-full flex flex-col gap-6 text-sm">
+      {/* Toggle buttons */}
+      <div className="flex flex-wrap gap-2 items-center">
         {Object.keys(flows).map((key) => (
           <button
             key={key}
             onClick={() => setSelectedFlow(key)}
-            className={`px-3 py-1 rounded-md border text-sm transition-all ${
+            className={`px-3 py-1.5 rounded-full transition-colors border ${
               selectedFlow === key
-                ? "bg-blue-600 text-white border-blue-600"
-                : "bg-white text-gray-800 border-gray-300 hover:bg-gray-100"
+                ? "bg-[#7c3aed] border-[#7c3aed] text-white shadow-md"
+                : "bg-transparent border-[#423180] text-gray-300 hover:bg-[#2a215a]"
             }`}
           >
             {flows[key].label}
           </button>
         ))}
+        <div className="flex-grow"></div>
         <button
           onClick={() => setPlaying(!playing)}
-          className="px-3 py-1 rounded-md border text-sm bg-green-600 text-white border-green-600 hover:bg-green-700 ml-auto"
+          className={
+            playing
+              ? "px-3 py-1.5 rounded-full bg-[#10b981] text-white border border-[#10b981] hover:bg-[#059669]"
+              : "px-3 py-1.5 rounded-full bg-[#2563eb] text-white border border-[#2563eb] hover:bg-[#1d4ed8]"
+          }
         >
           {playing ? "Pause" : "Play"}
         </button>
@@ -174,118 +207,128 @@ export const SuperGalacticArchitectureFlow = () => {
             setStepIndex(0);
             setPlaying(false);
           }}
-          className="px-3 py-1 rounded-md border text-sm bg-gray-200 text-gray-800 border-gray-300 hover:bg-gray-300"
+          className="px-3 py-1.5 rounded-full bg-[#374151] text-gray-200 border border-[#4b5563] hover:bg-[#4b5563] ml-2"
         >
           Reset
         </button>
       </div>
 
-      {/* Diagram */}
-      <div className="relative mt-4 flex items-stretch justify-between px-2">
-        {/* Game Client Node */}
-        <div
-          className={`relative w-1/3 p-4 border rounded-lg transition-colors ${
-            currentStep.highlight?.game ? "bg-blue-50 border-blue-300" : "bg-white border-gray-200"
-          }`}
-        >
-          <h3 className="font-semibold mb-2">Game Client (Unity)</h3>
-          <ul className="text-sm leading-relaxed list-disc list-inside space-y-0.5">
-            <li>Player gameplay</li>
-            <li>Missions and combat</li>
-            <li>Progression & upgrades</li>
-            <li>Reward generation</li>
-          </ul>
-        </div>
-
-        {/* Super Galactic Hub Node */}
-        <div
-          className={`relative w-1/3 p-4 border rounded-lg transition-colors ${
-            currentStep.highlight?.hub ? "bg-blue-50 border-blue-300" : "bg-white border-gray-200"
-          }`}
-        >
-          <h3 className="font-semibold mb-2">Super Galactic Hub</h3>
-          <ul className="text-sm leading-relaxed list-disc list-inside space-y-0.5">
-            <li>Unified application layer</li>
-            <li>Asset management</li>
-            <li>UAP balance & rewards</li>
-            <li>Breeding & NFT actions</li>
-            <li>Progression & stats</li>
-          </ul>
-        </div>
-
-        {/* Blockchain Layer Node */}
-        <div
-          className={`relative w-1/3 p-4 border rounded-lg transition-colors ${
-            currentStep.highlight?.chain ? "bg-blue-50 border-blue-300" : "bg-white border-gray-200"
-          }`}
-        >
-          <h3 className="font-semibold mb-2">Blockchain Layer</h3>
-          <ul className="text-sm leading-relaxed list-disc list-inside space-y-0.5">
-            <li>UAP token & NFT contracts</li>
-            <li>Burn & treasury flows</li>
-            <li>Transaction verification</li>
-            <li>Multi‑chain support</li>
-          </ul>
-        </div>
-
-        {/* Arrow: Game → Hub */}
-        <div
-          className={`absolute left-[16.66%] top-[50%] h-px bg-gray-300 overflow-hidden transform -translate-y-1/2 ${
-            isArrowActive("game-hub") ? "bg-blue-400" : ""
-          }`}
-          style={{ width: isArrowActive("game-hub") ? "33.33%" : "0%", transition: "width 0.6s ease" }}
-        >
-          {/* Arrow head */}
+      {/* Diagram container with dark gradient background */}
+      <div className="relative p-6 rounded-2xl overflow-hidden" style={{ background: "linear-gradient(145deg, #120940, #1f113d)" }}>
+        {/* Horizontal arrangement of nodes */}
+        <div className="flex items-start justify-between relative z-10">
+          {/* Game Node */}
           <div
-            className="absolute right-0 -top-1 w-0 h-0 border-t-4 border-b-4 border-l-8 border-transparent"
-            style={{ borderLeftColor: isArrowActive("game-hub") ? "#60a5fa" : "transparent" }}
-          ></div>
+            className={`flex flex-col items-center w-1/3 px-4 py-6 border rounded-xl transition-colors ${
+              isNodeActive("game") ? `${colours.nodeBgActive} ${colours.nodeBorderActive}` : `${colours.nodeBgInactive} ${colours.nodeBorderInactive}`
+            }`}
+          >
+            <div className="text-4xl mb-2">🎮</div>
+            <h3 className={`mb-3 font-semibold text-center ${isNodeActive("game") ? colours.textActive : colours.textInactive}`}>Game Client</h3>
+            <ul className="text-xs space-y-1 list-disc list-inside">
+              <li className={isNodeActive("game") ? colours.textActive : colours.textInactive}>Player gameplay</li>
+              <li className={isNodeActive("game") ? colours.textActive : colours.textInactive}>Missions & combat</li>
+              <li className={isNodeActive("game") ? colours.textActive : colours.textInactive}>Progression & upgrades</li>
+              <li className={isNodeActive("game") ? colours.textActive : colours.textInactive}>Reward generation</li>
+            </ul>
+          </div>
+
+          {/* Hub Node */}
+          <div
+            className={`flex flex-col items-center w-1/3 px-4 py-6 border rounded-xl transition-colors ${
+              isNodeActive("hub") ? `${colours.nodeBgActive} ${colours.nodeBorderActive}` : `${colours.nodeBgInactive} ${colours.nodeBorderInactive}`
+            }`}
+          >
+            <div className="text-4xl mb-2">🪐</div>
+            <h3 className={`mb-3 font-semibold text-center ${isNodeActive("hub") ? colours.textActive : colours.textInactive}`}>Super Galactic Hub</h3>
+            <ul className="text-xs space-y-1 list-disc list-inside">
+              <li className={isNodeActive("hub") ? colours.textActive : colours.textInactive}>Unified application layer</li>
+              <li className={isNodeActive("hub") ? colours.textActive : colours.textInactive}>Asset management</li>
+              <li className={isNodeActive("hub") ? colours.textActive : colours.textInactive}>UAP balance & rewards</li>
+              <li className={isNodeActive("hub") ? colours.textActive : colours.textInactive}>Breeding & NFT actions</li>
+              <li className={isNodeActive("hub") ? colours.textActive : colours.textInactive}>Progression & stats</li>
+            </ul>
+          </div>
+
+          {/* Blockchain Node */}
+          <div
+            className={`flex flex-col items-center w-1/3 px-4 py-6 border rounded-xl transition-colors ${
+              isNodeActive("chain") ? `${colours.nodeBgActive} ${colours.nodeBorderActive}` : `${colours.nodeBgInactive} ${colours.nodeBorderInactive}`
+            }`}
+          >
+            <div className="text-4xl mb-2">⛓️</div>
+            <h3 className={`mb-3 font-semibold text-center ${isNodeActive("chain") ? colours.textActive : colours.textInactive}`}>Blockchain Layer</h3>
+            <ul className="text-xs space-y-1 list-disc list-inside">
+              <li className={isNodeActive("chain") ? colours.textActive : colours.textInactive}>UAP token & NFT contracts</li>
+              <li className={isNodeActive("chain") ? colours.textActive : colours.textInactive}>Burn & treasury flows</li>
+              <li className={isNodeActive("chain") ? colours.textActive : colours.textInactive}>Transaction verification</li>
+              <li className={isNodeActive("chain") ? colours.textActive : colours.textInactive}>Multi‑chain support</li>
+            </ul>
+          </div>
         </div>
 
-        {/* Arrow: Hub → Game */}
-        <div
-          className={`absolute right-[16.66%] top-[60%] h-px bg-gray-300 overflow-hidden transform -translate-y-1/2 ${
-            isArrowActive("hub-game") ? "bg-blue-400" : ""
-          }`}
-          style={{ width: isArrowActive("hub-game") ? "33.33%" : "0%", transition: "width 0.6s ease" }}
-        >
-          <div
-            className="absolute left-0 -top-1 w-0 h-0 border-t-4 border-b-4 border-r-8 border-transparent"
-            style={{ borderRightColor: isArrowActive("hub-game") ? "#60a5fa" : "transparent" }}
-          ></div>
-        </div>
+        {/* SVG overlay for paths and arrows */}
+        <svg className="absolute inset-0 pointer-events-none z-0" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <defs>
+            <marker id="arrowhead" markerWidth="6" markerHeight="6" refX="0" refY="3" orient="auto" markerUnits="strokeWidth">
+              <path d="M0 0 L6 3 L0 6 z" fill={colours.pathActive} />
+            </marker>
+          </defs>
+          {/* game → hub */}
+          <path
+            d="M20 40 L45 40"
+            stroke={isPathActive("game-hub") ? colours.pathActive : colours.pathInactive}
+            strokeWidth="2"
+            fill="none"
+            markerEnd="url(#arrowhead)"
+            style={{ transition: "stroke 0.6s ease" }}
+          />
+          {/* hub → game */}
+          <path
+            d="M45 60 L20 60"
+            stroke={isPathActive("hub-game") ? colours.pathActive : colours.pathInactive}
+            strokeWidth="2"
+            fill="none"
+            markerEnd="url(#arrowhead)"
+            style={{ transition: "stroke 0.6s ease" }}
+          />
+          {/* hub → chain */}
+          <path
+            d="M55 40 L80 40"
+            stroke={isPathActive("hub-chain") ? colours.pathActive : colours.pathInactive}
+            strokeWidth="2"
+            fill="none"
+            markerEnd="url(#arrowhead)"
+            style={{ transition: "stroke 0.6s ease" }}
+          />
+          {/* chain → hub */}
+          <path
+            d="M80 60 L55 60"
+            stroke={isPathActive("chain-hub") ? colours.pathActive : colours.pathInactive}
+            strokeWidth="2"
+            fill="none"
+            markerEnd="url(#arrowhead)"
+            style={{ transition: "stroke 0.6s ease" }}
+          />
+        </svg>
 
-        {/* Arrow: Hub → Chain */}
-        <div
-          className={`absolute left-[50%] top-[50%] h-px bg-gray-300 overflow-hidden transform -translate-y-1/2 ${
-            isArrowActive("hub-chain") ? "bg-blue-400" : ""
-          }`}
-          style={{ width: isArrowActive("hub-chain") ? "33.33%" : "0%", transition: "width 0.6s ease" }}
-        >
-          <div
-            className="absolute right-0 -top-1 w-0 h-0 border-t-4 border-b-4 border-l-8 border-transparent"
-            style={{ borderLeftColor: isArrowActive("hub-chain") ? "#60a5fa" : "transparent" }}
-          ></div>
-        </div>
-
-        {/* Arrow: Chain → Hub */}
-        <div
-          className={`absolute right-[50%] top-[60%] h-px bg-gray-300 overflow-hidden transform -translate-y-1/2 ${
-            isArrowActive("chain-hub") ? "bg-blue-400" : ""
-          }`}
-          style={{ width: isArrowActive("chain-hub") ? "33.33%" : "0%", transition: "width 0.6s ease" }}
-        >
-          <div
-            className="absolute left-0 -top-1 w-0 h-0 border-t-4 border-b-4 border-r-8 border-transparent"
-            style={{ borderRightColor: isArrowActive("chain-hub") ? "#60a5fa" : "transparent" }}
-          ></div>
-        </div>
+        {/* Subtle glow effect behind active node */}
+        {/* We render a blurred circle behind whichever node is active to create a halo effect. */}
+        {isNodeActive("game") && (
+          <div className="absolute" style={{ left: "8%", top: "42%", width: "16%", height: "16%", background: "#7c3aed", filter: "blur(60px)", opacity: 0.4, borderRadius: "50%" }}></div>
+        )}
+        {isNodeActive("hub") && (
+          <div className="absolute" style={{ left: "42%", top: "42%", width: "16%", height: "16%", background: "#7c3aed", filter: "blur(60px)", opacity: 0.4, borderRadius: "50%" }}></div>
+        )}
+        {isNodeActive("chain") && (
+          <div className="absolute" style={{ left: "76%", top: "42%", width: "16%", height: "16%", background: "#7c3aed", filter: "blur(60px)", opacity: 0.4, borderRadius: "50%" }}></div>
+        )}
       </div>
 
-      {/* Step description */}
-      <div className="mt-6 text-sm">
-        <div className="font-medium text-gray-700 mb-1">Step {stepIndex + 1} of {currentFlow.steps.length}</div>
-        <div className="text-gray-800 italic">{currentStep.desc}</div>
+      {/* Step indicator and description */}
+      <div className="px-4">
+        <div className="mb-1 text-gray-300">Step {stepIndex + 1} of {currentFlow.steps.length}</div>
+        <div className="text-gray-100 text-base italic">{currentStep.desc}</div>
       </div>
     </div>
   );
