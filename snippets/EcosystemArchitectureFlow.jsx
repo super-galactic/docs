@@ -1,233 +1,649 @@
 "use client";
 import React from "react";
 
+// This component renders a high‑level animated architecture diagram for the
+// Super Galactic ecosystem. It is designed for Mintlify MDX pages and
+// follows the same export pattern as other snippet components.  The diagram
+// conveys the flow of data and actions between the Game Client, the
+// Super Galactic Hub, and the Blockchain Layer.  Only the currently
+// selected flow is visible at any given time to keep the visualization
+// focused and easy to understand.  Non‑selected flows are hidden
+// entirely rather than dimmed.  Within the selected flow, only the
+// currently active step gets an animated overlay and arrowhead; all
+// underlying static lines are rendered without arrowheads to avoid visual
+// clutter.  See the CSS at the bottom of this file for details on how
+// the arrow animations are implemented.
+
 export const SuperGalacticArchitectureFlow = () => {
-  const [activeFlow, setActiveFlow] = React.useState<"reward" | "spend" | "sync">("sync");
-  const [currentStep, setCurrentStep] = React.useState(0);
+  const W = 1100;
+  const H = 650;
 
-  const flows = {
-    reward: {
-      label: "Reward flow",
-      steps: [
-        { source: "game", row: 1, label: "Missions and combat completed" },
-        { source: "game", row: 3, label: "Reward generated off-chain (unclaimed)" },
-        { dest: "hub", row: 1, connector: "game_to_hub_reward", label: "Claimable balance visible in Hub" },
-        { source: "hub", row: 2, label: "Player claims reward" },
-        { dest: "chain", row: 4, connector: "hub_to_chain_claim", label: "Transaction verified on-chain" },
-        { source: "chain", dest: "hub", connector: "chain_to_hub_balance", label: "Balance updated in Hub" },
-        { dest: "game", row: 4, connector: "hub_to_game_balance", label: "Balance synced back to game client" },
-      ],
-    },
-    spend: {
-      label: "Spending and burn flow",
-      steps: [
-        { source: "game", row: 2, label: "Player initiates upgrade or breeding" },
-        { dest: "hub", row: 3, connector: "game_to_hub_action", label: "Action prepared in Hub" },
-        { source: "hub", dest: "chain", connector: "hub_to_chain_spend", label: "Settlement triggered on-chain" },
-        { source: "chain", row: 2, state: "burn", label: "Burn execution (50%)" },
-        { source: "chain", row: 3, state: "treasury", label: "Treasury allocation (50%)" },
-        { source: "chain", dest: "hub", connector: "chain_to_hub_asset", label: "Updated state synced to Hub" },
-        { dest: "game", row: 2, connector: "hub_to_game_asset", label: "Updated state reflected in game" },
-      ],
-    },
-    sync: {
-      label: "Asset synchronization",
-      steps: [
-        { source: "game", row: 2, label: "Gameplay progression or upgrades" },
-        { dest: "hub", row: 4, connector: "game_to_hub_stats", label: "Asset state updated in Hub" },
-        { source: "hub", row: 3, state: "nft_evolve", label: "NFT evolution or breeding result processed" },
-        { source: "hub", dest: "game", connector: "hub_to_game_newstate", label: "Updated NFT & stats synced back" },
-      ],
-    },
-  };
+  const [activeFlow, setActiveFlow] = React.useState("reward");
+  const [step, setStep] = React.useState(0);
 
-  const flow = flows[activeFlow];
+  // Define the flows, their labels, the order of steps, and which edges
+  // (arrows) and state dots should be visible for each flow.  Only the
+  // edges listed in `edges` will be rendered when that flow is active.
+  const flows = React.useMemo(
+    () => ({
+      reward: {
+        label: "Reward flow",
+        steps: [
+          { id: "gc_to_hub_reward", caption: "Reward data sent to Hub" },
+          { id: "hub_claimable", caption: "UAP appears as claimable balance" },
+        ],
+        edges: ["gc_to_hub_reward"],
+        states: ["hub_claimable"],
+      },
+      claim: {
+        label: "Claim flow",
+        steps: [
+          { id: "hub_to_chain_claim", caption: "Claim triggers on‑chain tx" },
+          { id: "chain_confirm_claim", caption: "Chain confirms transaction" },
+          { id: "chain_to_hub_balance", caption: "Balance updates across systems" },
+          { id: "hub_to_gc_balance", caption: "Game client reflects updated state" },
+        ],
+        edges: [
+          "hub_to_chain_claim",
+          "chain_confirm_claim",
+          "chain_to_hub_balance",
+          "hub_to_gc_balance",
+        ],
+        states: [],
+      },
+      spend: {
+        label: "Spending and burn flow",
+        steps: [
+          { id: "hub_to_chain_spend", caption: "Spend triggers on‑chain settlement" },
+          { id: "chain_burn", caption: "Automated burn executes" },
+          { id: "chain_treasury", caption: "Treasury allocation recorded" },
+          { id: "chain_to_hub_asset", caption: "Updated asset state syncs to Hub" },
+          { id: "hub_to_gc_asset", caption: "Updated state syncs to game client" },
+        ],
+        edges: [
+          "hub_to_chain_spend",
+          "chain_burn",
+          "chain_treasury",
+          "chain_to_hub_asset",
+          "hub_to_gc_asset",
+        ],
+        states: [],
+      },
+      sync: {
+        label: "Asset synchronization",
+        steps: [
+          { id: "gc_to_hub_stats", caption: "Upgrades performed in game" },
+          { id: "hub_nft_evolve", caption: "NFT stats and evolution update in Hub" },
+          { id: "hub_breed", caption: "Breeding initiated in Hub" },
+          { id: "hub_to_gc_newstate", caption: "Resulting NFT state reflects in game" },
+        ],
+        edges: ["gc_to_hub_stats", "hub_breed", "hub_to_gc_newstate"],
+        states: ["hub_nft_evolve"],
+      },
+    }),
+    []
+  );
 
+  // Whenever the active flow changes, reset the step to 0 and set an
+  // interval to advance the step.  Steps cycle through the defined
+  // sequence for the active flow.  The interval clears itself when the
+  // component unmounts or when the active flow changes.
+  // Step progression logic: when the active flow changes, reset the step to zero.
+  // Then automatically advance to the next step once after a short delay.  The
+  // animation plays through all steps exactly once and stops; clicking the same
+  // flow tab again will restart the sequence from the beginning.  This uses a
+  // timeout rather than an interval to avoid continuous looping.
+  const timerRef = React.useRef();
   React.useEffect(() => {
-    setCurrentStep(0);
-    const interval = setInterval(() => {
-      setCurrentStep((s) => (s + 1) % flow.steps.length);
-    }, 3000); // Calm 3-second pace per step
-
-    return () => clearInterval(interval);
-  }, [activeFlow, flow.steps.length]);
-
-  const step = flow.steps[currentStep] || {};
-
-  // Layout
-  const card = { w: 320, h: 380, y: 170 };
-  const nodes = { game: 40, hub: 400, chain: 760 };
-  const pillY = (i) => card.y + 100 + i * 48;
-
-  const isHighlighted = (type, value) => {
-    if (type === "card") return step.source === value || step.dest === value;
-    if (type === "connector") return step.connector === value;
-    if (type === "state") return step.state === value;
-    if (type === "row") {
-      const rowMatch = step.row !== undefined && step.row === value.row && (step.source || step.dest) === value.card;
-      return rowMatch;
+    // Clear any existing timer whenever the flow or step changes
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
     }
-    return false;
+    const total = flows[activeFlow]?.steps?.length || 0;
+    // If there are more steps ahead, schedule the next one
+    if (step < total - 1) {
+      timerRef.current = setTimeout(() => {
+        setStep((s) => s + 1);
+      }, 1600);
+    }
+    return () => {
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, [step, activeFlow, flows]);
+
+  // Determine the ID of the currently active step and its caption for
+  // display in the caption bar.  If no step exists, fall back to an
+  // empty string.
+  const activeStepId = flows[activeFlow]?.steps?.[step]?.id;
+  const caption = flows[activeFlow]?.steps?.[step]?.caption || "";
+
+  // Precompute the layout of the major nodes.  These numbers define the
+  // positions and sizes of the Game Client, Hub, and Blockchain cards on
+  // the SVG canvas.  Changing these values will reposition the entire
+  // diagram.
+  // All three node cards share the same width and height for consistency.
+  const nodeWidth = 320;
+  const nodeHeight = 340;
+  const node = {
+    game: {
+      x: 35,
+      y: 155,
+      w: nodeWidth,
+      h: nodeHeight,
+      title: "Game Client",
+      subtitle: "Unity",
+    },
+    hub: {
+      x: 390,
+      y: 155,
+      w: nodeWidth,
+      h: nodeHeight,
+      title: "Super Galactic Hub",
+      subtitle: "Unified app layer",
+    },
+    chain: {
+      x: 745,
+      y: 155,
+      w: nodeWidth,
+      h: nodeHeight,
+      title: "Blockchain Layer",
+      /* Move chain grouping text into the subtitle instead of overlaying a separate block. */
+      subtitle: "Chains: Ethereum (origin) plus BNB and Avalanche (gameplay)",
+    },
   };
 
-  const Pill = ({ x, y, text, row, card }) => (
-    <g className={isHighlighted("row", { row, card }) ? "pill highlighted" : "pill"}>
-      <rect x={x} y={y} width="280" height="38" rx="12" className="pill-bg" />
-      <text x={x + 16} y={y + 24} className="pill-text">{text}</text>
+  // Helpers to decide whether a given edge (arrow) or state (dot) should
+  // render for the current flow.  These functions look up the active
+  // flow's edge/state lists and return true if the ID is present.
+  const isEdgeVisible = (id) => (flows[activeFlow]?.edges || []).includes(id);
+  const isStateVisible = (id) => (flows[activeFlow]?.states || []).includes(id);
+  const isActive = (id) => id === activeStepId;
+
+  // Render a pill representing a row inside a card.  Pills are reused for
+  // multiple rows across the three node cards.  They are not interactive;
+  // they simply display the text in a consistent style.
+  const pill = (x, y, text) => (
+    <g>
+      <rect x={x} y={y} rx="10" ry="10" width="260" height="34" className="pillRect" />
+      <text x={x + 12} y={y + 22} className="pillText">
+        {text}
+      </text>
     </g>
   );
 
-  const Card = ({ x, title, subtitle, type, children }) => (
-    <g className={isHighlighted("card", type) ? "card highlighted" : "card"}>
-      <rect x={x} y={card.y} width={card.w} height={card.h} rx="20" className="card-bg" />
-      <text x={x + 20} y={card.y + 38} className="card-title">{title}</text>
-      <text x={x + 20} y={card.y + 60} className="card-subtitle">{subtitle}</text>
-      <line x1={x + 20} y1={card.y + 82} x2={x + card.w - 20} y2={card.y + 82} className="divider" />
+  // Render a card with its title, subtitle, divider line, and child
+  // elements (pills).  Each card is a rounded rectangle containing a
+  // group of pill rows.  Children are passed in as children of the
+  // Card component.
+  const Card = ({ n, children }) => (
+    <g>
+      <rect x={n.x} y={n.y} width={n.w} height={n.h} rx="18" ry="18" className="card" />
+      <text x={n.x + 18} y={n.y + 34} className="cardTitle">
+        {n.title}
+      </text>
+      <text x={n.x + 18} y={n.y + 58} className="cardSub">
+        {n.subtitle}
+      </text>
+      <line x1={n.x + 18} y1={n.y + 78} x2={n.x + n.w - 18} y2={n.y + 78} className="divider" />
       {children}
     </g>
   );
 
-  const Connector = ({ id, d }) => (
-    <path d={d} className={isHighlighted("connector", id) ? "connector active" : "connector"} />
-  );
+  // Render an arrow for a given edge.  If the edge is not visible for
+  // the current flow, return null so nothing is rendered.  Otherwise
+  // render a base line (static) and, if the edge is the active step,
+  // overlay an animated path with an arrowhead.  The CSS ensures the
+  // static line has no arrowhead via `marker-end: none` on .arrowBase.
+  const Arrow = ({ id, d }) => {
+    if (!isEdgeVisible(id)) return null;
+    const active = isActive(id);
+    return (
+      <g className="arrow">
+        <path d={d} className={`arrowBase${active ? " arrowBaseDim" : ""}`} />
+        {active ? (
+          <path
+            d={d}
+            className="arrowActive"
+            markerStart="none"
+            markerEnd="url(#arrowHead)"
+          />
+        ) : null}
+      </g>
+    );
+  };
 
-  const StateDot = ({ id, cx, cy, label }) => (
-    <g className={isHighlighted("state", id) ? "state-dot pulse" : "state-dot"}>
-      <circle cx={cx} cy={cy} r="10" />
-      <text x={cx} y={cy + 28} textAnchor="middle" className="state-label">{label}</text>
-    </g>
-  );
+  // Render a state indicator dot.  If the state is not visible for the
+  // current flow, return null.  Otherwise render a circle and its
+  // label.  When active, the dot pulses via CSS animation.
+  const StateDot = ({ id, cx, cy, label }) => {
+    if (!isStateVisible(id)) return null;
+    const active = isActive(id);
+    return (
+      <g className={`stateDot${active ? " stateDotActive" : ""}`}>
+        <circle cx={cx} cy={cy} r="8" className="dot" />
+        <text x={cx} y={cy + 23} textAnchor="middle" className="dotLabel">
+          {label}
+        </text>
+      </g>
+    );
+  };
 
   return (
-    <div className="wrapper">
-      <div className="header">
+    <div className="wrap">
+      <div className="topbar">
         <div className="title">
-          <h1>Super Galactic Ecosystem Architecture</h1>
-          <p>System flow, data flow, and state synchronization</p>
+          <div className="h1">Super Galactic Ecosystem Architecture</div>
+          <div className="h2">System flow, data flow, and state synchronization</div>
         </div>
-        <div className="tabs">
-          {Object.entries(flows).map(([key, f]) => (
+        <div className="controls" role="tablist" aria-label="Flow toggles">
+          {Object.entries(flows).map(([key, v]) => (
             <button
               key={key}
-              className={activeFlow === key ? "tab active" : "tab"}
-              onClick={() => setActiveFlow(key)}
+              type="button"
+              className={`btn${activeFlow === key ? " btnActive" : ""}`}
+              onClick={() => {
+                // Selecting a flow resets the step and sets the active flow.  Clicking the
+                // same tab again restarts the animation from the beginning.
+                setActiveFlow(key);
+                setStep(0);
+              }}
+              role="tab"
+              aria-selected={activeFlow === key}
             >
-              {f.label}
+              {v.label}
             </button>
           ))}
         </div>
       </div>
-
       <div className="caption">
-        <span className="label">Now highlighting:</span>
-        <span className="text">{step.label || "Select a flow to begin"}</span>
+        <span className="captionLabel">Now highlighting</span>
+        <span className="captionText">{caption}</span>
       </div>
-
-      <svg viewBox="0 0 1120 720" preserveAspectRatio="xMidYMid meet" className="diagram">
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%" className="svg">
         <defs>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="6" result="blur"/>
-            <feFlood floodColor="#ffffff" floodOpacity="0.35"/>
-            <feComposite in2="blur" operator="in"/>
-            <feMerge>
-              <feMergeNode/>
-              <feMergeNode in="SourceGraphic"/>
-            </feMerge>
+          {/* Arrowhead definition used only for active arrows. */}
+          <marker id="arrowHead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" className="arrowHead" />
+          </marker>
+          {/* Drop shadow for cards. */}
+          <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="10" stdDeviation="12" floodOpacity="0.18" />
           </filter>
         </defs>
-
-        <text x="200" y="130" className="col-header">Gameplay logic</text>
-        <text x="560" y="130" className="col-header">Application layer</text>
-        <text x="920" y="130" className="col-header">On‑chain settlement</text>
-
-        <Card x={nodes.game} title="Game Client" subtitle="Unity" type="game">
-          <Pill x={nodes.game + 20} y={pillY(0)} text="Player gameplay" row={0} card="game" />
-          <Pill x={nodes.game + 20} y={pillY(1)} text="Missions and combat" row={1} card="game" />
-          <Pill x={nodes.game + 20} y={pillY(2)} text="Progression and upgrades" row={2} card="game" />
-          <Pill x={nodes.game + 20} y={pillY(3)} text="Reward generation (off‑chain)" row={3} card="game" />
-          <Pill x={nodes.game + 20} y={pillY(4)} text="UAP earned (unclaimed)" row={4} card="game" />
+        {/* Column headers */}
+        <text x="210" y="120" className="colHeader" textAnchor="middle">
+          Gameplay logic
+        </text>
+        <text x="565" y="120" className="colHeader" textAnchor="middle">
+          Application layer
+        </text>
+        <text x="905" y="120" className="colHeader" textAnchor="middle">
+          On‑chain settlement
+        </text>
+        {/* Node cards */}
+        <Card n={node.game}>
+          {pill(node.game.x + 20, node.game.y + 95, "Player gameplay")}
+          {pill(node.game.x + 20, node.game.y + 140, "Missions and combat")}
+          {pill(node.game.x + 20, node.game.y + 185, "Progression and upgrades")}
+          {pill(node.game.x + 20, node.game.y + 230, "Reward generation (off‑chain)")}
+          {pill(node.game.x + 20, node.game.y + 275, "UAP earned (unclaimed)")}
         </Card>
-
-        <Card x={nodes.hub} title="Super Galactic Hub" subtitle="Unified app layer" type="hub">
-          <Pill x={nodes.hub + 20} y={pillY(0)} text="Asset management" row={0} card="hub" />
-          <Pill x={nodes.hub + 20} y={pillY(1)} text="UAP balance visibility" row={1} card="hub" />
-          <Pill x={nodes.hub + 20} y={pillY(2)} text="Reward claiming" row={2} card="hub" />
-          <Pill x={nodes.hub + 20} y={pillY(3)} text="Breeding and NFT actions" row={3} card="hub" />
-          <Pill x={nodes.hub + 20} y={pillY(4)} text="Progression and stats" row={4} card="hub" />
+        <Card n={node.hub}>
+          {pill(node.hub.x + 20, node.hub.y + 95, "Asset management")}
+          {pill(node.hub.x + 20, node.hub.y + 140, "UAP balance visibility")}
+          {pill(node.hub.x + 20, node.hub.y + 185, "Reward claiming")}
+          {pill(node.hub.x + 20, node.hub.y + 230, "Breeding and NFT actions")}
+          {pill(node.hub.x + 20, node.hub.y + 275, "Progression and stats")}
         </Card>
-
-        <Card x={nodes.chain} title="Blockchain Layer" subtitle="Ethereum (origin) + BNB & Avalanche (gameplay)" type="chain">
-          <Pill x={nodes.chain + 20} y={pillY(0)} text="UAP token contracts" row={0} card="chain" />
-          <Pill x={nodes.chain + 20} y={pillY(1)} text="NFT ownership contracts" row={1} card="chain" />
-          <Pill x={nodes.chain + 20} y={pillY(2)} text="Burn execution" row={2} card="chain" />
-          <Pill x={nodes.chain + 20} y={pillY(3)} text="Treasury flows" row={3} card="chain" />
-          <Pill x={nodes.chain + 20} y={pillY(4)} text="Tx verification" row={4} card="chain" />
+        <Card n={node.chain}>
+          {pill(node.chain.x + 20, node.chain.y + 95, "UAP token contracts")}
+          {pill(node.chain.x + 20, node.chain.y + 140, "NFT ownership contracts")}
+          {pill(node.chain.x + 20, node.chain.y + 185, "Burn execution")}
+          {pill(node.chain.x + 20, node.chain.y + 230, "Treasury flows")}
+          {pill(node.chain.x + 20, node.chain.y + 275, "Tx verification")}
         </Card>
-
-        {/* Connectors */}
-        <Connector id="game_to_hub_reward" d={`M ${nodes.game + card.w} ${pillY(3)+19} C ${nodes.game + card.w + 80} ${pillY(3)+19}, ${nodes.hub - 80} ${pillY(1)+19}, ${nodes.hub} ${pillY(1)+19}`} />
-        <Connector id="game_to_hub_stats" d={`M ${nodes.game + card.w} ${pillY(2)+19} C ${nodes.game + card.w + 80} ${pillY(2)+19}, ${nodes.hub - 80} ${pillY(4)+19}, ${nodes.hub} ${pillY(4)+19}`} />
-        <Connector id="game_to_hub_action" d={`M ${nodes.game + card.w} ${pillY(2)+19} C ${nodes.game + card.w + 80} ${pillY(2)+19}, ${nodes.hub - 80} ${pillY(3)+19}, ${nodes.hub} ${pillY(3)+19}`} />
-        <Connector id="hub_to_chain_claim" d={`M ${nodes.hub + card.w} ${pillY(2)+19} C ${nodes.hub + card.w + 80} ${pillY(2)+19}, ${nodes.chain - 80} ${pillY(4)+19}, ${nodes.chain} ${pillY(4)+19}`} />
-        <Connector id="hub_to_chain_spend" d={`M ${nodes.hub + card.w} ${pillY(3)+19} C ${nodes.hub + card.w + 80} ${pillY(3)+19}, ${nodes.chain - 80} ${pillY(2)+19}, ${nodes.chain} ${pillY(2)+19}`} />
-        <Connector id="chain_to_hub_balance" d={`M ${nodes.chain} ${pillY(1)+19} C ${nodes.chain - 80} ${pillY(1)+19}, ${nodes.hub + card.w + 80} ${pillY(1)+19}, ${nodes.hub + card.w} ${pillY(1)+19}`} />
-        <Connector id="chain_to_hub_asset" d={`M ${nodes.chain} ${pillY(4)+19} C ${nodes.chain - 80} ${pillY(4)+19}, ${nodes.hub + card.w + 80} ${pillY(4)+19}, ${nodes.hub + card.w} ${pillY(4)+19}`} />
-        <Connector id="hub_to_game_balance" d={`M ${nodes.hub} ${pillY(1)+19} C ${nodes.hub - 80} ${pillY(1)+19}, ${nodes.game + card.w + 80} ${pillY(4)+19}, ${nodes.game + card.w} ${pillY(4)+19}`} />
-        <Connector id="hub_to_game_asset" d={`M ${nodes.hub} ${pillY(4)+19} C ${nodes.hub - 80} ${pillY(4)+19}, ${nodes.game + card.w + 80} ${pillY(2)+19}, ${nodes.game + card.w} ${pillY(2)+19}`} />
-        <Connector id="hub_to_game_newstate" d={`M ${nodes.hub} ${pillY(0)+19} C ${nodes.hub - 100} ${pillY(0)+19}, ${nodes.game + card.w + 100} ${pillY(0)+19}, ${nodes.game + card.w} ${pillY(0)+19}`} />
-
-        {/* Breeding loop */}
-        <path
-          d={`M ${nodes.hub + 160} ${pillY(3)+19} Q ${nodes.hub + 290} ${pillY(3)+80}, ${nodes.hub + 290} ${pillY(3)+130} Q ${nodes.hub + 290} ${pillY(3)+170}, ${nodes.hub + 160} ${pillY(3)+170}`}
-          className={activeFlow === "sync" && currentStep === 2 ? "connector active" : "connector"}
+        {/* No separate chain grouping overlay; chain info is part of the subtitle */}
+        {/* Reward edges and states */}
+        <Arrow
+          id="gc_to_hub_reward"
+          d={`M ${node.game.x + node.game.w} ${node.game.y + 290} C ${node.game.x + node.game.w + 90} ${node.game.y + 290}, ${
+            node.hub.x - 90
+          } ${node.hub.y + 290}, ${node.hub.x} ${node.hub.y + 290}`}
         />
-
-        {/* State dots */}
-        <StateDot id="nft_evolve" cx={nodes.hub + 290} cy={pillY(4) + 19} label="NFT state" />
-        <StateDot id="burn" cx={nodes.chain + 290} cy={pillY(2) + 19} label="burn" />
-        <StateDot id="treasury" cx={nodes.chain + 290} cy={pillY(3) + 19} label="treasury" />
-
-        {/* Footer */}
+        <StateDot
+          id="hub_claimable"
+          cx={node.hub.x + 290}
+          cy={node.hub.y + 155}
+          label="claimable"
+        />
+        {/* Claim edges */}
+        <Arrow
+          id="hub_to_chain_claim"
+          d={`M ${node.hub.x + node.hub.w} ${node.hub.y + 210} C ${node.hub.x + node.hub.w + 90} ${node.hub.y + 210}, ${
+            node.chain.x - 90
+          } ${node.chain.y + 210}, ${node.chain.x} ${node.chain.y + 210}`}
+        />
+        <Arrow
+          id="chain_confirm_claim"
+          d={`M ${node.chain.x + 40} ${node.chain.y + 210} C ${node.chain.x + 100} ${node.chain.y + 150}, ${
+            node.chain.x + 160
+          } ${node.chain.y + 150}, ${node.chain.x + 220} ${node.chain.y + 210}`}
+        />
+        <Arrow
+          id="chain_to_hub_balance"
+          d={`M ${node.chain.x} ${node.chain.y + 250} C ${node.chain.x - 90} ${node.chain.y + 250}, ${
+            node.hub.x + node.hub.w + 90
+          } ${node.hub.y + 250}, ${node.hub.x + node.hub.w} ${node.hub.y + 250}`}
+        />
+        <Arrow
+          id="hub_to_gc_balance"
+          d={`M ${node.hub.x} ${node.hub.y + 250} C ${node.hub.x - 90} ${node.hub.y + 250}, ${
+            node.game.x + node.game.w + 90
+          } ${node.game.y + 250}, ${node.game.x + node.game.w} ${node.game.y + 250}`}
+        />
+        {/* Spend edges */}
+        <Arrow
+          id="hub_to_chain_spend"
+          d={`M ${node.hub.x + node.hub.w} ${node.hub.y + 330} C ${node.hub.x + node.hub.w + 90} ${node.hub.y + 330}, ${
+            node.chain.x - 90
+          } ${node.chain.y + 330}, ${node.chain.x} ${node.chain.y + 330}`}
+        />
+        <Arrow
+          id="chain_burn"
+          d={`M ${node.chain.x + 60} ${node.chain.y + 330} C ${node.chain.x + 120} ${node.chain.y + 380}, ${
+            node.chain.x + 150
+          } ${node.chain.y + 380}, ${node.chain.x + 210} ${node.chain.y + 330}`}
+        />
+        <Arrow
+          id="chain_treasury"
+          d={`M ${node.chain.x + 60} ${node.chain.y + 330} C ${node.chain.x + 120} ${node.chain.y + 280}, ${
+            node.chain.x + 150
+          } ${node.chain.y + 280}, ${node.chain.x + 210} ${node.chain.y + 330}`}
+        />
+        <Arrow
+          id="chain_to_hub_asset"
+          d={`M ${node.chain.x} ${node.chain.y + 370} C ${node.chain.x - 90} ${node.chain.y + 370}, ${
+            node.hub.x + node.hub.w + 90
+          } ${node.hub.y + 370}, ${node.hub.x + node.hub.w} ${node.hub.y + 370}`}
+        />
+        <Arrow
+          id="hub_to_gc_asset"
+          d={`M ${node.hub.x} ${node.hub.y + 370} C ${node.hub.x - 90} ${node.hub.y + 370}, ${
+            node.game.x + node.game.w + 90
+          } ${node.game.y + 370}, ${node.game.x + node.game.w} ${node.game.y + 370}`}
+        />
+        {/* Sync edges and states */}
+        <Arrow
+          id="gc_to_hub_stats"
+          d={`M ${node.game.x + node.game.w} ${node.game.y + 190} C ${node.game.x + node.game.w + 90} ${node.game.y + 190}, ${
+            node.hub.x - 90
+          } ${node.hub.y + 190}, ${node.hub.x} ${node.hub.y + 190}`}
+        />
+        <StateDot
+          id="hub_nft_evolve"
+          cx={node.hub.x + 290}
+          cy={node.hub.y + 300}
+          label="NFT state"
+        />
+        <Arrow
+          id="hub_breed"
+          d={`M ${node.hub.x + 160} ${node.hub.y + 320} C ${node.hub.x + 230} ${node.hub.y + 320}, ${
+            node.hub.x + 230
+          } ${node.hub.y + 355}, ${node.hub.x + 160} ${node.hub.y + 355}`}
+        />
+        <Arrow
+          id="hub_to_gc_newstate"
+          d={`M ${node.hub.x} ${node.hub.y + 170} C ${node.hub.x - 120} ${node.hub.y + 170}, ${
+            node.game.x + node.game.w + 120
+          } ${node.game.y + 170}, ${node.game.x + node.game.w} ${node.game.y + 170}`}
+        />
+        {/* Footer explaining the key principles */}
         <g className="footer">
-          <rect x="60" y="570" width="1000" height="100" rx="18" className="footer-bg" />
-          <text x="80" y="605" className="footer-title">Key principles</text>
-          <text x="80" y="635" className="footer-text">
+          <rect x="60" y="510" width="980" height="110" rx="16" ry="16" className="footerCard" />
+          <text x="85" y="545" className="footerTitle">
+            Key principles
+          </text>
+          <text x="85" y="572" className="footerText">
             Single source of truth • Bidirectional synchronization • No manual syncing • Clear separation between gameplay, application, and on‑chain settlement
           </text>
         </g>
       </svg>
-
       <style jsx>{`
-        .wrapper { padding: 32px; background: #0a0a12; border-radius: 24px; border: 1px solid rgba(255,255,255,0.08); }
-        .header { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 24px; margin-bottom: 24px; }
-        h1 { font-size: 22px; font-weight: 700; color: #fff; margin: 0; }
-        p { font-size: 14px; color: #aaa; margin: 8px 0 0; }
-        .tabs { display: flex; gap: 12px; flex-wrap: wrap; }
-        .tab { padding: 10px 20px; border-radius: 24px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.12); color: #ccc; font-size: 14px; cursor: pointer; transition: all 0.3s; }
-        .tab:hover { background: rgba(255,255,255,0.08); }
-        .tab.active { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.3); color: #fff; font-weight: 600; }
-        .caption { display: flex; align-items: center; gap: 12px; padding: 14px 20px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; margin-bottom: 28px; }
-        .label { font-size: 13px; color: #999; }
-        .text { font-size: 15px; font-weight: 600; color: #fff; }
-        .col-header { fill: #777; font-size: 13px; text-anchor: middle; }
-        .card-bg { fill: rgba(255,255,255,0.05); stroke: rgba(255,255,255,0.15); }
-        .card.highlighted .card-bg { fill: rgba(255,255,255,0.12); stroke: #fff; filter: url(#glow); }
-        .card-title { fill: #fff; font-size: 17px; font-weight: 700; }
-        .card-subtitle { fill: #bbb; font-size: 13px; }
-        .divider { stroke: rgba(255,255,255,0.12); }
-        .pill-bg { fill: rgba(255,255,255,0.04); stroke: rgba(255,255,255,0.12); }
-        .pill.highlighted .pill-bg { fill: rgba(255,255,255,0.18); stroke: #fff; filter: url(#glow); }
-        .pill-text { fill: #ddd; font-size: 13px; }
-        .connector { fill: none; stroke: rgba(255,255,255,0.18); stroke-width: 2; }
-        .connector.active { stroke: #fff; stroke-width: 3.5; filter: url(#glow); }
-        .state-dot circle { fill: rgba(255,255,255,0.18); stroke: rgba(255,255,255,0.3); }
-        .state-dot.pulse circle { animation: pulse 1s ease-out; fill: #fff; }
-        @keyframes pulse { 0% { r: 10; opacity: 0.6; } 50% { r: 16; opacity: 1; } 100% { r: 10; opacity: 0.6; } }
-        .state-label { fill: #aaa; font-size: 11px; }
-        .footer-bg { fill: rgba(255,255,255,0.04); stroke: rgba(255,255,255,0.12); }
-        .footer-title { fill: #eee; font-size: 14px; font-weight: 700; }
-        .footer-text { fill: #bbb; font-size: 13px; }
-        .diagram { width: 100%; height: auto; display: block; }
+        .wrap {
+          width: 100%;
+          border-radius: 18px;
+          padding: 16px;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: rgba(255, 255, 255, 0.02);
+        }
+        .topbar {
+          display: flex;
+          gap: 14px;
+          align-items: flex-start;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          margin-bottom: 10px;
+        }
+        .title {
+          min-width: 260px;
+        }
+        .h1 {
+          font-size: 18px;
+          font-weight: 700;
+          line-height: 1.2;
+          color: rgba(255, 255, 255, 0.92);
+        }
+        .h2 {
+          margin-top: 6px;
+          font-size: 13px;
+          opacity: 0.8;
+          color: rgba(255, 255, 255, 0.75);
+        }
+        .controls {
+          display: flex;
+          gap: 8px;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: flex-end;
+        }
+        .btn {
+          font-size: 12px;
+          padding: 8px 10px;
+          border-radius: 12px;
+          border: 1px solid rgba(255, 255, 255, 0.14);
+          background: rgba(255, 255, 255, 0.03);
+          cursor: pointer;
+          opacity: 0.85;
+        }
+        .btn:hover {
+          opacity: 1;
+        }
+        .btnActive {
+          opacity: 1;
+          border: 1px solid rgba(255, 255, 255, 0.28);
+          background: rgba(255, 255, 255, 0.06);
+        }
+        .caption {
+          display: flex;
+          gap: 10px;
+          align-items: center;
+          padding: 10px 12px;
+          border-radius: 14px;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: rgba(0, 0, 0, 0.12);
+          margin-bottom: 12px;
+        }
+        .captionLabel {
+          font-size: 12px;
+          opacity: 1;
+          color: rgba(255, 255, 255, 0.8);
+          white-space: nowrap;
+        }
+        .captionText {
+          font-size: 12px;
+          font-weight: 600;
+          color: rgba(255, 255, 255, 0.92);
+        }
+        .svg {
+          width: 100%;
+          height: auto;
+          display: block;
+        }
+        .colHeader {
+          font-size: 12px;
+          opacity: 0.75;
+          letter-spacing: 0.2px;
+        }
+        /* Ensure all SVG text elements are visible on a dark background */
+        .svg text {
+          fill: rgba(255, 255, 255, 0.86);
+        }
+        .card {
+          /* Slightly lighter background and stroke for better contrast */
+          filter: url(#softShadow);
+          stroke: rgba(255, 255, 255, 0.18);
+          stroke-width: 1;
+          fill: rgba(255, 255, 255, 0.05);
+        }
+        .cardTitle {
+          font-size: 16px;
+          font-weight: 700;
+          fill: rgba(255, 255, 255, 0.9);
+        }
+        .cardSub {
+          font-size: 12px;
+          opacity: 1;
+          fill: rgba(255, 255, 255, 0.8);
+        }
+        .divider {
+          stroke: rgba(255, 255, 255, 0.12);
+          stroke-width: 1;
+        }
+        .pillRect {
+          stroke: rgba(255, 255, 255, 0.18);
+          stroke-width: 1;
+          fill: rgba(255, 255, 255, 0.04);
+        }
+        .pillText {
+          font-size: 12px;
+          opacity: 1;
+          fill: rgba(255, 255, 255, 0.86);
+        }
+        /* Base arrow line: no arrowheads; lighten when active */
+        .arrowBase {
+          fill: none;
+          stroke: rgba(255, 255, 255, 0.20);
+          stroke-width: 2;
+          /* ensure no markers on any portion of the base line */
+          marker-start: none;
+          marker-mid: none;
+          marker-end: none;
+        }
+        .arrowBaseDim {
+          stroke: rgba(255, 255, 255, 0.12);
+        }
+        .arrowActive {
+          fill: none;
+          stroke: rgba(255, 255, 255, 0.9);
+          /* Slightly wider for active glow */
+          stroke-width: 3.5;
+          /* add a subtle glow with drop shadow */
+          filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.45));
+          animation: glowPulse 1.2s ease-in-out;
+        }
+        .arrowHead {
+          fill: rgba(255, 255, 255, 0.9);
+        }
+        /* Pulse for glowing arrows: gently increase and decrease stroke width */
+        @keyframes glowPulse {
+          0% {
+            stroke-width: 3.5;
+            opacity: 0.75;
+          }
+          50% {
+            stroke-width: 5;
+            opacity: 1;
+          }
+          100% {
+            stroke-width: 3.5;
+            opacity: 0.75;
+          }
+        }
+        @keyframes pulse {
+          0% {
+            opacity: 0.65;
+          }
+          50% {
+            opacity: 1;
+          }
+          100% {
+            opacity: 0.65;
+          }
+        }
+        .stateDot .dot {
+          fill: rgba(255, 255, 255, 0.20);
+          stroke: rgba(255, 255, 255, 0.18);
+          stroke-width: 1;
+        }
+        .stateDotActive .dot {
+          fill: rgba(255, 255, 255, 0.92);
+          stroke: rgba(255, 255, 255, 0.35);
+          animation: dotPulse 1.2s ease-in-out infinite;
+        }
+        @keyframes dotPulse {
+          0% {
+            transform: scale(1);
+            transform-origin: center;
+            opacity: 0.7;
+          }
+          50% {
+            transform: scale(1.12);
+            transform-origin: center;
+            opacity: 1;
+          }
+          100% {
+            transform: scale(1);
+            transform-origin: center;
+            opacity: 0.7;
+          }
+        }
+        .dotLabel {
+          font-size: 10px;
+          opacity: 1;
+          fill: rgba(255, 255, 255, 0.86);
+        }
+        .chainGroupRect {
+          fill: rgba(255, 255, 255, 0.04);
+          stroke: rgba(255, 255, 255, 0.16);
+          stroke-width: 1;
+        }
+        .chainGroupTitle {
+          font-size: 12px;
+          font-weight: 700;
+          opacity: 1;
+          fill: rgba(255, 255, 255, 0.86);
+        }
+        .chainGroupSub {
+          font-size: 11px;
+          opacity: 1;
+          fill: rgba(255, 255, 255, 0.78);
+        }
+        .footerCard {
+          fill: rgba(255, 255, 255, 0.04);
+          stroke: rgba(255, 255, 255, 0.16);
+          stroke-width: 1;
+        }
+        .footerTitle {
+          font-size: 13px;
+          font-weight: 700;
+          opacity: 1;
+          fill: rgba(255, 255, 255, 0.88);
+        }
+        .footerText {
+          font-size: 12px;
+          opacity: 1;
+          fill: rgba(255, 255, 255, 0.80);
+        }
       `}</style>
     </div>
   );
