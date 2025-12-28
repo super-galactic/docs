@@ -16,15 +16,19 @@ export const SuperGalacticArchitectureFlow = () => {
           { id: "gc_to_hub_reward", caption: "Reward data sent to Hub" },
           { id: "hub_claimable", caption: "UAP appears as claimable balance" },
         ],
+        edges: ["gc_to_hub_reward"],
+        states: ["hub_claimable"],
       },
       claim: {
         label: "Claim flow",
         steps: [
           { id: "hub_to_chain_claim", caption: "Claim triggers on-chain tx" },
-          { id: "chain_confirm_claim", caption: "Chain confirms" },
+          { id: "chain_confirm_claim", caption: "Chain confirms transaction" },
           { id: "chain_to_hub_balance", caption: "Balance updates across systems" },
           { id: "hub_to_gc_balance", caption: "Game client reflects updated state" },
         ],
+        edges: ["hub_to_chain_claim", "chain_confirm_claim", "chain_to_hub_balance", "hub_to_gc_balance"],
+        states: [],
       },
       spend: {
         label: "Spending and burn flow",
@@ -33,44 +37,48 @@ export const SuperGalacticArchitectureFlow = () => {
           { id: "chain_burn", caption: "Automated burn executes" },
           { id: "chain_treasury", caption: "Treasury allocation recorded" },
           { id: "chain_to_hub_asset", caption: "Updated asset state syncs to Hub" },
-          { id: "hub_to_gc_asset", caption: "Updated state syncs to Game client" },
+          { id: "hub_to_gc_asset", caption: "Updated state syncs to game client" },
         ],
+        edges: ["hub_to_chain_spend", "chain_burn", "chain_treasury", "chain_to_hub_asset", "hub_to_gc_asset"],
+        states: [],
       },
       sync: {
         label: "Asset synchronization",
         steps: [
           { id: "gc_to_hub_stats", caption: "Upgrades performed in game" },
-          { id: "hub_nft_evolve", caption: "NFT stats and evolution update" },
+          { id: "hub_nft_evolve", caption: "NFT stats and evolution update in Hub" },
           { id: "hub_breed", caption: "Breeding initiated in Hub" },
           { id: "hub_to_gc_newstate", caption: "Resulting NFT state reflects in game" },
         ],
+        edges: ["gc_to_hub_stats", "hub_breed", "hub_to_gc_newstate"],
+        states: ["hub_nft_evolve"],
       },
     }),
     []
   );
 
   React.useEffect(() => {
-    const steps = flows[activeFlow]?.steps?.length || 1;
+    const total = flows[activeFlow]?.steps?.length || 1;
     setStep(0);
-    const t = setInterval(() => {
-      setStep((s) => (s + 1) % steps);
-    }, 1600);
+    const t = setInterval(() => setStep((s) => (s + 1) % total), 1700);
     return () => clearInterval(t);
   }, [activeFlow, flows]);
 
   const activeStepId = flows[activeFlow]?.steps?.[step]?.id;
+  const caption = flows[activeFlow]?.steps?.[step]?.caption || "";
 
-  const isActive = (id) => id === activeStepId;
-
-  // Layout (x, y, w, h)
   const node = {
     game: { x: 60, y: 155, w: 300, h: 300, title: "Game Client", subtitle: "Unity" },
     hub: { x: 405, y: 135, w: 320, h: 340, title: "Super Galactic Hub", subtitle: "Unified app layer" },
-    chain: { x: 770, y: 155, w: 270, h: 300, title: "Blockchain Layer", subtitle: "Settlement + source of truth" },
+    chain: { x: 770, y: 155, w: 270, h: 300, title: "Blockchain Layer", subtitle: "Settlement and source of truth" },
   };
 
-  const pill = (x, y, text, activeId) => (
-    <g className={`pill ${isActive(activeId) ? "pillActive" : ""}`}>
+  const isEdgeVisible = (id) => (flows[activeFlow]?.edges || []).includes(id);
+  const isStateVisible = (id) => (flows[activeFlow]?.states || []).includes(id);
+  const isActive = (id) => id === activeStepId;
+
+  const pill = (x, y, text) => (
+    <g>
       <rect x={x} y={y} rx="10" ry="10" width="260" height="34" className="pillRect" />
       <text x={x + 12} y={y + 22} className="pillText">
         {text}
@@ -92,23 +100,37 @@ export const SuperGalacticArchitectureFlow = () => {
     </g>
   );
 
-  const Arrow = ({ id, d, label, yLabel }) => (
-    <g className={`arrow ${isActive(id) ? "arrowActive" : ""}`}>
-      <path d={d} className="arrowPath" markerEnd="url(#arrowHead)" />
-      {label ? (
-        <text x="0" y="0" className="arrowLabel">
-          <textPath href={`#${id}_path`} startOffset="50%" textAnchor="middle">
-            {label}
-          </textPath>
-        </text>
-      ) : null}
-      {/* Invisible path for label anchoring */}
-      <path id={`${id}_path`} d={d} fill="none" stroke="transparent" strokeWidth="1" />
-      {typeof yLabel === "number" ? null : null}
-    </g>
-  );
+  // Base line always clean and static
+  // Animated overlay only when active, includes arrowhead and dash animation
+  const Arrow = ({ id, d }) => {
+    if (!isEdgeVisible(id)) return null;
 
-  const caption = flows[activeFlow]?.steps?.[step]?.caption || "";
+    const active = isActive(id);
+
+    return (
+      <g className="arrow">
+        <path d={d} className={`arrowBase ${active ? "arrowBaseDim" : ""}`} />
+        {active ? (
+          <path d={d} className="arrowActive" markerEnd="url(#arrowHead)" />
+        ) : null}
+      </g>
+    );
+  };
+
+  const StateDot = ({ id, cx, cy, label }) => {
+    if (!isStateVisible(id)) return null;
+
+    const active = isActive(id);
+
+    return (
+      <g className={`stateDot ${active ? "stateDotActive" : ""}`}>
+        <circle cx={cx} cy={cy} r="8" className="dot" />
+        <text x={cx} y={cy + 23} textAnchor="middle" className="dotLabel">
+          {label}
+        </text>
+      </g>
+    );
+  };
 
   return (
     <div className="wrap">
@@ -150,7 +172,6 @@ export const SuperGalacticArchitectureFlow = () => {
           </filter>
         </defs>
 
-        {/* Column headers */}
         <text x="210" y="120" className="colHeader" textAnchor="middle">
           Gameplay logic
         </text>
@@ -161,32 +182,30 @@ export const SuperGalacticArchitectureFlow = () => {
           On-chain settlement
         </text>
 
-        {/* Cards */}
         <Card n={node.game}>
-          {pill(node.game.x + 20, node.game.y + 95, "Player gameplay", "gc_player")}
-          {pill(node.game.x + 20, node.game.y + 140, "Missions and combat", "gc_missions")}
-          {pill(node.game.x + 20, node.game.y + 185, "Progression and upgrades", "gc_prog")}
-          {pill(node.game.x + 20, node.game.y + 230, "Reward generation (off-chain)", "gc_reward")}
-          {pill(node.game.x + 20, node.game.y + 275, "UAP earned (unclaimed)", "gc_unclaimed")}
+          {pill(node.game.x + 20, node.game.y + 95, "Player gameplay")}
+          {pill(node.game.x + 20, node.game.y + 140, "Missions and combat")}
+          {pill(node.game.x + 20, node.game.y + 185, "Progression and upgrades")}
+          {pill(node.game.x + 20, node.game.y + 230, "Reward generation (off-chain)")}
+          {pill(node.game.x + 20, node.game.y + 275, "UAP earned (unclaimed)")}
         </Card>
 
         <Card n={node.hub}>
-          {pill(node.hub.x + 20, node.hub.y + 95, "Asset management", "hub_assets")}
-          {pill(node.hub.x + 20, node.hub.y + 140, "UAP balance visibility", "hub_balance")}
-          {pill(node.hub.x + 20, node.hub.y + 185, "Reward claiming", "hub_claim")}
-          {pill(node.hub.x + 20, node.hub.y + 230, "Breeding and NFT actions", "hub_breed")}
-          {pill(node.hub.x + 20, node.hub.y + 275, "Progression and stats", "hub_stats")}
+          {pill(node.hub.x + 20, node.hub.y + 95, "Asset management")}
+          {pill(node.hub.x + 20, node.hub.y + 140, "UAP balance visibility")}
+          {pill(node.hub.x + 20, node.hub.y + 185, "Reward claiming")}
+          {pill(node.hub.x + 20, node.hub.y + 230, "Breeding and NFT actions")}
+          {pill(node.hub.x + 20, node.hub.y + 275, "Progression and stats")}
         </Card>
 
         <Card n={node.chain}>
-          {pill(node.chain.x + 20, node.chain.y + 95, "UAP token contracts", "chain_uap")}
-          {pill(node.chain.x + 20, node.chain.y + 140, "NFT ownership contracts", "chain_nft")}
-          {pill(node.chain.x + 20, node.chain.y + 185, "Burn execution", "chain_burn_pill")}
-          {pill(node.chain.x + 20, node.chain.y + 230, "Treasury flows", "chain_treasury_pill")}
-          {pill(node.chain.x + 20, node.chain.y + 275, "Tx verification", "chain_verify")}
+          {pill(node.chain.x + 20, node.chain.y + 95, "UAP token contracts")}
+          {pill(node.chain.x + 20, node.chain.y + 140, "NFT ownership contracts")}
+          {pill(node.chain.x + 20, node.chain.y + 185, "Burn execution")}
+          {pill(node.chain.x + 20, node.chain.y + 230, "Treasury flows")}
+          {pill(node.chain.x + 20, node.chain.y + 275, "Tx verification")}
         </Card>
 
-        {/* Optional chain grouping labels */}
         <g className="chainGroup">
           <rect x={node.chain.x + 18} y={node.chain.y + 18} rx="12" ry="12" width={node.chain.w - 36} height="60" className="chainGroupRect" />
           <text x={node.chain.x + 34} y={node.chain.y + 43} className="chainGroupTitle">
@@ -197,21 +216,14 @@ export const SuperGalacticArchitectureFlow = () => {
           </text>
         </g>
 
-        {/* Arrows (directional animated paths) */}
-        {/* Reward: Game -> Hub */}
+        {/* Reward */}
         <Arrow
           id="gc_to_hub_reward"
           d={`M ${node.game.x + node.game.w} ${node.game.y + 290} C ${node.game.x + node.game.w + 90} ${node.game.y + 290}, ${node.hub.x - 90} ${node.hub.y + 290}, ${node.hub.x} ${node.hub.y + 290}`}
         />
-        {/* Hub claimable state highlight */}
-        <g className={`stateDot ${isActive("hub_claimable") ? "stateDotActive" : ""}`}>
-          <circle cx={node.hub.x + 290} cy={node.hub.y + 155} r="8" className="dot" />
-          <text x={node.hub.x + 290} y={node.hub.y + 178} textAnchor="middle" className="dotLabel">
-            claimable
-          </text>
-        </g>
+        <StateDot id="hub_claimable" cx={node.hub.x + 290} cy={node.hub.y + 155} label="claimable" />
 
-        {/* Claim: Hub -> Chain -> Hub -> Game */}
+        {/* Claim */}
         <Arrow
           id="hub_to_chain_claim"
           d={`M ${node.hub.x + node.hub.w} ${node.hub.y + 210} C ${node.hub.x + node.hub.w + 90} ${node.hub.y + 210}, ${node.chain.x - 90} ${node.chain.y + 210}, ${node.chain.x} ${node.chain.y + 210}`}
@@ -229,7 +241,7 @@ export const SuperGalacticArchitectureFlow = () => {
           d={`M ${node.hub.x} ${node.hub.y + 250} C ${node.hub.x - 90} ${node.hub.y + 250}, ${node.game.x + node.game.w + 90} ${node.game.y + 250}, ${node.game.x + node.game.w} ${node.game.y + 250}`}
         />
 
-        {/* Spend: Hub -> Chain, burn, treasury, then sync back */}
+        {/* Spend */}
         <Arrow
           id="hub_to_chain_spend"
           d={`M ${node.hub.x + node.hub.w} ${node.hub.y + 330} C ${node.hub.x + node.hub.w + 90} ${node.hub.y + 330}, ${node.chain.x - 90} ${node.chain.y + 330}, ${node.chain.x} ${node.chain.y + 330}`}
@@ -251,17 +263,12 @@ export const SuperGalacticArchitectureFlow = () => {
           d={`M ${node.hub.x} ${node.hub.y + 370} C ${node.hub.x - 90} ${node.hub.y + 370}, ${node.game.x + node.game.w + 90} ${node.game.y + 370}, ${node.game.x + node.game.w} ${node.game.y + 370}`}
         />
 
-        {/* Sync: Game -> Hub, evolve, breed, Hub -> Game */}
+        {/* Sync */}
         <Arrow
           id="gc_to_hub_stats"
           d={`M ${node.game.x + node.game.w} ${node.game.y + 190} C ${node.game.x + node.game.w + 90} ${node.game.y + 190}, ${node.hub.x - 90} ${node.hub.y + 190}, ${node.hub.x} ${node.hub.y + 190}`}
         />
-        <g className={`stateDot ${isActive("hub_nft_evolve") ? "stateDotActive" : ""}`}>
-          <circle cx={node.hub.x + 290} cy={node.hub.y + 300} r="8" className="dot" />
-          <text x={node.hub.x + 290} y={node.hub.y + 323} textAnchor="middle" className="dotLabel">
-            NFT state
-          </text>
-        </g>
+        <StateDot id="hub_nft_evolve" cx={node.hub.x + 290} cy={node.hub.y + 300} label="NFT state" />
         <Arrow
           id="hub_breed"
           d={`M ${node.hub.x + 160} ${node.hub.y + 320} C ${node.hub.x + 230} ${node.hub.y + 320}, ${node.hub.x + 230} ${node.hub.y + 355}, ${node.hub.x + 160} ${node.hub.y + 355}`}
@@ -271,7 +278,6 @@ export const SuperGalacticArchitectureFlow = () => {
           d={`M ${node.hub.x} ${node.hub.y + 170} C ${node.hub.x - 120} ${node.hub.y + 170}, ${node.game.x + node.game.w + 120} ${node.game.y + 170}, ${node.game.x + node.game.w} ${node.game.y + 170}`}
         />
 
-        {/* Key principles footer */}
         <g className="footer">
           <rect x="60" y="510" width="980" height="110" rx="16" ry="16" className="footerCard" />
           <text x="85" y="545" className="footerTitle">
@@ -412,27 +418,26 @@ export const SuperGalacticArchitectureFlow = () => {
           opacity: 0.92;
         }
 
-        .pillActive .pillRect {
-          stroke: rgba(255, 255, 255, 0.35);
-          fill: rgba(255, 255, 255, 0.06);
+        .arrowBase {
+          fill: none;
+          stroke: rgba(255, 255, 255, 0.16);
+          stroke-width: 2;
+        }
+
+        .arrowBaseDim {
+          stroke: rgba(255, 255, 255, 0.10);
+        }
+
+        .arrowActive {
+          fill: none;
+          stroke: rgba(255, 255, 255, 0.90);
+          stroke-width: 3.2;
+          stroke-dasharray: 10 12;
+          animation: dash 1.2s linear infinite, pulse 1.6s ease-in-out infinite;
         }
 
         .arrowHead {
-          fill: rgba(255, 255, 255, 0.7);
-        }
-
-        .arrowPath {
-          fill: none;
-          stroke: rgba(255, 255, 255, 0.22);
-          stroke-width: 2;
-          stroke-dasharray: 8 10;
-          animation: dash 2.2s linear infinite;
-        }
-
-        .arrowActive .arrowPath {
-          stroke: rgba(255, 255, 255, 0.85);
-          stroke-width: 3.2;
-          animation: dash 1.2s linear infinite, pulse 1.6s ease-in-out infinite;
+          fill: rgba(255, 255, 255, 0.85);
         }
 
         @keyframes dash {
@@ -440,7 +445,7 @@ export const SuperGalacticArchitectureFlow = () => {
             stroke-dashoffset: 0;
           }
           to {
-            stroke-dashoffset: -180;
+            stroke-dashoffset: -220;
           }
         }
 
@@ -457,13 +462,13 @@ export const SuperGalacticArchitectureFlow = () => {
         }
 
         .stateDot .dot {
-          fill: rgba(255, 255, 255, 0.22);
+          fill: rgba(255, 255, 255, 0.20);
           stroke: rgba(255, 255, 255, 0.18);
           stroke-width: 1;
         }
 
         .stateDotActive .dot {
-          fill: rgba(255, 255, 255, 0.9);
+          fill: rgba(255, 255, 255, 0.92);
           stroke: rgba(255, 255, 255, 0.35);
           animation: dotPulse 1.2s ease-in-out infinite;
         }
