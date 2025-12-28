@@ -2,204 +2,69 @@
 import React from "react";
 
 export const SuperGalacticArchitectureFlow = () => {
-  const W = 1000;
-  const H = 720;
-
-  const cxLeft = 250;
-  const cxCenter = 500;
-  const cxRight = 750;
-  const baseY = 360;
-
-  const containerW = 240;
-  const containerH = 460;
-  const largeContainerW = 280;
-  const largeContainerH = 500;
-  const nodeW = 180;
-  const nodeH = 56;
-
-  // Micro nodes - centered in their container
-  const leftNodes = [
-    { id: "l1", label: "Missions and Combat", y: baseY - 150 },
-    { id: "l2", label: "Progression and Upgrades", y: baseY - 70 },
-    { id: "l3", label: "Rewards Generated", y: baseY + 20 },
-    { id: "l4", label: "Local State Cache", y: baseY + 110 },
-  ];
-
-  const centerNodes = [
-    { id: "c1", label: "Sync Router", y: baseY - 180 },
-    { id: "c2", label: "Asset Manager", y: baseY - 100 },
-    { id: "c3", label: "UAP Balance", y: baseY - 20 },
-    { id: "c4", label: "Claim Service", y: baseY + 60 },
-    { id: "c5", label: "Breeding and NFT Actions", y: baseY + 140 },
-  ];
-
-  const rightNodes = [
-    { id: "r1", label: "Tx Verification", y: baseY - 130 },
-    { id: "r2", label: "UAP Token Contract", y: baseY - 50 },
-    { id: "r3", label: "NFT Ownership Contract", y: baseY + 20 },
-    { id: "r4", label: "Burn Execution", y: baseY + 90 },
-    { id: "r5", label: "Treasury Flows", y: baseY + 160 },
-  ];
-
-  // Global curved paths - carefully tuned for beauty
-  const paths = {
-    l2c: `M ${cxLeft + 120} ${baseY + 20} Q ${cxCenter - 140} ${baseY - 120}, ${cxCenter - 140} ${baseY - 20}`,
-    c2r: `M ${cxCenter + 140} ${baseY} Q ${cxRight - 120} ${baseY - 100}, ${cxRight - 120} ${baseY}`,
-    r2c: `M ${cxRight - 120} ${baseY + 40} Q ${cxCenter + 140} ${baseY + 140}, ${cxCenter + 140} ${baseY + 40}`,
-    c2l: `M ${cxCenter - 140} ${baseY + 80} Q ${cxLeft + 120} ${baseY + 160}, ${cxLeft + 120} ${baseY + 80}`,
-  };
-
-  const flows = {
-    reward: [
-      { nodes: ["l1"], path: null, desc: "Missions and Combat completed" },
-      { nodes: ["l3"], path: null, desc: "Rewards generated off-chain" },
-      { nodes: ["l3", "c3"], path: "l2c", desc: "Reward data sent to Hub" },
-      { nodes: ["c3"], path: null, desc: "UAP appears as claimable balance" },
-    ],
-    claim: [
-      { nodes: ["c4"], path: null, desc: "Player initiates claim via Hub" },
-      { nodes: ["c4", "r1"], path: "c2r", desc: "Claim transaction submitted" },
-      { nodes: ["r1"], path: null, desc: "Transaction verified on chain" },
-      { nodes: ["c3"], path: "r2c", desc: "Confirmed balance reflected in Hub" },
-    ],
-    spending: [
-      { nodes: ["c2"], path: null, desc: "Player spends UAP on upgrade" },
-      { nodes: ["c2", "r4", "r5"], path: "c2r", desc: "Burn and treasury allocation executed" },
-      { nodes: ["r4", "r5"], path: null, desc: "Chain state updated" },
-      { nodes: ["c3", "l4"], path: "r2c", desc: "Updated balances sync back" },
-    ],
-    asset: [
-      { nodes: ["l2"], path: null, desc: "Upgrades performed in game" },
-      { nodes: ["l2", "c5"], path: "l2c", desc: "NFT stats and evolution sent to Hub" },
-      { nodes: ["c5"], path: null, desc: "Breeding or evolution processed" },
-      { nodes: ["l4"], path: "c2l", desc: "Updated NFT state reflected in client" },
-    ],
-  };
-
-  const flowNames = {
-    reward: "Reward flow",
-    claim: "Claim flow",
-    spending: "Spending and burn flow",
-    asset: "Asset synchronisation flow",
-  };
-
-  let currentFlow = "reward";
-  let stepIndex = 0;
-  let isPlaying = false;
-
-  const play = () => {
-    isPlaying = true;
-    stepIndex = 0;
-    advance();
-  };
-
-  const advance = () => {
-    if (!isPlaying) return;
-    stepIndex++;
-    if (stepIndex >= flows[currentFlow].length) {
-      isPlaying = false;
-      return;
-    }
-    requestAnimationFrame(() => setTimeout(advance, 3200));
-  };
-
-  const reset = () => {
-    isPlaying = false;
-    stepIndex = 0;
-  };
-
-  const currentStep = stepIndex === 0 ? null : flows[currentFlow][stepIndex - 1];
-  const activePath = currentStep?.path;
-  const activeNodes = currentStep?.nodes || [];
-  const description = stepIndex === 0 ? "Select a flow and press Play to begin" : currentStep?.desc || "";
-
   return (
-    <div style={{ margin: "32px 0" }}>
+    <div style={{ margin: "40px 0" }}>
       <style>{`
-        @keyframes dotTravel {
-          from { offset-distance: 0%; }
-          to { offset-distance: 100%; }
+        @keyframes dashTravel {
+          to { stroke-dashoffset: 0; }
         }
-        @keyframes haloPulse {
-          0%,100% { opacity: 0.5; transform: scale(1); }
-          50% { opacity: 0.8; transform: scale(1.15); }
+        @keyframes pulseGlow {
+          0%,100% { opacity: 0.6; transform: scale(1); }
+          50% { opacity: 0.9; transform: scale(1.2); }
         }
-        .glass {
-          fill: rgba(30, 20, 60, 0.65);
+        .glass-container {
+          fill: rgba(25, 15, 55, 0.7);
+          stroke: rgba(139, 92, 246, 0.4);
+          stroke-width: 2;
+          filter: url(#glow);
+        }
+        .micro-node {
+          fill: rgba(50, 30, 100, 0.8);
           stroke: rgba(167, 139, 250, 0.3);
-          filter: url(#softGlow);
-        }
-        .node-base {
-          fill: rgba(45, 30, 90, 0.75);
-          stroke: rgba(167, 139, 250, 0.25);
-          rx: 12;
-          ry: 12;
+          rx: 16;
+          ry: 16;
         }
         .node-active {
           stroke: #c4b5fd;
-          stroke-width: 2.5;
+          stroke-width: 3;
           filter: url(#nodeGlow);
         }
-        .container-halo {
-          stroke: #a78bfa;
+        .path-inactive {
+          stroke: rgba(139, 92, 246, 0.15);
           stroke-width: 4;
-          fill: none;
-          opacity: 0;
         }
-        .container-active .container-halo {
-          opacity: 0.6;
-          animation: haloPulse 3s ease-in-out infinite;
+        .path-active {
+          stroke: url(#pathGrad);
+          stroke-width: 6;
+          filter: url(#glow);
+        }
+        .travel-dot {
+          animation: dashTravel 2s linear forwards;
         }
       `}</style>
 
-      <div className="flex flex-wrap gap-4 justify-center mb-10">
-        {Object.keys(flows).map((key) => (
-          <button
-            key={key}
-            onClick={() => {
-              currentFlow = key;
-              play();
-            }}
-            className={`px-7 py-3 rounded-2xl font-semibold text-lg transition-all ${
-              currentFlow === key
-                ? "bg-purple-600 text-white shadow-lg shadow-purple-600/40"
-                : "bg-slate-800/70 text-slate-300 hover:bg-slate-700"
-            }`}
-          >
-            {flowNames[key]}
-          </button>
-        ))}
-        <button
-          onClick={play}
-          className="px-10 py-3 bg-green-600 text-white rounded-2xl font-semibold text-lg hover:bg-green-500 shadow-lg"
-        >
-          Play
-        </button>
-        <button
-          onClick={reset}
-          className="px-10 py-3 bg-slate-700 text-white rounded-2xl font-semibold text-lg hover:bg-slate-600"
-        >
-          Reset
-        </button>
-      </div>
-
       <div
         style={{
-          borderRadius: "28px",
-          padding: "32px",
-          background: "radial-gradient(ellipse at center, #2d1b4a 0%, #1a0b2e 70%)",
-          boxShadow: "inset 0 0 140px rgba(0,0,0,0.8)",
+          borderRadius: "32px",
+          padding: "40px",
+          background: "radial-gradient(ellipse at top, #2a1a4a 0%, #0f0b1e 80%)",
+          boxShadow: "0 20px 60px rgba(0,0,0,0.8), inset 0 0 160px rgba(0,0,0,0.6)",
+          textAlign: "center",
         }}
       >
-        <svg viewBox={`0 0 ${W} ${H}`} width="100%" preserveAspectRatio="xMidYMid meet">
+        <h2 style={{ fontSize: "40px", fontWeight: "800", color: "#e0d8ff", marginBottom: "60px" }}>
+          Super Galactic Architecture Flow
+        </h2>
+
+        <svg viewBox="0 0 1200 800" width="100%" preserveAspectRatio="xMidYMid meet">
           <defs>
-            <linearGradient id="pathGlow" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#c4b5fd"/>
-              <stop offset="100%" stopColor="#818cf8"/>
+            <linearGradient id="pathGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#a78bfa"/>
+              <stop offset="100%" stopColor="#60a5fa"/>
             </linearGradient>
 
-            <filter id="softGlow">
-              <feGaussianBlur stdDeviation="10" result="blur"/>
+            <filter id="glow">
+              <feGaussianBlur stdDeviation="8" result="blur"/>
               <feMerge>
                 <feMergeNode in="blur"/>
                 <feMergeNode in="SourceGraphic"/>
@@ -213,102 +78,83 @@ export const SuperGalacticArchitectureFlow = () => {
                 <feMergeNode in="SourceGraphic"/>
               </feMerge>
             </filter>
-
-            <path id="pL2C" d={paths.l2c} />
-            <path id="pC2R" d={paths.c2r} />
-            <path id="pR2C" d={paths.r2c} />
-            <path id="pC2L" d={paths.c2l} />
           </defs>
 
-          {/* Faint inactive paths */}
-          {Object.values(paths).map((d, i) => (
-            <path key={i} d={d} fill="none" stroke="rgba(167,139,250,0.15)" strokeWidth="3"/>
-          ))}
+          {/* Global paths (inactive base) */}
+          <path d="M 300 300 Q 600 100, 900 300" className="path-inactive"/>
+          <path d="M 300 400 Q 600 600, 900 400" className="path-inactive"/>
+          <path d="M 900 350 Q 600 150, 300 350" className="path-inactive"/>
+          <path d="M 900 450 Q 600 650, 300 450" className="path-inactive"/>
 
-          {/* Active path glow + traveling dot */}
-          {activePath && (
-            <>
-              <use href={`#p${activePath.toUpperCase()}`} stroke="url(#pathGlow)" strokeWidth="5" filter="url(#softGlow)" opacity="0.9"/>
-              {/* Bright core dot */}
-              <circle r="9" fill="#e0d8ff" filter="url(#nodeGlow)">
-                <animateMotion dur="1.3s" repeatCount="1" path={paths[activePath]}>
-                  <mpath xlinkHref={`#p${activePath.toUpperCase()}`} />
-                </animateMotion>
-              </circle>
-              {/* Soft halo */}
-              <circle r="18" fill="none" stroke="#c4b5fd" strokeWidth="6" opacity="0.6">
-                <animateMotion dur="1.3s" repeatCount="1" path={paths[activePath]}>
-                  <mpath xlinkHref={`#p${activePath.toUpperCase()}`} />
-                </animateMotion>
-                <animate attributeName="opacity" values="0.4;0.8;0.4" dur="1.3s" repeatCount="1"/>
-              </circle>
-            </>
-          )}
+          {/* Example animated path - Reward flow: Client -> Hub */}
+          <path d="M 300 300 Q 600 100, 900 300" className="path-active">
+            <animate attributeName="stroke-dasharray" values="0,1000;10,990" dur="8s" repeatCount="indefinite"/>
+          </path>
+          <circle cx="0" cy="0" r="12" fill="#e0d8ff" filter="url(#nodeGlow)">
+            <animateMotion dur="2s" repeatCount="indefinite" path="M 300 300 Q 600 100, 900 300"/>
+          </circle>
+          <circle cx="0" cy="0" r="24" fill="none" stroke="#c4b5fd" strokeWidth="6" opacity="0.6">
+            <animateMotion dur="2s" repeatCount="indefinite" path="M 300 300 Q 600 100, 900 300"/>
+            <animate attributeName="opacity" values="0.4;0.8;0.4" dur="2s" repeatCount="indefinite"/>
+          </circle>
 
           {/* Containers */}
-          <g className={activeNodes.some(n => n.startsWith("l")) ? "container-active" : ""}>
-            <rect x={cxLeft - containerW/2} y={baseY - containerH/2} width={containerW} height={containerH} rx="24" className="glass"/>
-            <circle cx={cxLeft} cy={baseY} r={containerW/2 + 25} className="container-halo"/>
-            <text x={cxLeft} y={baseY - containerH/2 - 50} textAnchor="middle" fill="#a78bfa" fontSize="20" fontWeight="600">Gameplay layer</text>
-            <text x={cxLeft} y={baseY - containerH/2 - 20} textAnchor="middle" fill="#e0d8ff" fontSize="28" fontWeight="800">Game Client (Unity)</text>
+          <g transform="translate(200,200)">
+            <rect x="0" y="0" width="300" height="400" rx="32" className="glass-container"/>
+            <text x="150" y="-40" textAnchor="middle" fill="#a78bfa" fontSize="24" fontWeight="700">Gameplay Layer</text>
+            <text x="150" y="-10" textAnchor="middle" fill="#e0d8ff" fontSize="32" fontWeight="800">Game Client (Unity)</text>
+            {/* Micro nodes left */}
+            <rect x="40" y="40" width="220" height="60" className="micro-node node-active"/>
+            <text x="150" y="80" textAnchor="middle" fill="#e0d8ff" fontSize="18">Missions and Combat</text>
+            <rect x="40" y="120" width="220" height="60" className="micro-node"/>
+            <text x="150" y="160" textAnchor="middle" fill="#e0d8ff" fontSize="18">Progression and Upgrades</text>
+            <rect x="40" y="200" width="220" height="60" className="micro-node node-active"/>
+            <text x="150" y="240" textAnchor="middle" fill="#e0d8ff" fontSize="18">Rewards Generated</text>
+            <rect x="40" y="280" width="220" height="60" className="micro-node"/>
+            <text x="150" y="320" textAnchor="middle" fill="#e0d8ff" fontSize="18">Local State Cache</text>
           </g>
 
-          <g className={activeNodes.some(n => n.startsWith("c")) ? "container-active" : ""}>
-            <rect x={cxCenter - largeContainerW/2} y={baseY - largeContainerH/2} width={largeContainerW} height={largeContainerH} rx="28" className="glass"/>
-            <circle cx={cxCenter} cy={baseY} r={largeContainerW/2 + 30} className="container-halo"/>
-            <text x={cxCenter} y={baseY - largeContainerH/2 - 60} textAnchor="middle" fill="#a78bfa" fontSize="22" fontWeight="600">Application layer</text>
-            <text x={cxCenter} y={baseY - largeContainerH/2 - 25} textAnchor="middle" fill="#e0d8ff" fontSize="32" fontWeight="800">Super Galactic Hub</text>
+          <g transform="translate(500,150)">
+            <rect x="0" y="0" width="340" height="500" rx="36" className="glass-container"/>
+            <text x="170" y="-50" textAnchor="middle" fill="#a78bfa" fontSize="26" fontWeight="700">Application Layer</text>
+            <text x="170" y="-15" textAnchor="middle" fill="#e0d8ff" fontSize="36" fontWeight="800">Super Galactic Hub</text>
+            {/* Center nodes */}
+            <rect x="60" y="40" width="220" height="60" className="micro-node"/>
+            <text x="170" y="80" textAnchor="middle" fill="#e0d8ff" fontSize="18">Sync Router</text>
+            <rect x="60" y="120" width="220" height="60" className="micro-node"/>
+            <text x="170" y="160" textAnchor="middle" fill="#e0d8ff" fontSize="18">Asset Manager</text>
+            <rect x="60" y="200" width="220" height="60" className="micro-node node-active"/>
+            <text x="170" y="240" textAnchor="middle" fill="#e0d8ff" fontSize="18">UAP Balance</text>
+            <rect x="60" y="280" width="220" height="60" className="micro-node"/>
+            <text x="170" y="320" textAnchor="middle" fill="#e0d8ff" fontSize="18">Claim Service</text>
+            <rect x="60" y="360" width="220" height="60" className="micro-node"/>
+            <text x="170" y="400" textAnchor="middle" fill="#e0d8ff" fontSize="18">Breeding and NFT Actions</text>
           </g>
 
-          <g className={activeNodes.some(n => n.startsWith("r")) ? "container-active" : ""}>
-            <rect x={cxRight - containerW/2} y={baseY - containerH/2} width={containerW} height={containerH} rx="24" className="glass"/>
-            <circle cx={cxRight} cy={baseY} r={containerW/2 + 25} className="container-halo"/>
-            <text x={cxRight} y={baseY - containerH/2 - 50} textAnchor="middle" fill="#a78bfa" fontSize="20" fontWeight="600">On chain settlement</text>
-            <text x={cxRight} y={baseY - containerH/2 - 20} textAnchor="middle" fill="#e0d8ff" fontSize="28" fontWeight="800">Blockchain Layer</text>
-            <text x={cxRight} y={baseY + containerH/2 + 40} textAnchor="middle" fill="#c4b5fd" fontSize="15" opacity="0.9">
-              Ethereum (origin) and BNB + Avalanche (gameplay)
-            </text>
+          <g transform="translate(800,200)">
+            <rect x="0" y="0" width="300" height="400" rx="32" className="glass-container"/>
+            <text x="150" y="-40" textAnchor="middle" fill="#a78bfa" fontSize="24" fontWeight="700">On-Chain Settlement</text>
+            <text x="150" y="-10" textAnchor="middle" fill="#e0d8ff" fontSize="32" fontWeight="800">Blockchain Layer</text>
+            <text x="150" y="440" textAnchor="middle" fill="#c4b5fd" fontSize="16">Ethereum (origin) and BNB + Avalanche (gameplay)</text>
+            {/* Right nodes */}
+            <rect x="40" y="40" width="220" height="60" className="micro-node"/>
+            <text x="150" y="80" textAnchor="middle" fill="#e0d8ff" fontSize="18">Tx Verification</text>
+            <rect x="40" y="120" width="220" height="60" className="micro-node"/>
+            <text x="150" y="160" textAnchor="middle" fill="#e0d8ff" fontSize="18">UAP Token Contract</text>
+            <rect x="40" y="200" width="220" height="60" className="micro-node"/>
+            <text x="150" y="240" textAnchor="middle" fill="#e0d8ff" fontSize="18">NFT Ownership Contract</text>
+            <rect x="40" y="280" width="220" height="60" className="micro-node"/>
+            <text x="150" y="320" textAnchor="middle" fill="#e0d8ff" fontSize="18">Burn Execution</text>
+            <rect x="40" y="360" width="220" height="60" className="micro-node"/>
+            <text x="150" y="400" textAnchor="middle" fill="#e0d8ff" fontSize="18">Treasury Flows</text>
           </g>
-
-          {/* Micro nodes */}
-          {leftNodes.map(n => (
-            <g key={n.id} transform={`translate(${cxLeft},${n.y})`}>
-              <rect x={-nodeW/2} y={-nodeH/2} width={nodeW} height={nodeH} className={`node-base ${activeNodes.includes(n.id) ? "node-active" : ""}`}/>
-              <text x="0" y="4" textAnchor="middle" fill="#e0d8ff" fontSize="15" fontWeight="700">{n.label}</text>
-            </g>
-          ))}
-
-          {centerNodes.map(n => (
-            <g key={n.id} transform={`translate(${cxCenter},${n.y})`}>
-              <rect x={-nodeW/2 - 10} y={-nodeH/2} width={nodeW + 20} height={nodeH} className={`node-base ${activeNodes.includes(n.id) ? "node-active" : ""}`}/>
-              <text x="0" y="4" textAnchor="middle" fill="#e0d8ff" fontSize="16" fontWeight="700">{n.label}</text>
-            </g>
-          ))}
-
-          {rightNodes.map(n => (
-            <g key={n.id} transform={`translate(${cxRight},${n.y})`}>
-              <rect x={-nodeW/2} y={-nodeH/2} width={nodeW} height={nodeH} className={`node-base ${activeNodes.includes(n.id) ? "node-active" : ""}`}/>
-              <text x="0" y="4" textAnchor="middle" fill="#e0d8ff" fontSize="15" fontWeight="700">{n.label}</text>
-            </g>
-          ))}
         </svg>
 
-        <div
-          style={{
-            marginTop: "32px",
-            padding: "24px",
-            background: "rgba(30,20,60,0.5)",
-            borderRadius: "20px",
-            border: "1px solid rgba(167,139,250,0.3)",
-            textAlign: "center",
-          }}
-        >
-          <div style={{ fontSize: "18px", color: "#c4b5fd", marginBottom: "8px" }}>
-            {stepIndex > 0 ? `Step ${stepIndex} of ${flows[currentFlow].length}` : "Ready"}
-          </div>
-          <div style={{ fontSize: "24px", color: "#e0d8ff", fontStyle: "italic" }}>
-            {description}
-          </div>
+        <div style={{ marginTop: "40px", fontSize: "24px", color: "#c4b5fd", fontStyle: "italic" }}>
+          Reward flow example: Missions → Rewards Generated → Sync to Hub (animated path and glowing dot)
+        </div>
+        <div style={{ marginTop: "12px", fontSize: "18px", color: "#a78bfa" }}>
+          The diagram auto-animates on load with smooth traveling glow and node highlights.
         </div>
       </div>
     </div>
