@@ -1,629 +1,316 @@
 "use client";
 import React from "react";
 
-// Premium Mintlify safe architecture flow
-// Keeps the same structure as your working file
-// Adds MP4 style traveling glow dot along the active connector path
-
 export const SuperGalacticArchitectureFlow = () => {
-  const W = 1100;
-  const H = 650;
+  const W = 1000;
+  const H = 720;
 
-  const [activeFlow, setActiveFlow] = React.useState("reward");
-  const [step, setStep] = React.useState(0);
+  const cxLeft = 250;
+  const cxCenter = 500;
+  const cxRight = 750;
+  const baseY = 360;
 
-  const flows = React.useMemo(
-    () => ({
-      reward: {
-        label: "Reward flow",
-        steps: [
-          { id: "gc_to_hub_reward", caption: "Reward data sent to Hub" },
-          { id: "hub_claimable", caption: "UAP appears as claimable balance" },
-        ],
-        edges: ["gc_to_hub_reward"],
-        states: ["hub_claimable"],
-      },
-      claim: {
-        label: "Claim flow",
-        steps: [
-          { id: "hub_to_chain_claim", caption: "Claim triggers on chain tx" },
-          { id: "chain_confirm_claim", caption: "Chain confirms transaction" },
-          { id: "chain_to_hub_balance", caption: "Balance updates across systems" },
-          { id: "hub_to_gc_balance", caption: "Game client reflects updated state" },
-        ],
-        edges: [
-          "hub_to_chain_claim",
-          "chain_confirm_claim",
-          "chain_to_hub_balance",
-          "hub_to_gc_balance",
-        ],
-        states: [],
-      },
-      spend: {
-        label: "Spending and burn flow",
-        steps: [
-          { id: "hub_to_chain_spend", caption: "Spend triggers on chain settlement" },
-          { id: "chain_burn", caption: "Automated burn executes" },
-          { id: "chain_treasury", caption: "Treasury allocation recorded" },
-          { id: "chain_to_hub_asset", caption: "Updated asset state syncs to Hub" },
-          { id: "hub_to_gc_asset", caption: "Updated state syncs to game client" },
-        ],
-        edges: [
-          "hub_to_chain_spend",
-          "chain_burn",
-          "chain_treasury",
-          "chain_to_hub_asset",
-          "hub_to_gc_asset",
-        ],
-        states: [],
-      },
-      sync: {
-        label: "Asset synchronization",
-        steps: [
-          { id: "gc_to_hub_stats", caption: "Upgrades performed in game" },
-          { id: "hub_nft_evolve", caption: "NFT stats and evolution update in Hub" },
-          { id: "hub_breed", caption: "Breeding initiated in Hub" },
-          { id: "hub_to_gc_newstate", caption: "Resulting NFT state reflects in game" },
-        ],
-        edges: ["gc_to_hub_stats", "hub_breed", "hub_to_gc_newstate"],
-        states: ["hub_nft_evolve"],
-      },
-    }),
-    []
-  );
+  const containerW = 240;
+  const containerH = 460;
+  const largeContainerW = 280;
+  const largeContainerH = 500;
+  const nodeW = 180;
+  const nodeH = 56;
 
-  const timerRef = React.useRef();
+  // Micro nodes - centered in their container
+  const leftNodes = [
+    { id: "l1", label: "Missions and Combat", y: baseY - 150 },
+    { id: "l2", label: "Progression and Upgrades", y: baseY - 70 },
+    { id: "l3", label: "Rewards Generated", y: baseY + 20 },
+    { id: "l4", label: "Local State Cache", y: baseY + 110 },
+  ];
 
-  React.useEffect(() => {
-    if (timerRef.current) clearTimeout(timerRef.current);
+  const centerNodes = [
+    { id: "c1", label: "Sync Router", y: baseY - 180 },
+    { id: "c2", label: "Asset Manager", y: baseY - 100 },
+    { id: "c3", label: "UAP Balance", y: baseY - 20 },
+    { id: "c4", label: "Claim Service", y: baseY + 60 },
+    { id: "c5", label: "Breeding and NFT Actions", y: baseY + 140 },
+  ];
 
-    const total = flows[activeFlow]?.steps?.length || 0;
-    if (step < total - 1) {
-      timerRef.current = setTimeout(() => setStep((s) => s + 1), 1600);
-    }
+  const rightNodes = [
+    { id: "r1", label: "Tx Verification", y: baseY - 130 },
+    { id: "r2", label: "UAP Token Contract", y: baseY - 50 },
+    { id: "r3", label: "NFT Ownership Contract", y: baseY + 20 },
+    { id: "r4", label: "Burn Execution", y: baseY + 90 },
+    { id: "r5", label: "Treasury Flows", y: baseY + 160 },
+  ];
 
-    return () => {
-      if (timerRef.current) clearTimeout(timerRef.current);
-    };
-  }, [step, activeFlow, flows]);
-
-  const activeStepId = flows[activeFlow]?.steps?.[step]?.id;
-  const caption = flows[activeFlow]?.steps?.[step]?.caption || "";
-
-  const nodeWidth = 320;
-  const nodeHeight = 340;
-
-  const node = {
-    game: {
-      x: 35,
-      y: 155,
-      w: nodeWidth,
-      h: nodeHeight,
-      title: "Game Client",
-      subtitle: "Unity",
-    },
-    hub: {
-      x: 390,
-      y: 155,
-      w: nodeWidth,
-      h: nodeHeight,
-      title: "Super Galactic Hub",
-      subtitle: "Unified app layer",
-    },
-    chain: {
-      x: 745,
-      y: 155,
-      w: nodeWidth,
-      h: nodeHeight,
-      title: "Blockchain Layer",
-      subtitle: "Chains: Ethereum (origin) plus BNB and Avalanche (gameplay)",
-    },
+  // Global curved paths - carefully tuned for beauty
+  const paths = {
+    l2c: `M ${cxLeft + 120} ${baseY + 20} Q ${cxCenter - 140} ${baseY - 120}, ${cxCenter - 140} ${baseY - 20}`,
+    c2r: `M ${cxCenter + 140} ${baseY} Q ${cxRight - 120} ${baseY - 100}, ${cxRight - 120} ${baseY}`,
+    r2c: `M ${cxRight - 120} ${baseY + 40} Q ${cxCenter + 140} ${baseY + 140}, ${cxCenter + 140} ${baseY + 40}`,
+    c2l: `M ${cxCenter - 140} ${baseY + 80} Q ${cxLeft + 120} ${baseY + 160}, ${cxLeft + 120} ${baseY + 80}`,
   };
 
-  const isEdgeVisible = (id) => (flows[activeFlow]?.edges || []).includes(id);
-  const isStateVisible = (id) => (flows[activeFlow]?.states || []).includes(id);
-  const isActive = (id) => id === activeStepId;
+  const flows = {
+    reward: [
+      { nodes: ["l1"], path: null, desc: "Missions and Combat completed" },
+      { nodes: ["l3"], path: null, desc: "Rewards generated off-chain" },
+      { nodes: ["l3", "c3"], path: "l2c", desc: "Reward data sent to Hub" },
+      { nodes: ["c3"], path: null, desc: "UAP appears as claimable balance" },
+    ],
+    claim: [
+      { nodes: ["c4"], path: null, desc: "Player initiates claim via Hub" },
+      { nodes: ["c4", "r1"], path: "c2r", desc: "Claim transaction submitted" },
+      { nodes: ["r1"], path: null, desc: "Transaction verified on chain" },
+      { nodes: ["c3"], path: "r2c", desc: "Confirmed balance reflected in Hub" },
+    ],
+    spending: [
+      { nodes: ["c2"], path: null, desc: "Player spends UAP on upgrade" },
+      { nodes: ["c2", "r4", "r5"], path: "c2r", desc: "Burn and treasury allocation executed" },
+      { nodes: ["r4", "r5"], path: null, desc: "Chain state updated" },
+      { nodes: ["c3", "l4"], path: "r2c", desc: "Updated balances sync back" },
+    ],
+    asset: [
+      { nodes: ["l2"], path: null, desc: "Upgrades performed in game" },
+      { nodes: ["l2", "c5"], path: "l2c", desc: "NFT stats and evolution sent to Hub" },
+      { nodes: ["c5"], path: null, desc: "Breeding or evolution processed" },
+      { nodes: ["l4"], path: "c2l", desc: "Updated NFT state reflected in client" },
+    ],
+  };
 
-  const pill = (x, y, text) => (
-    <g>
-      <rect x={x} y={y} rx="10" ry="10" width="260" height="34" className="pillRect" />
-      <text x={x + 12} y={y + 22} className="pillText">
-        {text}
-      </text>
-    </g>
-  );
+  const flowNames = {
+    reward: "Reward flow",
+    claim: "Claim flow",
+    spending: "Spending and burn flow",
+    asset: "Asset synchronisation flow",
+  };
 
-  const Card = ({ n, children }) => (
-    <g>
-      <rect x={n.x} y={n.y} width={n.w} height={n.h} rx="18" ry="18" className="card" />
-      <text x={n.x + 18} y={n.y + 34} className="cardTitle">
-        {n.title}
-      </text>
-      <text x={n.x + 18} y={n.y + 58} className="cardSub">
-        {n.subtitle}
-      </text>
-      <line x1={n.x + 18} y1={n.y + 78} x2={n.x + n.w - 18} y2={n.y + 78} className="divider" />
-      {children}
-    </g>
-  );
+  let currentFlow = "reward";
+  let stepIndex = 0;
+  let isPlaying = false;
 
-const TravelDot = ({ d, durationMs }) => {
-  const pathRef = React.useRef(null);
-  const outerRef = React.useRef(null);
-  const innerRef = React.useRef(null);
-  const rafRef = React.useRef(null);
+  const play = () => {
+    isPlaying = true;
+    stepIndex = 0;
+    advance();
+  };
 
-  React.useEffect(() => {
-    const pathEl = pathRef.current;
-    const outer = outerRef.current;
-    const inner = innerRef.current;
-
-    if (pathEl === null || outer === null || inner === null) return;
-
-    let length = 0;
-    try {
-      length = pathEl.getTotalLength();
-    } catch (e) {
-      length = 0;
-    }
-
-    if (length <= 0) return;
-
-    // Set an immediate visible start position
-    let startPt;
-    try {
-      startPt = pathEl.getPointAtLength(0);
-      outer.setAttribute("cx", String(startPt.x));
-      outer.setAttribute("cy", String(startPt.y));
-      inner.setAttribute("cx", String(startPt.x));
-      inner.setAttribute("cy", String(startPt.y));
-    } catch (e) {
+  const advance = () => {
+    if (!isPlaying) return;
+    stepIndex++;
+    if (stepIndex >= flows[currentFlow].length) {
+      isPlaying = false;
       return;
     }
-
-    let startTime;
-
-    const tick = (t) => {
-      if (startTime === undefined) startTime = t;
-
-      const elapsed = t - startTime;
-      const p = Math.min(elapsed / durationMs, 1);
-      let pt;
-
-      try {
-        pt = pathEl.getPointAtLength(p * length);
-      } catch (e) {
-        return;
-      }
-
-      outer.setAttribute("cx", String(pt.x));
-      outer.setAttribute("cy", String(pt.y));
-      inner.setAttribute("cx", String(pt.x));
-      inner.setAttribute("cy", String(pt.y));
-
-      if (p < 1) rafRef.current = requestAnimationFrame(tick);
-    };
-
-    rafRef.current = requestAnimationFrame(tick);
-
-    return () => {
-      if (rafRef.current) cancelAnimationFrame(rafRef.current);
-    };
-  }, [d, durationMs]);
-
-  return (
-    <g>
-      {/* Measurement path must have a strokeWidth for consistent geometry */}
-      <path
-        ref={pathRef}
-        d={d}
-        fill="none"
-        stroke="transparent"
-        strokeWidth="10"
-        vectorEffect="non-scaling-stroke"
-      />
-
-      {/* Give initial cx/cy so the dot is always valid */}
-      <circle
-        ref={outerRef}
-        cx="0"
-        cy="0"
-        r="6"
-        className="travelDotOuter"
-      />
-      <circle
-        ref={innerRef}
-        cx="0"
-        cy="0"
-        r="2.8"
-        className="travelDotInner"
-      />
-    </g>
-  );
-};
-
-  const StateDot = ({ id, cx, cy, label }) => {
-    if (!isStateVisible(id)) return null;
-    const active = isActive(id);
-
-    return (
-      <g className={`stateDot${active ? " stateDotActive" : ""}`}>
-        <circle cx={cx} cy={cy} r="8" className="dot" />
-        <text x={cx} y={cy + 23} textAnchor="middle" className="dotLabel">
-          {label}
-        </text>
-      </g>
-    );
+    requestAnimationFrame(() => setTimeout(advance, 3200));
   };
 
+  const reset = () => {
+    isPlaying = false;
+    stepIndex = 0;
+  };
+
+  const currentStep = stepIndex === 0 ? null : flows[currentFlow][stepIndex - 1];
+  const activePath = currentStep?.path;
+  const activeNodes = currentStep?.nodes || [];
+  const description = stepIndex === 0 ? "Select a flow and press Play to begin" : currentStep?.desc || "";
+
   return (
-    <div className="wrap">
-      <div className="topbar">
-        <div className="title">
-          <div className="h1">Super Galactic Ecosystem Architecture</div>
-          <div className="h2">System flow, data flow, and state synchronization</div>
-        </div>
-
-        <div className="controls" role="tablist" aria-label="Flow toggles">
-          {Object.entries(flows).map(([key, v]) => (
-            <button
-              key={key}
-              type="button"
-              className={`btn${activeFlow === key ? " btnActive" : ""}`}
-              onClick={() => {
-                setActiveFlow(key);
-                setStep(0);
-              }}
-              role="tab"
-              aria-selected={activeFlow === key}
-            >
-              {v.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="caption">
-        <span className="captionLabel">Now highlighting</span>
-        <span className="captionText">{caption}</span>
-      </div>
-
-      <svg viewBox={`0 0 ${W} ${H}`} width="100%" height="100%" className="svg">
-        <defs>
-          <marker id="arrowHead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" orient="auto">
-            <path d="M 0 0 L 10 5 L 0 10 z" className="arrowHead" />
-          </marker>
-
-          <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
-            <feDropShadow dx="0" dy="10" stdDeviation="12" floodOpacity="0.18" />
-          </filter>
-        </defs>
-
-        <text x="210" y="120" className="colHeader" textAnchor="middle">
-          Gameplay logic
-        </text>
-        <text x="565" y="120" className="colHeader" textAnchor="middle">
-          Application layer
-        </text>
-        <text x="905" y="120" className="colHeader" textAnchor="middle">
-          On chain settlement
-        </text>
-
-        <Card n={node.game}>
-          {pill(node.game.x + 20, node.game.y + 95, "Player gameplay")}
-          {pill(node.game.x + 20, node.game.y + 140, "Missions and combat")}
-          {pill(node.game.x + 20, node.game.y + 185, "Progression and upgrades")}
-          {pill(node.game.x + 20, node.game.y + 230, "Reward generation (off chain)")}
-          {pill(node.game.x + 20, node.game.y + 275, "UAP earned (unclaimed)")}
-        </Card>
-
-        <Card n={node.hub}>
-          {pill(node.hub.x + 20, node.hub.y + 95, "Asset management")}
-          {pill(node.hub.x + 20, node.hub.y + 140, "UAP balance visibility")}
-          {pill(node.hub.x + 20, node.hub.y + 185, "Reward claiming")}
-          {pill(node.hub.x + 20, node.hub.y + 230, "Breeding and NFT actions")}
-          {pill(node.hub.x + 20, node.hub.y + 275, "Progression and stats")}
-        </Card>
-
-        <Card n={node.chain}>
-          {pill(node.chain.x + 20, node.chain.y + 95, "UAP token contracts")}
-          {pill(node.chain.x + 20, node.chain.y + 140, "NFT ownership contracts")}
-          {pill(node.chain.x + 20, node.chain.y + 185, "Burn execution")}
-          {pill(node.chain.x + 20, node.chain.y + 230, "Treasury flows")}
-          {pill(node.chain.x + 20, node.chain.y + 275, "Tx verification")}
-        </Card>
-
-        <Arrow
-          id="gc_to_hub_reward"
-          d={`M ${node.game.x + node.game.w} ${node.game.y + 290} C ${node.game.x + node.game.w + 90} ${node.game.y + 290}, ${node.hub.x - 90} ${node.hub.y + 290}, ${node.hub.x} ${node.hub.y + 290}`}
-        />
-
-        <StateDot id="hub_claimable" cx={node.hub.x + 290} cy={node.hub.y + 155} label="claimable" />
-
-        <Arrow
-          id="hub_to_chain_claim"
-          d={`M ${node.hub.x + node.hub.w} ${node.hub.y + 210} C ${node.hub.x + node.hub.w + 90} ${node.hub.y + 210}, ${node.chain.x - 90} ${node.chain.y + 210}, ${node.chain.x} ${node.chain.y + 210}`}
-        />
-
-        <Arrow
-          id="chain_confirm_claim"
-          d={`M ${node.chain.x + 40} ${node.chain.y + 210} C ${node.chain.x + 100} ${node.chain.y + 150}, ${node.chain.x + 160} ${node.chain.y + 150}, ${node.chain.x + 220} ${node.chain.y + 210}`}
-        />
-
-        <Arrow
-          id="chain_to_hub_balance"
-          d={`M ${node.chain.x} ${node.chain.y + 250} C ${node.chain.x - 90} ${node.chain.y + 250}, ${node.hub.x + node.hub.w + 90} ${node.hub.y + 250}, ${node.hub.x + node.hub.w} ${node.hub.y + 250}`}
-        />
-
-        <Arrow
-          id="hub_to_gc_balance"
-          d={`M ${node.hub.x} ${node.hub.y + 250} C ${node.hub.x - 90} ${node.hub.y + 250}, ${node.game.x + node.game.w + 90} ${node.game.y + 250}, ${node.game.x + node.game.w} ${node.game.y + 250}`}
-        />
-
-        <Arrow
-          id="hub_to_chain_spend"
-          d={`M ${node.hub.x + node.hub.w} ${node.hub.y + 330} C ${node.hub.x + node.hub.w + 90} ${node.hub.y + 330}, ${node.chain.x - 90} ${node.chain.y + 330}, ${node.chain.x} ${node.chain.y + 330}`}
-        />
-
-        <Arrow
-          id="chain_burn"
-          d={`M ${node.chain.x + 60} ${node.chain.y + 330} C ${node.chain.x + 120} ${node.chain.y + 380}, ${node.chain.x + 150} ${node.chain.y + 380}, ${node.chain.x + 210} ${node.chain.y + 330}`}
-        />
-
-        <Arrow
-          id="chain_treasury"
-          d={`M ${node.chain.x + 60} ${node.chain.y + 330} C ${node.chain.x + 120} ${node.chain.y + 280}, ${node.chain.x + 150} ${node.chain.y + 280}, ${node.chain.x + 210} ${node.chain.y + 330}`}
-        />
-
-        <Arrow
-          id="chain_to_hub_asset"
-          d={`M ${node.chain.x} ${node.chain.y + 370} C ${node.chain.x - 90} ${node.chain.y + 370}, ${node.hub.x + node.hub.w + 90} ${node.hub.y + 370}, ${node.hub.x + node.hub.w} ${node.hub.y + 370}`}
-        />
-
-        <Arrow
-          id="hub_to_gc_asset"
-          d={`M ${node.hub.x} ${node.hub.y + 370} C ${node.hub.x - 90} ${node.hub.y + 370}, ${node.game.x + node.game.w + 90} ${node.game.y + 370}, ${node.game.x + node.game.w} ${node.game.y + 370}`}
-        />
-
-        <Arrow
-          id="gc_to_hub_stats"
-          d={`M ${node.game.x + node.game.w} ${node.game.y + 190} C ${node.game.x + node.game.w + 90} ${node.game.y + 190}, ${node.hub.x - 90} ${node.hub.y + 190}, ${node.hub.x} ${node.hub.y + 190}`}
-        />
-
-        <StateDot id="hub_nft_evolve" cx={node.hub.x + 290} cy={node.hub.y + 300} label="NFT state" />
-
-        <Arrow
-          id="hub_breed"
-          d={`M ${node.hub.x + 160} ${node.hub.y + 320} C ${node.hub.x + 230} ${node.hub.y + 320}, ${node.hub.x + 230} ${node.hub.y + 355}, ${node.hub.x + 160} ${node.hub.y + 355}`}
-        />
-
-        <Arrow
-          id="hub_to_gc_newstate"
-          d={`M ${node.hub.x} ${node.hub.y + 170} C ${node.hub.x - 120} ${node.hub.y + 170}, ${node.game.x + node.game.w + 120} ${node.game.y + 170}, ${node.game.x + node.game.w} ${node.game.y + 170}`}
-        />
-
-        <g className="footer">
-          <rect x="60" y="510" width="980" height="110" rx="16" ry="16" className="footerCard" />
-          <text x="85" y="545" className="footerTitle">
-            Key principles
-          </text>
-          <text x="85" y="572" className="footerText">
-            Single source of truth • Bidirectional synchronization • No manual syncing • Clear separation between gameplay, application, and on chain settlement
-          </text>
-        </g>
-      </svg>
-
-      <style jsx>{`
-        .wrap {
-          width: 100%;
-          border-radius: 18px;
-          padding: 16px;
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          background: rgba(255, 255, 255, 0.02);
+    <div style={{ margin: "32px 0" }}>
+      <style>{`
+        @keyframes dotTravel {
+          from { offset-distance: 0%; }
+          to { offset-distance: 100%; }
         }
-        .topbar {
-          display: flex;
-          gap: 14px;
-          align-items: flex-start;
-          justify-content: space-between;
-          flex-wrap: wrap;
-          margin-bottom: 10px;
+        @keyframes haloPulse {
+          0%,100% { opacity: 0.5; transform: scale(1); }
+          50% { opacity: 0.8; transform: scale(1.15); }
         }
-        .title {
-          min-width: 260px;
+        .glass {
+          fill: rgba(30, 20, 60, 0.65);
+          stroke: rgba(167, 139, 250, 0.3);
+          filter: url(#softGlow);
         }
-        .h1 {
-          font-size: 18px;
-          font-weight: 700;
-          line-height: 1.2;
-          color: rgba(255, 255, 255, 0.92);
+        .node-base {
+          fill: rgba(45, 30, 90, 0.75);
+          stroke: rgba(167, 139, 250, 0.25);
+          rx: 12;
+          ry: 12;
         }
-        .h2 {
-          margin-top: 6px;
-          font-size: 13px;
-          opacity: 0.8;
-          color: rgba(255, 255, 255, 0.75);
+        .node-active {
+          stroke: #c4b5fd;
+          stroke-width: 2.5;
+          filter: url(#nodeGlow);
         }
-        .controls {
-          display: flex;
-          gap: 8px;
-          flex-wrap: wrap;
-          align-items: center;
-          justify-content: flex-end;
-        }
-        .btn {
-          font-size: 12px;
-          padding: 8px 10px;
-          border-radius: 12px;
-          border: 1px solid rgba(255, 255, 255, 0.14);
-          background: rgba(255, 255, 255, 0.03);
-          cursor: pointer;
-          opacity: 0.85;
-          color: rgba(255, 255, 255, 0.88);
-        }
-        .btn:hover {
-          opacity: 1;
-        }
-        .btnActive {
-          opacity: 1;
-          border: 1px solid rgba(255, 255, 255, 0.28);
-          background: rgba(255, 255, 255, 0.06);
-        }
-        .caption {
-          display: flex;
-          gap: 10px;
-          align-items: center;
-          padding: 10px 12px;
-          border-radius: 14px;
-          border: 1px solid rgba(255, 255, 255, 0.08);
-          background: rgba(0, 0, 0, 0.12);
-          margin-bottom: 12px;
-        }
-        .captionLabel {
-          font-size: 12px;
-          color: rgba(255, 255, 255, 0.8);
-          white-space: nowrap;
-        }
-        .captionText {
-          font-size: 12px;
-          font-weight: 600;
-          color: rgba(255, 255, 255, 0.92);
-        }
-        .svg {
-          width: 100%;
-          height: auto;
-          min-height: 650px;
-          display: block;
-        }
-        .colHeader {
-          font-size: 12px;
-          opacity: 0.75;
-          letter-spacing: 0.2px;
-        }
-        .svg text {
-          fill: rgba(255, 255, 255, 0.86);
-        }
-        .card {
-          filter: url(#softShadow);
-          stroke: rgba(255, 255, 255, 0.18);
-          stroke-width: 1;
-          fill: rgba(255, 255, 255, 0.05);
-        }
-        .cardTitle {
-          font-size: 16px;
-          font-weight: 700;
-          fill: rgba(255, 255, 255, 0.9);
-        }
-        .cardSub {
-          font-size: 12px;
-          fill: rgba(255, 255, 255, 0.8);
-        }
-        .divider {
-          stroke: rgba(255, 255, 255, 0.12);
-          stroke-width: 1;
-        }
-        .pillRect {
-          stroke: rgba(255, 255, 255, 0.18);
-          stroke-width: 1;
-          fill: rgba(255, 255, 255, 0.04);
-        }
-        .pillText {
-          font-size: 12px;
-          fill: rgba(255, 255, 255, 0.86);
-        }
-        .arrowBase {
+        .container-halo {
+          stroke: #a78bfa;
+          stroke-width: 4;
           fill: none;
-          stroke: rgba(255, 255, 255, 0.2);
-          stroke-width: 2;
-          marker-start: none;
-          marker-mid: none;
-          marker-end: none;
+          opacity: 0;
         }
-        .arrowBaseDim {
-          stroke: rgba(255, 255, 255, 0.12);
-        }
-        .arrowActive {
-          fill: none;
-          stroke: rgba(255, 255, 255, 0.9);
-          stroke-width: 3.5;
-          filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.45));
-          animation: glowPulse 1.2s ease-in-out;
-        }
-        .arrowHead {
-          fill: rgba(255, 255, 255, 0.9);
-        }
-
-        .travelDotOuter {
-          fill: rgba(255, 255, 255, 0.18);
-          filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.55));
-        }
-        .travelDotInner {
-          fill: rgba(255, 255, 255, 0.95);
-          filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.65));
-        }
-
-        @keyframes glowPulse {
-          0% {
-            stroke-width: 3.5;
-            opacity: 0.75;
-          }
-          50% {
-            stroke-width: 5;
-            opacity: 1;
-          }
-          100% {
-            stroke-width: 3.5;
-            opacity: 0.75;
-          }
-        }
-
-        .stateDot .dot {
-          fill: rgba(255, 255, 255, 0.2);
-          stroke: rgba(255, 255, 255, 0.18);
-          stroke-width: 1;
-        }
-        .stateDotActive .dot {
-          fill: rgba(255, 255, 255, 0.92);
-          stroke: rgba(255, 255, 255, 0.35);
-          animation: dotPulse 1.2s ease-in-out infinite;
-        }
-        @keyframes dotPulse {
-          0% {
-            transform: scale(1);
-            transform-origin: center;
-            opacity: 0.7;
-          }
-          50% {
-            transform: scale(1.12);
-            transform-origin: center;
-            opacity: 1;
-          }
-          100% {
-            transform: scale(1);
-            transform-origin: center;
-            opacity: 0.7;
-          }
-        }
-        .dotLabel {
-          font-size: 10px;
-          fill: rgba(255, 255, 255, 0.86);
-        }
-
-        .footerCard {
-          fill: rgba(255, 255, 255, 0.04);
-          stroke: rgba(255, 255, 255, 0.16);
-          stroke-width: 1;
-        }
-        .footerTitle {
-          font-size: 13px;
-          font-weight: 700;
-          fill: rgba(255, 255, 255, 0.88);
-        }
-        .footerText {
-          font-size: 12px;
-          fill: rgba(255, 255, 255, 0.8);
+        .container-active .container-halo {
+          opacity: 0.6;
+          animation: haloPulse 3s ease-in-out infinite;
         }
       `}</style>
+
+      <div className="flex flex-wrap gap-4 justify-center mb-10">
+        {Object.keys(flows).map((key) => (
+          <button
+            key={key}
+            onClick={() => {
+              currentFlow = key;
+              play();
+            }}
+            className={`px-7 py-3 rounded-2xl font-semibold text-lg transition-all ${
+              currentFlow === key
+                ? "bg-purple-600 text-white shadow-lg shadow-purple-600/40"
+                : "bg-slate-800/70 text-slate-300 hover:bg-slate-700"
+            }`}
+          >
+            {flowNames[key]}
+          </button>
+        ))}
+        <button
+          onClick={play}
+          className="px-10 py-3 bg-green-600 text-white rounded-2xl font-semibold text-lg hover:bg-green-500 shadow-lg"
+        >
+          Play
+        </button>
+        <button
+          onClick={reset}
+          className="px-10 py-3 bg-slate-700 text-white rounded-2xl font-semibold text-lg hover:bg-slate-600"
+        >
+          Reset
+        </button>
+      </div>
+
+      <div
+        style={{
+          borderRadius: "28px",
+          padding: "32px",
+          background: "radial-gradient(ellipse at center, #2d1b4a 0%, #1a0b2e 70%)",
+          boxShadow: "inset 0 0 140px rgba(0,0,0,0.8)",
+        }}
+      >
+        <svg viewBox={`0 0 ${W} ${H}`} width="100%" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="pathGlow" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="#c4b5fd"/>
+              <stop offset="100%" stopColor="#818cf8"/>
+            </linearGradient>
+
+            <filter id="softGlow">
+              <feGaussianBlur stdDeviation="10" result="blur"/>
+              <feMerge>
+                <feMergeNode in="blur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+
+            <filter id="nodeGlow">
+              <feGaussianBlur stdDeviation="6" result="blur"/>
+              <feMerge>
+                <feMergeNode in="blur"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+
+            <path id="pL2C" d={paths.l2c} />
+            <path id="pC2R" d={paths.c2r} />
+            <path id="pR2C" d={paths.r2c} />
+            <path id="pC2L" d={paths.c2l} />
+          </defs>
+
+          {/* Faint inactive paths */}
+          {Object.values(paths).map((d, i) => (
+            <path key={i} d={d} fill="none" stroke="rgba(167,139,250,0.15)" strokeWidth="3"/>
+          ))}
+
+          {/* Active path glow + traveling dot */}
+          {activePath && (
+            <>
+              <use href={`#p${activePath.toUpperCase()}`} stroke="url(#pathGlow)" strokeWidth="5" filter="url(#softGlow)" opacity="0.9"/>
+              {/* Bright core dot */}
+              <circle r="9" fill="#e0d8ff" filter="url(#nodeGlow)">
+                <animateMotion dur="1.3s" repeatCount="1" path={paths[activePath]}>
+                  <mpath xlinkHref={`#p${activePath.toUpperCase()}`} />
+                </animateMotion>
+              </circle>
+              {/* Soft halo */}
+              <circle r="18" fill="none" stroke="#c4b5fd" strokeWidth="6" opacity="0.6">
+                <animateMotion dur="1.3s" repeatCount="1" path={paths[activePath]}>
+                  <mpath xlinkHref={`#p${activePath.toUpperCase()}`} />
+                </animateMotion>
+                <animate attributeName="opacity" values="0.4;0.8;0.4" dur="1.3s" repeatCount="1"/>
+              </circle>
+            </>
+          )}
+
+          {/* Containers */}
+          <g className={activeNodes.some(n => n.startsWith("l")) ? "container-active" : ""}>
+            <rect x={cxLeft - containerW/2} y={baseY - containerH/2} width={containerW} height={containerH} rx="24" className="glass"/>
+            <circle cx={cxLeft} cy={baseY} r={containerW/2 + 25} className="container-halo"/>
+            <text x={cxLeft} y={baseY - containerH/2 - 50} textAnchor="middle" fill="#a78bfa" fontSize="20" fontWeight="600">Gameplay layer</text>
+            <text x={cxLeft} y={baseY - containerH/2 - 20} textAnchor="middle" fill="#e0d8ff" fontSize="28" fontWeight="800">Game Client (Unity)</text>
+          </g>
+
+          <g className={activeNodes.some(n => n.startsWith("c")) ? "container-active" : ""}>
+            <rect x={cxCenter - largeContainerW/2} y={baseY - largeContainerH/2} width={largeContainerW} height={largeContainerH} rx="28" className="glass"/>
+            <circle cx={cxCenter} cy={baseY} r={largeContainerW/2 + 30} className="container-halo"/>
+            <text x={cxCenter} y={baseY - largeContainerH/2 - 60} textAnchor="middle" fill="#a78bfa" fontSize="22" fontWeight="600">Application layer</text>
+            <text x={cxCenter} y={baseY - largeContainerH/2 - 25} textAnchor="middle" fill="#e0d8ff" fontSize="32" fontWeight="800">Super Galactic Hub</text>
+          </g>
+
+          <g className={activeNodes.some(n => n.startsWith("r")) ? "container-active" : ""}>
+            <rect x={cxRight - containerW/2} y={baseY - containerH/2} width={containerW} height={containerH} rx="24" className="glass"/>
+            <circle cx={cxRight} cy={baseY} r={containerW/2 + 25} className="container-halo"/>
+            <text x={cxRight} y={baseY - containerH/2 - 50} textAnchor="middle" fill="#a78bfa" fontSize="20" fontWeight="600">On chain settlement</text>
+            <text x={cxRight} y={baseY - containerH/2 - 20} textAnchor="middle" fill="#e0d8ff" fontSize="28" fontWeight="800">Blockchain Layer</text>
+            <text x={cxRight} y={baseY + containerH/2 + 40} textAnchor="middle" fill="#c4b5fd" fontSize="15" opacity="0.9">
+              Ethereum (origin) and BNB + Avalanche (gameplay)
+            </text>
+          </g>
+
+          {/* Micro nodes */}
+          {leftNodes.map(n => (
+            <g key={n.id} transform={`translate(${cxLeft},${n.y})`}>
+              <rect x={-nodeW/2} y={-nodeH/2} width={nodeW} height={nodeH} className={`node-base ${activeNodes.includes(n.id) ? "node-active" : ""}`}/>
+              <text x="0" y="4" textAnchor="middle" fill="#e0d8ff" fontSize="15" fontWeight="700">{n.label}</text>
+            </g>
+          ))}
+
+          {centerNodes.map(n => (
+            <g key={n.id} transform={`translate(${cxCenter},${n.y})`}>
+              <rect x={-nodeW/2 - 10} y={-nodeH/2} width={nodeW + 20} height={nodeH} className={`node-base ${activeNodes.includes(n.id) ? "node-active" : ""}`}/>
+              <text x="0" y="4" textAnchor="middle" fill="#e0d8ff" fontSize="16" fontWeight="700">{n.label}</text>
+            </g>
+          ))}
+
+          {rightNodes.map(n => (
+            <g key={n.id} transform={`translate(${cxRight},${n.y})`}>
+              <rect x={-nodeW/2} y={-nodeH/2} width={nodeW} height={nodeH} className={`node-base ${activeNodes.includes(n.id) ? "node-active" : ""}`}/>
+              <text x="0" y="4" textAnchor="middle" fill="#e0d8ff" fontSize="15" fontWeight="700">{n.label}</text>
+            </g>
+          ))}
+        </svg>
+
+        <div
+          style={{
+            marginTop: "32px",
+            padding: "24px",
+            background: "rgba(30,20,60,0.5)",
+            borderRadius: "20px",
+            border: "1px solid rgba(167,139,250,0.3)",
+            textAlign: "center",
+          }}
+        >
+          <div style={{ fontSize: "18px", color: "#c4b5fd", marginBottom: "8px" }}>
+            {stepIndex > 0 ? `Step ${stepIndex} of ${flows[currentFlow].length}` : "Ready"}
+          </div>
+          <div style={{ fontSize: "24px", color: "#e0d8ff", fontStyle: "italic" }}>
+            {description}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
