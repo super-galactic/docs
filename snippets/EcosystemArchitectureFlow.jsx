@@ -172,7 +172,7 @@ export const SuperGalacticArchitectureFlow = () => {
           <Pill x={nodes.hub.x + 20} y={pillY(4)} text="Progression and stats" />
         </Card>
 
-        <Card x={nodes.chain.x} title="Blockchain Layer" subtitle="Chains: Ethereum (origin) plus BNB and Avalanche (gameplay)">
+        <Card x={nodes.chain.x} title="Blockchain Layer" subtitle="On-chain settlement and verification">
           <Pill x={nodes.chain.x + 20} y={pillY(0)} text="UAP token contracts" />
           <Pill x={nodes.chain.x + 20} y={pillY(1)} text="NFT ownership contracts" />
           <Pill x={nodes.chain.x + 20} y={pillY(2)} text="Burn execution" />
