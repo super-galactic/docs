@@ -1,18 +1,9 @@
 "use client";
 import React from "react";
 
-// This component renders a high level animated architecture diagram for the
-// Super Galactic ecosystem. It is designed for Mintlify MDX pages and
-// follows the same export pattern as other snippet components. The diagram
-// conveys the flow of data and actions between the Game Client, the
-// Super Galactic Hub, and the Blockchain Layer. Only the currently
-// selected flow is visible at any given time to keep the visualization
-// focused and easy to understand. Non selected flows are hidden
-// entirely rather than dimmed. Within the selected flow, only the
-// currently active step gets an animated overlay and arrowhead. All
-// underlying static lines are rendered without arrowheads to avoid visual
-// clutter. See the CSS at the bottom of this file for details on how
-// the arrow animations are implemented.
+// Premium Mintlify safe architecture flow
+// Keeps the same structure as your working file
+// Adds MP4 style traveling glow dot along the active connector path
 
 export const SuperGalacticArchitectureFlow = () => {
   const W = 1100;
@@ -40,7 +31,12 @@ export const SuperGalacticArchitectureFlow = () => {
           { id: "chain_to_hub_balance", caption: "Balance updates across systems" },
           { id: "hub_to_gc_balance", caption: "Game client reflects updated state" },
         ],
-        edges: ["hub_to_chain_claim", "chain_confirm_claim", "chain_to_hub_balance", "hub_to_gc_balance"],
+        edges: [
+          "hub_to_chain_claim",
+          "chain_confirm_claim",
+          "chain_to_hub_balance",
+          "hub_to_gc_balance",
+        ],
         states: [],
       },
       spend: {
@@ -52,7 +48,13 @@ export const SuperGalacticArchitectureFlow = () => {
           { id: "chain_to_hub_asset", caption: "Updated asset state syncs to Hub" },
           { id: "hub_to_gc_asset", caption: "Updated state syncs to game client" },
         ],
-        edges: ["hub_to_chain_spend", "chain_burn", "chain_treasury", "chain_to_hub_asset", "hub_to_gc_asset"],
+        edges: [
+          "hub_to_chain_spend",
+          "chain_burn",
+          "chain_treasury",
+          "chain_to_hub_asset",
+          "hub_to_gc_asset",
+        ],
         states: [],
       },
       sync: {
@@ -70,12 +72,8 @@ export const SuperGalacticArchitectureFlow = () => {
     []
   );
 
-  // Step progression logic
-  // When the active flow changes, reset step to zero.
-  // Then automatically advance to the next step once after a short delay.
-  // The animation plays through all steps exactly once and stops.
-  // Clicking the same flow tab again restarts the sequence from the beginning.
   const timerRef = React.useRef();
+
   React.useEffect(() => {
     if (timerRef.current) clearTimeout(timerRef.current);
 
@@ -94,9 +92,24 @@ export const SuperGalacticArchitectureFlow = () => {
 
   const nodeWidth = 320;
   const nodeHeight = 340;
+
   const node = {
-    game: { x: 35, y: 155, w: nodeWidth, h: nodeHeight, title: "Game Client", subtitle: "Unity" },
-    hub: { x: 390, y: 155, w: nodeWidth, h: nodeHeight, title: "Super Galactic Hub", subtitle: "Unified app layer" },
+    game: {
+      x: 35,
+      y: 155,
+      w: nodeWidth,
+      h: nodeHeight,
+      title: "Game Client",
+      subtitle: "Unity",
+    },
+    hub: {
+      x: 390,
+      y: 155,
+      w: nodeWidth,
+      h: nodeHeight,
+      title: "Super Galactic Hub",
+      subtitle: "Unified app layer",
+    },
     chain: {
       x: 745,
       y: 155,
@@ -134,8 +147,50 @@ export const SuperGalacticArchitectureFlow = () => {
     </g>
   );
 
-  // Arrow renders a base line, and when active overlays glow + arrowhead + traveling dot
-  // The traveling dot uses SVG animateMotion which is reliable in Mintlify environments
+  const TravelDot = ({ d, durationMs }) => {
+    const pathRef = React.useRef(null);
+    const outerRef = React.useRef(null);
+    const innerRef = React.useRef(null);
+    const rafRef = React.useRef(null);
+
+    React.useEffect(() => {
+      const pathEl = pathRef.current;
+      const outer = outerRef.current;
+      const inner = innerRef.current;
+      if (pathEl === null || outer === null || inner === null) return;
+
+      const length = pathEl.getTotalLength();
+      let start;
+
+      const tick = (t) => {
+        if (start === undefined) start = t;
+        const p = Math.min((t - start) / durationMs, 1);
+        const pt = pathEl.getPointAtLength(p * length);
+
+        outer.setAttribute("cx", String(pt.x));
+        outer.setAttribute("cy", String(pt.y));
+        inner.setAttribute("cx", String(pt.x));
+        inner.setAttribute("cy", String(pt.y));
+
+        if (p < 1) rafRef.current = requestAnimationFrame(tick);
+      };
+
+      rafRef.current = requestAnimationFrame(tick);
+
+      return () => {
+        if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      };
+    }, [d, durationMs]);
+
+    return (
+      <g>
+        <path ref={pathRef} d={d} fill="none" stroke="transparent" strokeWidth="10" />
+        <circle ref={outerRef} r="6" className="travelDotOuter" />
+        <circle ref={innerRef} r="2.8" className="travelDotInner" />
+      </g>
+    );
+  };
+
   const Arrow = ({ id, d }) => {
     if (!isEdgeVisible(id)) return null;
     const active = isActive(id);
@@ -143,18 +198,10 @@ export const SuperGalacticArchitectureFlow = () => {
     return (
       <g className="arrow">
         <path d={d} className={`arrowBase${active ? " arrowBaseDim" : ""}`} />
-
         {active ? (
           <g key={activeStepId}>
-            <path d={d} className="arrowActive" markerStart="none" markerEnd="url(#arrowHead)" />
-
-            <circle r="6" className="travelDotOuter">
-              <animateMotion dur="1.2s" repeatCount="1" path={d} />
-            </circle>
-
-            <circle r="2.8" className="travelDotInner">
-              <animateMotion dur="1.2s" repeatCount="1" path={d} />
-            </circle>
+            <path d={d} className="arrowActive" markerEnd="url(#arrowHead)" />
+            <TravelDot d={d} durationMs={1200} />
           </g>
         ) : null}
       </g>
@@ -212,6 +259,7 @@ export const SuperGalacticArchitectureFlow = () => {
           <marker id="arrowHead" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" orient="auto">
             <path d="M 0 0 L 10 5 L 0 10 z" className="arrowHead" />
           </marker>
+
           <filter id="softShadow" x="-20%" y="-20%" width="140%" height="140%">
             <feDropShadow dx="0" dy="10" stdDeviation="12" floodOpacity="0.18" />
           </filter>
@@ -253,86 +301,71 @@ export const SuperGalacticArchitectureFlow = () => {
 
         <Arrow
           id="gc_to_hub_reward"
-          d={`M ${node.game.x + node.game.w} ${node.game.y + 290} C ${node.game.x + node.game.w + 90} ${node.game.y + 290}, ${
-            node.hub.x - 90
-          } ${node.hub.y + 290}, ${node.hub.x} ${node.hub.y + 290}`}
+          d={`M ${node.game.x + node.game.w} ${node.game.y + 290} C ${node.game.x + node.game.w + 90} ${node.game.y + 290}, ${node.hub.x - 90} ${node.hub.y + 290}, ${node.hub.x} ${node.hub.y + 290}`}
         />
+
         <StateDot id="hub_claimable" cx={node.hub.x + 290} cy={node.hub.y + 155} label="claimable" />
 
         <Arrow
           id="hub_to_chain_claim"
-          d={`M ${node.hub.x + node.hub.w} ${node.hub.y + 210} C ${node.hub.x + node.hub.w + 90} ${node.hub.y + 210}, ${
-            node.chain.x - 90
-          } ${node.chain.y + 210}, ${node.chain.x} ${node.chain.y + 210}`}
+          d={`M ${node.hub.x + node.hub.w} ${node.hub.y + 210} C ${node.hub.x + node.hub.w + 90} ${node.hub.y + 210}, ${node.chain.x - 90} ${node.chain.y + 210}, ${node.chain.x} ${node.chain.y + 210}`}
         />
+
         <Arrow
           id="chain_confirm_claim"
-          d={`M ${node.chain.x + 40} ${node.chain.y + 210} C ${node.chain.x + 100} ${node.chain.y + 150}, ${
-            node.chain.x + 160
-          } ${node.chain.y + 150}, ${node.chain.x + 220} ${node.chain.y + 210}`}
+          d={`M ${node.chain.x + 40} ${node.chain.y + 210} C ${node.chain.x + 100} ${node.chain.y + 150}, ${node.chain.x + 160} ${node.chain.y + 150}, ${node.chain.x + 220} ${node.chain.y + 210}`}
         />
+
         <Arrow
           id="chain_to_hub_balance"
-          d={`M ${node.chain.x} ${node.chain.y + 250} C ${node.chain.x - 90} ${node.chain.y + 250}, ${
-            node.hub.x + node.hub.w + 90
-          } ${node.hub.y + 250}, ${node.hub.x + node.hub.w} ${node.hub.y + 250}`}
+          d={`M ${node.chain.x} ${node.chain.y + 250} C ${node.chain.x - 90} ${node.chain.y + 250}, ${node.hub.x + node.hub.w + 90} ${node.hub.y + 250}, ${node.hub.x + node.hub.w} ${node.hub.y + 250}`}
         />
+
         <Arrow
           id="hub_to_gc_balance"
-          d={`M ${node.hub.x} ${node.hub.y + 250} C ${node.hub.x - 90} ${node.hub.y + 250}, ${
-            node.game.x + node.game.w + 90
-          } ${node.game.y + 250}, ${node.game.x + node.game.w} ${node.game.y + 250}`}
+          d={`M ${node.hub.x} ${node.hub.y + 250} C ${node.hub.x - 90} ${node.hub.y + 250}, ${node.game.x + node.game.w + 90} ${node.game.y + 250}, ${node.game.x + node.game.w} ${node.game.y + 250}`}
         />
 
         <Arrow
           id="hub_to_chain_spend"
-          d={`M ${node.hub.x + node.hub.w} ${node.hub.y + 330} C ${node.hub.x + node.hub.w + 90} ${node.hub.y + 330}, ${
-            node.chain.x - 90
-          } ${node.chain.y + 330}, ${node.chain.x} ${node.chain.y + 330}`}
+          d={`M ${node.hub.x + node.hub.w} ${node.hub.y + 330} C ${node.hub.x + node.hub.w + 90} ${node.hub.y + 330}, ${node.chain.x - 90} ${node.chain.y + 330}, ${node.chain.x} ${node.chain.y + 330}`}
         />
+
         <Arrow
           id="chain_burn"
-          d={`M ${node.chain.x + 60} ${node.chain.y + 330} C ${node.chain.x + 120} ${node.chain.y + 380}, ${
-            node.chain.x + 150
-          } ${node.chain.y + 380}, ${node.chain.x + 210} ${node.chain.y + 330}`}
+          d={`M ${node.chain.x + 60} ${node.chain.y + 330} C ${node.chain.x + 120} ${node.chain.y + 380}, ${node.chain.x + 150} ${node.chain.y + 380}, ${node.chain.x + 210} ${node.chain.y + 330}`}
         />
+
         <Arrow
           id="chain_treasury"
-          d={`M ${node.chain.x + 60} ${node.chain.y + 330} C ${node.chain.x + 120} ${node.chain.y + 280}, ${
-            node.chain.x + 150
-          } ${node.chain.y + 280}, ${node.chain.x + 210} ${node.chain.y + 330}`}
+          d={`M ${node.chain.x + 60} ${node.chain.y + 330} C ${node.chain.x + 120} ${node.chain.y + 280}, ${node.chain.x + 150} ${node.chain.y + 280}, ${node.chain.x + 210} ${node.chain.y + 330}`}
         />
+
         <Arrow
           id="chain_to_hub_asset"
-          d={`M ${node.chain.x} ${node.chain.y + 370} C ${node.chain.x - 90} ${node.chain.y + 370}, ${
-            node.hub.x + node.hub.w + 90
-          } ${node.hub.y + 370}, ${node.hub.x + node.hub.w} ${node.hub.y + 370}`}
+          d={`M ${node.chain.x} ${node.chain.y + 370} C ${node.chain.x - 90} ${node.chain.y + 370}, ${node.hub.x + node.hub.w + 90} ${node.hub.y + 370}, ${node.hub.x + node.hub.w} ${node.hub.y + 370}`}
         />
+
         <Arrow
           id="hub_to_gc_asset"
-          d={`M ${node.hub.x} ${node.hub.y + 370} C ${node.hub.x - 90} ${node.hub.y + 370}, ${
-            node.game.x + node.game.w + 90
-          } ${node.game.y + 370}, ${node.game.x + node.game.w} ${node.game.y + 370}`}
+          d={`M ${node.hub.x} ${node.hub.y + 370} C ${node.hub.x - 90} ${node.hub.y + 370}, ${node.game.x + node.game.w + 90} ${node.game.y + 370}, ${node.game.x + node.game.w} ${node.game.y + 370}`}
         />
 
         <Arrow
           id="gc_to_hub_stats"
-          d={`M ${node.game.x + node.game.w} ${node.game.y + 190} C ${node.game.x + node.game.w + 90} ${node.game.y + 190}, ${
-            node.hub.x - 90
-          } ${node.hub.y + 190}, ${node.hub.x} ${node.hub.y + 190}`}
+          d={`M ${node.game.x + node.game.w} ${node.game.y + 190} C ${node.game.x + node.game.w + 90} ${node.game.y + 190}, ${node.hub.x - 90} ${node.hub.y + 190}, ${node.hub.x} ${node.hub.y + 190}`}
         />
+
         <StateDot id="hub_nft_evolve" cx={node.hub.x + 290} cy={node.hub.y + 300} label="NFT state" />
+
         <Arrow
           id="hub_breed"
-          d={`M ${node.hub.x + 160} ${node.hub.y + 320} C ${node.hub.x + 230} ${node.hub.y + 320}, ${
-            node.hub.x + 230
-          } ${node.hub.y + 355}, ${node.hub.x + 160} ${node.hub.y + 355}`}
+          d={`M ${node.hub.x + 160} ${node.hub.y + 320} C ${node.hub.x + 230} ${node.hub.y + 320}, ${node.hub.x + 230} ${node.hub.y + 355}, ${node.hub.x + 160} ${node.hub.y + 355}`}
         />
+
         <Arrow
           id="hub_to_gc_newstate"
-          d={`M ${node.hub.x} ${node.hub.y + 170} C ${node.hub.x - 120} ${node.hub.y + 170}, ${
-            node.game.x + node.game.w + 120
-          } ${node.game.y + 170}, ${node.game.x + node.game.w} ${node.game.y + 170}`}
+          d={`M ${node.hub.x} ${node.hub.y + 170} C ${node.hub.x - 120} ${node.hub.y + 170}, ${node.game.x + node.game.w + 120} ${node.game.y + 170}, ${node.game.x + node.game.w} ${node.game.y + 170}`}
         />
 
         <g className="footer">
@@ -392,6 +425,7 @@ export const SuperGalacticArchitectureFlow = () => {
           background: rgba(255, 255, 255, 0.03);
           cursor: pointer;
           opacity: 0.85;
+          color: rgba(255, 255, 255, 0.88);
         }
         .btn:hover {
           opacity: 1;
@@ -424,6 +458,7 @@ export const SuperGalacticArchitectureFlow = () => {
         .svg {
           width: 100%;
           height: auto;
+          min-height: 650px;
           display: block;
         }
         .colHeader {
@@ -462,7 +497,6 @@ export const SuperGalacticArchitectureFlow = () => {
           font-size: 12px;
           fill: rgba(255, 255, 255, 0.86);
         }
-
         .arrowBase {
           fill: none;
           stroke: rgba(255, 255, 255, 0.2);
