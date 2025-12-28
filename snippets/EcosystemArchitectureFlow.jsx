@@ -113,10 +113,7 @@ export const SuperGalacticArchitectureFlow = () => {
         </button>
       </div>
 
-      <div
-        className="relative mt-2 p-6 rounded-2xl overflow-hidden"
-        style={{ background: "linear-gradient(145deg, #130a40, #1a114c)" }}
-      >
+      <div className="relative mt-2 p-6 rounded-2xl overflow-hidden" style={{ background: "linear-gradient(145deg, #130a40, #1a114c)" }}>
         {isNodeActive("game") ? (
           <div className="absolute" style={{ left: "7%", top: "35%", width: "20%", height: "20%", background: "#7c3aed", filter: "blur(50px)", opacity: 0.35, borderRadius: "50%" }}></div>
         ) : null}
