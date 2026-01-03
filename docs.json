@@ -51,6 +51,105 @@
         "icon": "send",
         "href": "https://t.me/ufogaming"
       }
+    ],
+    "groups": [
+      {
+        "group": "Overview",
+        "icon": "home",
+        "pages": [
+          "index",
+          "quickstart"
+        ]
+      },
+      {
+        "group": "Essentials",
+        "icon": "gear",
+        "pages": [
+          "essentials/settings",
+          "essentials/markdown",
+          "essentials/code"
+        ]
+      },
+      {
+        "group": "AI Tools",
+        "icon": "sparkles",
+        "pages": [
+          "ai-tools/cursor",
+          "ai-tools/claude-code",
+          "ai-tools/windsurf"
+        ]
+      },
+      {
+        "group": "API Reference",
+        "icon": "terminal",
+        "pages": [
+          "api-reference/endpoint/create"
+        ]
+      },
+      {
+        "group": "Game",
+        "icon": "gamepad",
+        "pages": [
+          {
+            "group": "Overview",
+            "pages": [
+              "game/overview/introduction",
+              "game/overview/market-opportunity",
+              "game/overview/competitive-landscape",
+              "game/overview/ecosystem-architecture"
+            ]
+          },
+          {
+            "group": "Gameplay",
+            "pages": [
+              "game/gameplay/gameplay-overview",
+              "game/gameplay/game-modes",
+              "game/gameplay/Progression-Access",
+              "game/gameplay/Matchmaking-Servers"
+            ]
+          },
+          {
+            "group": "Economy",
+            "pages": [
+              "game/economy/economy-overview",
+              "game/economy/rewards-system",
+              "game/economy/token-sinks",
+              "game/economy/breeding-economics",
+              "game/economy/burn-mechanisms"
+            ]
+          },
+          {
+            "group": "NFTs & Assets",
+            "pages": [
+              "game/nfts-assets/the-originals",
+              "game/nfts-assets/lore",
+              "game/nfts-assets/renting-system",
+              "game/nfts-assets/breeding-system",
+              "game/nfts-assets/equipment-and-weapons",
+              "game/nfts-assets/mystery-lootboxes",
+              "game/nfts-assets/rarity-attributes-rating",
+              "game/nfts-assets/upgrades-and-progression"
+            ]
+          },
+          {
+            "group": "Roadmap",
+            "pages": [
+              "game/roadmap/product-roadmap",
+              "game/roadmap/development-updates"
+            ]
+          },
+          {
+            "group": "Tokenomics",
+            "pages": [
+              "game/tokenomics/uap-token-overview",
+              "game/tokenomics/supply-and-allocation",
+              "game/tokenomics/token-launch-details",
+              "game/tokenomics/market-transaction-tax",
+              "game/tokenomics/smart-contract-audit"
+            ]
+          }
+        ]
+      }
     ]
   },
 
