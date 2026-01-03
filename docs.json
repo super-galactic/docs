@@ -72,7 +72,8 @@
               "game/gameplay/gameplay-overview",
               "game/gameplay/game-modes",
               "game/gameplay/Progression-Access",
-              "game/gameplay/Matchmaking-Servers"
+              "game/gameplay/Matchmaking-Servers",
+              "game/gameplay/Get-Started"
             ]
           },
           {
