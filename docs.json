@@ -52,44 +52,11 @@
         "href": "https://t.me/ufogaming"
       }
     ],
-    "groups": [
+    "tabs": [
       {
-        "group": "Overview",
-        "icon": "home",
-        "pages": [
-          "index",
-          "quickstart"
-        ]
-      },
-      {
-        "group": "Essentials",
-        "icon": "gear",
-        "pages": [
-          "essentials/settings",
-          "essentials/markdown",
-          "essentials/code"
-        ]
-      },
-      {
-        "group": "AI Tools",
-        "icon": "sparkles",
-        "pages": [
-          "ai-tools/cursor",
-          "ai-tools/claude-code",
-          "ai-tools/windsurf"
-        ]
-      },
-      {
-        "group": "API Reference",
-        "icon": "terminal",
-        "pages": [
-          "api-reference/endpoint/create"
-        ]
-      },
-      {
-        "group": "Game",
+        "tab": "Game",
         "icon": "gamepad",
-        "pages": [
+        "groups": [
           {
             "group": "Overview",
             "pages": [
@@ -158,16 +125,7 @@
   },
 
   "contextual": {
-    "options": [
-      "copy",
-      "view",
-      "chatgpt",
-      "claude",
-      "perplexity",
-      "mcp",
-      "cursor",
-      "vscode"
-    ]
+    "options": ["copy", "view", "chatgpt", "claude", "perplexity", "mcp", "cursor", "vscode"]
   },
 
   "footer": {
