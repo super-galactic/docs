@@ -2,115 +2,60 @@
 title: "Ecosystem Architecture"
 ---
 
-Super Galactic is built as a **fully integrated, multi system ecosystem** where gameplay, asset ownership, and on chain state remain synchronized at all times.
+Super Galactic is built as a connected system where gameplay, progression, ownership, and economy operate together without relying on a single dependency. Each layer is designed to function independently while remaining interoperable with the others.
 
-The architecture is designed to ensure that player actions performed in the game client or the Super Galactic Hub are reflected consistently across all connected systems, without manual syncing, duplicated actions, or fragmented state.
+This structure allows the game to evolve over time, introduce new features safely, and maintain balance without disrupting the core player experience.
 
 import { SuperGalacticArchitectureFlow } from "/snippets/EcosystemArchitectureFlowGrok.jsx";
 
 <SuperGalacticArchitectureFlow />
 
-### Core System Components
+---
 
-The Super Galactic ecosystem consists of three primary layers:
+### Core System Layers
 
-- The Game Client
-- The Super Galactic Hub
-- The Blockchain Layer
+Super Galactic is composed of four primary layers.
 
-Each layer has a distinct role while operating as part of a single cohesive system.
+<Steps>
+  <Step title="Game Client">
+    The game client is where all moment to moment gameplay occurs. Combat, movement, matchmaking, and progression input originate here. The client is designed to remain accessible to all players regardless of ownership status.
+  </Step>
+  <Step title="Ownership Layer">
+    The ownership layer represents player owned assets such as characters and equipment. These assets enhance progression and long term depth but are never required to access or enjoy the game.
+  </Step>
+  <Step title="Economy Layer">
+    The economy layer governs rewards, spending, sinks, and scarcity controls. It is designed to reinforce gameplay loops rather than override them. Economic systems respond to player activity and progression instead of operating independently.
+  </Step>
+  <Step title="Super Galactic Hub">
+    The Super Galactic Hub serves as the external interface for asset management, marketplace activity, and future systems such as renting. It connects ownership and economy features without introducing friction into gameplay.
+  </Step>
+</Steps>
 
-> The Super Galactic ecosystem operates across multiple blockchain networks to support scalability, low cost gameplay, and asset ownership.
+---
 
-### Game Client
+### Separation of Responsibilities
 
-The game client is built on Unity and is responsible for real time gameplay, combat, progression, and player interaction.
+Each layer has a clearly defined responsibility.
 
-Within the game client:
+Gameplay systems focus exclusively on play quality and competitive balance.\
+Ownership systems focus on persistence and progression depth.\
+Economic systems focus on sustainability and long term equilibrium.\
+The Hub focuses on access, management, and external interaction.
 
-- Players complete missions and earn rewards
-- Progression and upgrades are executed through gameplay
-- Asset performance, stats, and evolution are calculated in real time
+By separating responsibilities, Super Galactic avoids common failure points where changes in one system destabilize others.
 
-The game client is the source of gameplay activity and progression state.
+---
 
-### Super Galactic Hub
+### Designed for Iteration and Longevity
 
-The Super Galactic Hub is the unified application layer for asset management, progression visibility, and ownership actions.
+This architecture allows Super Galactic to evolve through live development.
 
-Within the Hub, players can:
+New gameplay modes can be added without altering ownership rules.\
+New assets can be introduced without inflating the economy.\
+Economic parameters can be adjusted without affecting gameplay fairness.
 
-- View and manage owned NFTs
-- View UAP balances and claim earned UAP
-- Initiate breeding and asset related actions
-- View progression, stat updates, and evolution history
+These boundaries make it possible to respond to player behavior, balance data, and long term growth without requiring structural resets.
 
-The Hub acts as the bridge between gameplay state and on chain ownership, providing a single interface for managing assets across the ecosystem.
-
-### Blockchain Layer
-
-The blockchain layer is responsible for:
-
-- Token ownership and transfers
-- NFT ownership and lifecycle events
-- Burn execution and treasury flows
-- Transaction transparency and verification
-
-All on chain actions are executed through audited smart contracts and are independently verifiable.
-
-### Cross System Synchronization
-
-Super Galactic is designed with full bidirectional synchronization between systems.
-
-- Gameplay actions update asset state visible in the Hub
-- Hub initiated actions reflect back into gameplay systems
-- Ownership and token balances remain consistent across all interfaces
-
-This ensures that players always interact with a single source of truth, regardless of where an action is initiated.
-
-### Reward Flow Architecture
-
-Reward generation and claiming follows a clear system flow:
-
-- Gameplay activity generates reward data in the game client
-- Earned rewards are recorded and surfaced in the Hub
-- Players claim rewards through the Hub
-- Claim actions execute on chain transactions
-
-Each step is tracked, timestamped, and transparently recorded.
-
-### Transaction Visibility and Transparency
-
-All on chain actions initiated through the ecosystem provide:
-
-- Transaction hashes
-- Timestamps
-- On chain verification
-
-Players can view historical activity related to rewards, claims, and asset actions directly through the Hub interface, with links to on chain data where applicable.
-
-### System Design Principles
-
-The ecosystem architecture is built around the following principles:
-
-- Single source of truth across systems
-- Real time synchronization without manual intervention
-- Clear separation between gameplay logic and ownership logic
-- Transparency and verifiability for all on chain actions
-
-This ensures reliability, scalability, and long term maintainability.
-
-### Relationship to Other Documentation
-
-This section describes **how systems integrate and synchronize**.
-
-For related topics:
-
-- Gameplay incentives and economic design are covered under **Game Economy**
-- Token usage and utility are covered under **Tokenomics**
-- User interaction flows are covered under **Super Galactic Hub** documentation
-
-<Note>
-  This section describes system architecture and integration only.\
-  Economic incentives, reward mechanics, and token supply rules are documented separately.
-</Note>
+<Info>
+  This page provides a high level view of how Super Galactic systems connect. Detailed explanations for gameplay, assets, economy, and ownership are covered in their respective sections.
+</Info>
