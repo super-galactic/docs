@@ -31,108 +31,25 @@
 
   "navigation": {
     "anchors": [
-      { "anchor": "Main site", "icon": "globe", "href": "https://ufogaming.io" },
-      { "anchor": "Twitter", "icon": "x", "href": "https://x.com/ufogaming" },
-      { "anchor": "YouTube", "icon": "youtube", "href": "https://www.youtube.com/@UFOGaming" },
-      { "anchor": "Telegram", "icon": "send", "href": "https://t.me/ufogaming" }
-    ],
-
-    "tabs": [
       {
-        "tab": "Game",
-        "icon": "gamepad",
-        "groups": [
-          {
-            "group": "Overview",
-            "pages": [
-              "game/overview/introduction",
-              "game/overview/market-opportunity",
-              "game/overview/competitive-landscape",
-              "game/overview/ecosystem-architecture"
-            ]
-          },
-          {
-            "group": "Gameplay",
-            "pages": [
-              "game/gameplay/gameplay-overview",
-              "game/gameplay/progression-and-game-modes"
-            ]
-          },
-          {
-            "group": "NFTs & Assets",
-            "pages": [
-              "game/nfts-assets/the-originals",
-              "game/nfts-assets/rarity-attributes-rating",
-              "game/nfts-assets/upgrades-and-progression",
-              "game/nfts-assets/equipment-and-weapons",
-              "game/nfts-assets/mystery-lootboxes",
-              "game/nfts-assets/breeding-system",
-              "game/nfts-assets/renting-system",
-              "game/nfts-assets/lore"
-            ]
-          },
-          {
-            "group": "Game Economy",
-            "pages": [
-              "game/economy/economy-overview",
-              "game/economy/rewards-system",
-              "game/economy/token-sinks",
-              "game/economy/burn-mechanisms",
-              "game/economy/breeding-economics"
-            ]
-          },
-          {
-            "group": "Tokenomics",
-            "pages": [
-              "game/tokenomics/uap-token-overview",
-              "game/tokenomics/smart-contract-audit",
-              "game/tokenomics/supply-and-allocation",
-              "game/tokenomics/token-launch-details",
-         
-              "game/tokenomics/market-transaction-tax"
-            ]
-          },
-          {
-            "group": "Roadmap & Development",
-            "pages": [
-              "game/roadmap/product-roadmap",
-              "game/roadmap/development-updates"
-            ]
-          }
-        ]
+        "anchor": "Main site",
+        "icon": "globe",
+        "href": "https://ufogaming.io"
       },
-
       {
-        "tab": "Marketplace",
-        "icon": "store",
-        "groups": [
-          {
-            "group": "Marketplace",
-            "pages": ["marketplace/overview"]
-          }
-        ]
+        "anchor": "Twitter",
+        "icon": "x",
+        "href": "https://x.com/ufogaming"
       },
-
       {
-        "tab": "Multichain",
-        "icon": "shuffle",
-        "groups": [
-          {
-            "group": "Multichain",
-            "pages": ["multichain/overview"]
-          }
-        ]
+        "anchor": "YouTube",
+        "icon": "youtube",
+        "href": "https://www.youtube.com/@UFOGaming"
       },
-
       {
-        "tab": "Resources",
-        "icon": "book-open",
-        "groups": [
-          {
-            "group": "Resources",
-            "pages": ["resources/overview"]
-          }
-        ]
+        "anchor": "Telegram",
+        "icon": "send",
+        "href": "https://t.me/ufogaming"
       }
     ]
   },
