@@ -99,13 +99,6 @@
             ]
           },
           {
-            "group": "Roadmap",
-            "pages": [
-              "game/roadmap/product-roadmap",
-              "game/roadmap/development-updates"
-            ]
-          },
-          {
             "group": "Tokenomics",
             "pages": [
               "game/tokenomics/uap-token-overview",
@@ -113,6 +106,13 @@
               "game/tokenomics/token-launch-details",
               "game/tokenomics/market-transaction-tax",
               "game/tokenomics/smart-contract-audit"
+            ]
+          },
+          {
+            "group": "Roadmap",
+            "pages": [
+              "game/roadmap/product-roadmap",
+              "game/roadmap/development-updates"
             ]
           }
         ]
