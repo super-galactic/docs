@@ -2,9 +2,9 @@
 title: "Ecosystem Architecture"
 ---
 
-Super Galactic is built as a connected system where gameplay, progression, ownership, and economy operate together without relying on a single dependency. Each layer is designed to function independently while remaining interoperable with the others.
+Super Galactic is built on a modular architecture designed to support real time gameplay, persistent progression, and a controlled on chain economy without compromising performance or accessibility.
 
-This structure allows the game to evolve over time, introduce new features safely, and maintain balance without disrupting the core player experience.
+The system is intentionally separated into distinct layers, each responsible for a specific role. This separation allows the game to scale, evolve, and iterate over time while maintaining clear boundaries between gameplay logic, player state, and economic settlement.
 
 import { SuperGalacticArchitectureFlow } from "/snippets/EcosystemArchitectureFlowGrok.jsx";
 
@@ -12,50 +12,79 @@ import { SuperGalacticArchitectureFlow } from "/snippets/EcosystemArchitectureFl
 
 ---
 
-### Core System Layers
+### Layered System Design
 
-Super Galactic is composed of four primary layers.
+The Super Galactic ecosystem is structured around three primary layers:
+
+1. Gameplay Layer
+2. Application Layer
+3. On Chain Settlement Layer
+
+Each layer operates independently while remaining synchronized through defined data flows and verification processes.
 
 <Steps>
-  <Step title="Game Client">
-    The game client is where all moment to moment gameplay occurs. Combat, movement, matchmaking, and progression input originate here. The client is designed to remain accessible to all players regardless of ownership status.
+  <Step title="Gameplay Layer">
+    The gameplay layer is responsible for all real time interactions.
+
+    This includes:
+
+    - Combat and mission execution
+    - Player movement and abilities
+    - Match outcomes and performance tracking
+    - Local game state and responsiveness
+
+    This layer is optimized for speed and player experience. No blockchain interactions occur during active gameplay, ensuring low latency and uninterrupted play.
   </Step>
-  <Step title="Ownership Layer">
-    The ownership layer represents player owned assets such as characters and equipment. These assets enhance progression and long term depth but are never required to access or enjoy the game.
+  <Step title="Application Layer">
+    The application layer acts as the coordination and synchronization layer between gameplay and on chain systems.
+
+    Its responsibilities include:
+
+    - Player account state
+    - Asset management and inventory
+    - Progression tracking
+    - Reward eligibility and claims
+    - Data synchronization across systems
+
+    This layer ensures that gameplay results are correctly recorded, validated, and prepared for settlement without exposing players to unnecessary technical complexity.
   </Step>
-  <Step title="Economy Layer">
-    The economy layer governs rewards, spending, sinks, and scarcity controls. It is designed to reinforce gameplay loops rather than override them. Economic systems respond to player activity and progression instead of operating independently.
-  </Step>
-  <Step title="Super Galactic Hub">
-    The Super Galactic Hub serves as the external interface for asset management, marketplace activity, and future systems such as renting. It connects ownership and economy features without introducing friction into gameplay.
+  <Step title="On Chain Settlement Layer">
+    The on chain layer handles ownership, verification, and economic finality.
+
+    This includes:
+
+    - UAP token logic
+    - NFT ownership and metadata
+    - Supply control mechanisms
+    - Burn and sink execution
+    - Transaction verification
+
+    Only validated outcomes are settled on chain. This design minimizes cost, avoids unnecessary transactions, and ensures economic actions are transparent and verifiable.
   </Step>
 </Steps>
 
----
+### Design Intent
 
-### Separation of Responsibilities
+This architecture is designed to achieve several long term goals:
 
-Each layer has a clearly defined responsibility.
+- Preserve gameplay performance by isolating real time systems
+- Enable secure ownership and economic participation
+- Support controlled supply and deflationary mechanics
+- Allow future expansion without rearchitecting core systems
 
-Gameplay systems focus exclusively on play quality and competitive balance.\
-Ownership systems focus on persistence and progression depth.\
-Economic systems focus on sustainability and long term equilibrium.\
-The Hub focuses on access, management, and external interaction.
-
-By separating responsibilities, Super Galactic avoids common failure points where changes in one system destabilize others.
+By separating access from ownership and gameplay from settlement, Super Galactic avoids the common pitfalls of tightly coupled game and blockchain systems.
 
 ---
 
-### Designed for Iteration and Longevity
+### Extensibility and Future Systems
 
-This architecture allows Super Galactic to evolve through live development.
+The modular structure allows new systems to be introduced without disrupting existing gameplay.
 
-New gameplay modes can be added without altering ownership rules.\
-New assets can be introduced without inflating the economy.\
-Economic parameters can be adjusted without affecting gameplay fairness.
+Future features such as expanded progression paths, additional asset interactions, and marketplace functionality can be integrated at the application or settlement layer while preserving core gameplay integrity.
 
-These boundaries make it possible to respond to player behavior, balance data, and long term growth without requiring structural resets.
+This approach ensures that Super Galactic can evolve over time without sacrificing stability, balance, or player experience.
 
-<Info>
-  This page provides a high level view of how Super Galactic systems connect. Detailed explanations for gameplay, assets, economy, and ownership are covered in their respective sections.
-</Info>
+<Note>
+  This section explains **how the ecosystem is structured**, not how each system operates in detail.\
+  The following sections explore gameplay, assets, and economic mechanics built on top of this architecture.
+</Note>
