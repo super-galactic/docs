@@ -3,15 +3,22 @@ title: "Burn Mechanisms"
 icon: "flame"
 ---
 
-Super Galactic uses an **automated, usage-based burn mechanism** to permanently reduce UAP supply as players engage with the game.
+Burn mechanisms are a core component of Super Galactic’s closed-loop economy. They permanently remove UAP from circulation as a direct result of gameplay activity, ensuring that increased engagement strengthens the economy rather than diluting it.
 
-Burns are not scheduled events tied to calendars or promotional campaigns. They are triggered directly by gameplay spending, ensuring that supply reduction scales naturally with player activity.
+Unlike scheduled or promotional burns, Super Galactic uses **automated, usage-based burns** that are triggered directly by in-game spending. Supply reduction therefore scales naturally with how the game is played.
 
-This design links economic growth to scarcity rather than inflation.
+### Purpose of Burn Mechanisms
 
----
+Burn mechanisms serve several critical roles within the game economy:
 
-## Automatic Burn Trigger
+- Permanently reduce circulating UAP in proportion to player activity
+- Counterbalance reward distribution over time
+- Reinforce long-term scarcity without restricting access
+- Align economic outcomes with real gameplay engagement
+
+By tying burns directly to progression and spending, the system avoids artificial scarcity and allows supply reduction to emerge organically from player behaviour.
+
+### Automatic Burn Trigger
 
 Every time UAP is spent inside the game, the burn mechanism is triggered automatically.
 
@@ -21,9 +28,7 @@ Every time UAP is spent inside the game, the burn mechanism is triggered automat
 
 As long as players are progressing, upgrading, or engaging with core gameplay systems, automated burns are continuously occurring.
 
----
-
-## Burn and Treasury Allocation
+### Burn and Treasury Allocation
 
 All in game UAP spending follows a fixed allocation model:
 
@@ -32,9 +37,10 @@ All in game UAP spending follows a fixed allocation model:
 
 The burn portion is removed from circulation permanently, directly reducing circulating supply. This allocation applies consistently across all gameplay systems that consume UAP.
 
----
+> **Example:**\
+> If a player spends 1000 UAP on an upgrade, 500 UAP is permanently burned and 500 UAP is routed to the game treasury
 
-## Usage-Based Supply Reduction
+### Usage-Based Supply Reduction
 
 Burns scale proportionally with gameplay activity.
 
@@ -46,9 +52,30 @@ There are no fixed burn schedules or time based burn events. Supply reduction is
 
 This ensures that growth strengthens scarcity instead of diluting it.
 
----
+### Relationship to Token Sinks
 
-## Treasury-Controlled Burns
+Token sinks act as the primary **entry point** for burn execution.
+
+- Players spend UAP through progression systems
+- Spending triggers the system allocation split
+- Burns reduce circulating supply
+- Treasury flows support ongoing development and operations
+
+This design tightly couples progression, spending, and supply management into a single coherent system.
+
+Details on where and how UAP is spent are documented in **Game Economy → Token Sinks**.
+
+### Fixed Supply Enforcement
+
+Super Galactic operates on a **fixed total supply model**.
+
+- No new UAP is minted through gameplay
+- Burns permanently reduce circulating supply
+- Supply cannot increase beyond the predefined cap
+
+Burn mechanisms do not offset inflation, they prevent it entirely by ensuring that circulation is continuously regulated by usage.
+
+### Treasury-Controlled Burns
 
 The portion of UAP routed to the game treasury provides economic flexibility without compromising automation.
 
@@ -63,60 +90,37 @@ Key principles governing treasury-controlled burns:
 
 This structure preserves a rules-based economy while allowing responsible long-term supply management.
 
----
-
-## Transparency and Enforcement
+### Transparency and Verification
 
 Burn mechanisms in Super Galactic are:
 
-- Rule based
+- Rule-based
 - Transparent
 - Consistently enforced
 - Verifiable on-chain
 
-Automated burns occur as part of gameplay transactions, while any treasury-controlled burns are clearly communicated and independently verifiable.
+Automated burns occur as part of gameplay transactions, while any treasury-controlled burns are clearly communicated and independently auditable.
 
----
+### Economic Role of Burn Mechanisms
 
-## Relationship to Token Sinks
+Burn mechanisms complete the economic loop by converting gameplay activity into controlled supply reduction.
 
-Token sinks are the primary trigger for burn activity.
+- Rewards introduce UAP through gameplay
+- Token sinks create structured demand
+- Burns permanently remove supply
 
-Whenever players spend UAP on:
+Together, these systems ensure that increased engagement strengthens the economy rather than destabilizing it.
 
-- Progression upgrades
-- Breeding or creation systems
-- Optional unlocks or customization
+### Design Principles
 
-The burn mechanism is applied as part of the same transaction flow.
+Burn mechanisms in Super Galactic follow these principles:
 
-Details on spending systems are covered in **Game Economy → Token Sinks**.
+- Burns must be driven by gameplay, not speculation
+- Supply reduction should emerge organically from progression
+- No scheduled, manual, or marketing-driven burns
+- Players should never be required to manage or trigger burns directly
 
----
-
-## Why This Matters
-
-By enforcing burns at the point of gameplay spending:
-
-- Supply reduction is organic and predictable
-- Scarcity increases alongside engagement
-- Inflationary pressure is structurally avoided
-- Economic incentives remain aligned with gameplay
-
-Unlike emission driven play to earn models, Super Galactic converts activity into controlled supply reduction rather than runaway token expansion.
-
----
-
-## Design Principles
-
-The burn mechanism is built around the following principles:
-
-- Automated burns must be system enforced
-- Supply reduction must scale with gameplay activity
-- Manual intervention must be transparent and limited to treasury actions
-- Players should not need to manage or trigger burns
-
-This approach supports long-term stability while keeping the player experience simple and predictable.
+This approach supports long-term stability while keeping the player experience predictable and frictionless.
 
 <Note>
   This section describes in game burn mechanics only.\
