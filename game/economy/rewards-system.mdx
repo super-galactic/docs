@@ -3,49 +3,36 @@ title: "Rewards System"
 icon: "trophy"
 ---
 
-Super Galactic’s reward system is designed to be **gameplay-first**, **skill-driven**, and **economically sustainable**. UAP rewards are earned exclusively through active participation in eligible gameplay modes and never through idle activity, passive mechanics, or time-based emissions.
-
-Every token distributed reflects measurable in-game performance within predefined system constraints.
+Super Galactic’s reward system is designed to be gameplay-first, skill-driven, and economically sustainable. UAP rewards are earned exclusively through eligible gameplay modes and never through idle activity, passive mechanics, or time-based emissions. Every token distributed reflects measurable in-game performance within predefined system constraints.
 
 ### How UAP Is Earned
 
-UAP enters player hands **only through successful PvE mission completion**.
+UAP enters player hands only through successful PvE mission completion. Players earn UAP by completing missions, fulfilling required objectives, and successfully finishing missions at a chosen difficulty level. All difficulty levels are eligible for rewards, provided mission objectives are completed successfully. There are no rewards for idle play, login activity, automated behaviour, or non-gameplay actions.
 
-Players earn UAP by:
+### Reward Eligibility by Game Mode
 
-- - Completing missions
-- - Fulfilling all required mission objectives
-- - Successfully completing missions at their chosen difficulty level
+PvP and demo modes are designed for competition, testing, and learning and do not generate token rewards.
 
-Players may select any mission difficulty from **Level 1 to Level 5**. All difficulty levels are eligible for rewards, provided mission objectives are completed successfully.
+| Game Mode                   | Eligible for UAP Rewards |
+| :-------------------------- | :----------------------- |
+| PvE Missions (Play to Earn) | Yes                      |
+| Demo Mode                   | No                       |
+| Duel (PvP)                  | No                       |
+| Team Deathmatch (PvP)       | No                       |
 
-There are no rewards for idle play, login activity, automated behavior, or non-gameplay actions. Every UAP reward reflects real gameplay participation.
+### Performance Based Reward Calculation
 
-### Performance-Based Reward Calculation
+UAP rewards are bounded by mission difficulty and determined by objective completion, not by stat-based multipliers. Each mission difficulty defines a fixed maximum UAP reward, and players qualify for that maximum only by successfully completing all mission objectives. Partial completion results in reduced rewards based on system calculation.
 
-UAP rewards are bounded by mission difficulty and determined by objective completion, not by stat-based multipliers.
+Progression improves the ability to complete higher difficulty missions consistently, but it does not increase reward caps or multiply UAP output. Performance is influenced by Genesis character rating, weapon ratings, and combat execution. This structure ensures access to higher reward tiers scales with skill and preparation without introducing inflationary mechanics.
 
-Each mission difficulty defines a **fixed maximum UAP reward**. Players qualify for this maximum only by successfully completing all mission objectives. Partial completion results in reduced rewards based on system calculation.
-
-Player progression improves **the ability to successfully complete higher difficulty missions**, not the reward caps themselves.
-
-Performance is influenced by:
-
-- **Genesis character rating**, which increases survivability and overall combat effectiveness
-- **Weapon ratings**, which improve damage output and combat efficiency
-- **Combat execution**, including objective completion and mission success
-
-Upgrading Genesis characters and weapons increases ratings and underlying stats, enabling players to perform more consistently at higher difficulty levels. These upgrades do **not** increase maximum rewards or multiply UAP output.
-
-This structure ensures access to higher reward tiers scales with skill and preparation without introducing inflationary mechanics.
+<Note>
+  Upgrading Genesis characters and weapons increases ratings and underlying stats, enabling more consistent performance at higher difficulty levels. These upgrades do not increase maximum rewards or multiply UAP output
+</Note>
 
 ### Mission Difficulty and Reward Caps
 
-Super Galactic missions are distributed across multiple planetary maps, each offering randomized mission objectives and selectable difficulty levels.
-
-Each difficulty level defines a **maximum UAP reward**, which can only be achieved by completing all mission objectives. Higher difficulties offer higher reward caps but require stronger performance and preparation.
-
-> _Planet selection and mission objectives are randomized, while reward caps remain consistent per difficulty level._
+Super Galactic missions are distributed across multiple planetary maps, each offering randomised mission objectives and selectable difficulty levels. Higher difficulties offer higher reward caps but require stronger performance and preparation. Planet selection and mission objectives are randomised, while reward caps remain consistent per difficulty level.
 
 | Mission Difficulty | Maximum UAP Reward |
 | :----------------- | :----------------- |
@@ -59,40 +46,9 @@ Each difficulty level defines a **maximum UAP reward**, which can only be achiev
   Maximum rewards are granted only when all mission objectives are completed. Partial completion results in reduced rewards based on system calculation.
 </Note>
 
-### Reward Eligibility by Game Mode
-
-PvP and demo modes are designed for competition, testing, and learning and do not generate token rewards.
-
-| Game Mode                   | Eligible for UAP Rewards |
-| :-------------------------- | :----------------------- |
-| PvE Missions (Play to Earn) | Yes                      |
-| Demo Mode                   | No                       |
-| Duel (PvP)                  | No                       |
-| Team Deathmatch (PvP)       | No                       |
-| Social / Practice Play      | No                       |
-
-### Reward Balancing and Live Configuration
-
-Super Galactic’s reward system is configurable to support long term balance and live operations.
-
-Reward values, difficulty tuning, and mission parameters can be adjusted based on gameplay analytics and observed player behaviour. This allows the system to respond to real usage patterns while preserving its core design principles.
-
-Adjustments are used to maintain balance, fairness, and sustainability and do not introduce token minting, inflationary emissions, or passive reward systems within the fixed supply model.
-
-<Note>
-  Any changes to reward configuration are communicated transparently and in advance through official development updates.
-</Note>
-
 ### Earn vs Claim
 
-UAP is **earned in game** but **claimed through the Super Galactic Hub**.
-
-- Mission completion records earned UAP off chain
-- Rewards become visible in the in game account overview
-- Players claim accumulated rewards through the hub
-- On chain settlement occurs at claim
-
-This separation allows precise reward tracking while minimising on chain activity and preventing abuse.
+UAP is earned in-game but claimed through the Super Galactic Hub. Mission completion records earned UAP off-chain, rewards become visible in the in-game account overview, and players claim accumulated rewards through the Hub. On-chain settlement occurs at claim. This separation allows precise reward tracking while minimising on-chain activity and preventing abuse.
 
 ```java
 Select mission difficulty
@@ -106,47 +62,32 @@ Claim via Hub (on-chain)
 
 ### Controlled Entry Into Circulation
 
-The reward system does not mint new tokens.
-
-All UAP distributed as rewards already exists within the fixed total supply. The system determines **when and how existing supply enters circulation** based on gameplay outcomes.
-
-This preserves supply discipline while supporting consistent reward flow for active players.
+The reward system does not mint new tokens. All UAP distributed as rewards already exists within the fixed total supply, and the system determines when and how existing supply enters circulation based on gameplay outcomes. This preserves supply discipline while supporting consistent reward flow for active players.
 
 ### Earning Limits and Mission Cooldowns
 
-To preserve long-term balance, reward generation is governed by **mission-level cooldowns**.
+To preserve long-term balance, reward generation is governed by mission-level cooldowns. Each completed PvE mission enters a 24-hour cooldown, cooldowns apply per mission rather than globally, and missions reset individually based on completion time. The cooldown begins immediately after a mission is completed, not after all missions are completed.
 
-- Each completed PvE mission enters a **24-hour cooldown**
-- Cooldowns apply per mission, not globally
-- Missions reset individually based on completion time
+As a result, a single Genesis Origin UFOep can earn UAP from up to five PvE missions within a rolling 24-hour window. Gameplay remains unlimited, but reward extraction is paced. This structure prevents excessive extraction while rewarding consistent participation.
 
-As a result:
+<Note>
+  This limit applies per Genesis character, so additional Genesis increase the number of reward eligible missions a player can complete within the same window.
+</Note>
 
-- A single Genesis Origin UFOep can earn UAP from **up to 5 PvE missions within a rolling 24-hour window**
-- Gameplay remains unlimited, but reward extraction is paced
+### Reward Balancing and Live Configuration
 
-This structure prevents excessive extraction while rewarding consistent participation.
+Super Galactic’s reward system is configurable to support long-term balance and live operations. Reward values, difficulty tuning, and mission parameters can be adjusted based on gameplay analytics and observed player behaviour. Adjustments are used to maintain balance, fairness, and sustainability and do not introduce token minting, inflationary emissions, or passive reward systems within the fixed supply model. 
+
+<Note>
+  Any changes to reward configuration are communicated transparently and in advance through official development updates.
+</Note>
 
 ### Rewards and Progression Reinvestment
 
-Earned UAP is primarily intended to be **reinvested into progression systems**:
+Earned UAP is designed to be reinvested into long-term progression through in-game sinks such as Genesis character upgrades, weapon upgrades, and breeding. In-game spending consumes UAP and follows the burn split model, while the systems that consume UAP are documented in Token Sinks.
 
-- Genesis character upgrades
-- Weapon upgrades
-- Preparation for systems such as breeding
-
-All progression spending permanently consumes UAP and contributes to automated burn and treasury flows.
-
-This reinforces long-term engagement and discourages extractive reward behavior.
+Player-held UAP remains player-owned and may be held or used according to player preference. Details on UAP’s broader handling outside gameplay systems are documented under Tokenomics.
 
 ### Relationship to the Broader Economy
 
-The Rewards System is one side of the closed-loop economy.
-
-- Rewards introduce UAP into player hands
-- Progression systems create demand through spending
-- Spending triggers automated burns and treasury flows
-
-Together, these systems ensure that increased engagement strengthens the economy rather than destabilizing it.
-
-Details on progression spending and burns are covered in: [**Token Sinks**](https://supergalactic.mintlify.app/game/economy/token-sinks) & [**Burn Mechanisms**](https://supergalactic.mintlify.app/game/economy/burn-mechanisms)
+Rewards introduce UAP through PvE gameplay outcomes, while long-term balance is maintained through progression sinks and the burn model. The full closed-loop flow is documented in the [Economy Overview flywheel](https://supergalactic.mintlify.app/game/economy/economy-overview#the-gameplay-flywheel) section and the [Burn Mechanisms split](https://supergalactic.mintlify.app/game/economy/burn-mechanisms#burn-and-treasury-split) section.

@@ -17,14 +17,28 @@ Every time UAP is spent inside the game, the burn mechanism is triggered automat
 
 ### Burn and Treasury Split
 
-All in-game UAP spending follows a fixed split: 
+All in-game UAP spending follows a fixed split:
 
 - **50% of spent UAP is permanently burned**
-- **50 percent is routed to the Game Treasury**
+- **50% is routed to the Game Treasury**
 
-The burn portion is removed from circulation permanently, directly reducing circulating supply. This split applies consistently across gameplay systems that consume UAP. 
+The burn portion is removed from circulation permanently, directly reducing circulating supply. This split applies consistently across gameplay systems that consume UAP.
 
 > Example: If a player spends 1,000 UAP on an upgrade, 500 UAP is permanently burned and 500 UAP is routed to the Game Treasury.
+
+```javascript
+Gameplay progression
+        ↓
+UAP spend (token sinks)
+        ↓
+System-level split
+   ↙            ↘
+Burn        Treasury
+```
+
+### Game Treasury
+
+The Game Treasury is a system wallet used to support long-term economic health and reward continuity. Funds routed to the Game Treasury may be reintroduced into the Play to Earn reward pool or burned, based on internal economic balancing decisions.
 
 ### Usage-Based Supply Reduction
 
@@ -36,7 +50,7 @@ Super Galactic operates on a fixed total supply model. No new UAP is minted thro
 
 ### Treasury-Controlled Burns
 
-The portion of UAP routed to the game treasury provides economic flexibility without compromising automation. While the automated burn portion is enforced at the system level, the treasury portion may be partially or fully burned at the discretion of the team if additional supply reduction is required to maintain long-term economic balance.
+The portion of UAP routed to the Game Treasury provides economic flexibility without compromising automation. While the automated burn portion is enforced at the system level, the treasury portion may be partially or fully burned based on internal economic balancing decisions if additional supply reduction is required to maintain long-term economic balance.
 
 Treasury actions do not replace or override the automated burn mechanism. They are an additional tool for long-term management within the same fixed-supply framework.
 
@@ -48,7 +62,7 @@ Automated burns occur as part of gameplay transactions and are enforceable and a
 
 ### Design Principles
 
-Burn mechanisms in Super Galactic follow these principles: burns must be driven by gameplay, supply reduction should emerge from progression, there are no scheduled or promotional burns as a substitute for system design, and players are never required to manage or trigger burns directly. 
+Burn mechanisms in Super Galactic follow these principles: burns must be driven by gameplay, supply reduction should emerge from progression, there are no scheduled or promotional burns as a substitute for system design, and players are never required to manage or trigger burns directly.
 
 This approach supports long-term stability while keeping the player experience predictable and frictionless.
 
