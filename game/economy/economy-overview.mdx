@@ -33,7 +33,7 @@ Progression systems are the primary source of long-term UAP demand.
 
 Players spend UAP to upgrade Genesis characters and weapons, unlocking deeper progression and improved gameplay performance. These systems are designed to scale with rarity and advancement depth, increasing UAP demand as players progress further.
 
-All progression spending permanently consumes UAP and feeds directly into supply management.
+All progression spending permanently consumes UAP from the player’s balance, then routes it through the burn and Game Treasury flow described below.
 
 Detailed progression sinks are covered in [**Token Sinks**](https://supergalactic.mintlify.app/game/economy/token-sinks).
 
@@ -41,23 +41,25 @@ Detailed progression sinks are covered in [**Token Sinks**](https://supergalacti
 
 Every time UAP is spent in-game, a **system-level allocation** is triggered automatically:
 
-- A portion of UAP is permanently burned
-- A portion is routed to the game treasury
+- A fixed portion of UAP is permanently burned
+- The remaining fixed portion is routed to the Game Treasury
+
+> For the exact split, see Game Economy → Burn Mechanisms → **Burn and Treasury Split**
 
 This process is usage-based, transparent, and enforced by the system. As player activity increases, total burn volume increases proportionally without relying on scheduled events or manual intervention.
 
-Complete burn logic is documented in [**Burn Mechanisms**](https://supergalactic.mintlify.app/game/economy/burn-mechanisms).
+Complete burn logic and the exact split are documented in Burn Mechanisms [**Burn Mechanisms**](https://supergalactic.mintlify.app/game/economy/burn-mechanisms).
 
 ### The Gameplay Flywheel
 
 Super Galactic’s economy functions as a self-reinforcing loop:
 
-1. Players complete missions and earn UAP  
-2. Players spend UAP on progression systems  
-3. Spending triggers automated burns and treasury allocation  
-4. Circulating supply is reduced through burns  
-5. Progression value increases, reinforcing engagement  
-6. Increased activity strengthens the overall system  
+1. Players complete missions and earn UAP
+2. Players spend UAP on progression systems
+3. Spending triggers automated burns and treasury allocation
+4. Circulating supply is reduced through burns
+5. Progression value increases, reinforcing engagement
+6. Increased activity strengthens the overall system
 
 This flywheel ensures that growth is tied to participation and progression rather than uncontrolled supply expansion.
 
