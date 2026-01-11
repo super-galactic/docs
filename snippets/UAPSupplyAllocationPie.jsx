@@ -1,60 +1,51 @@
-import React, { useMemo } from "react";
+"use client";
+import React from "react";
 
-function polarToCartesian(cx, cy, r, angleDeg) {
-  const angleRad = ((angleDeg - 90) * Math.PI) / 180.0;
-  return {
-    x: cx + r * Math.cos(angleRad),
-    y: cy + r * Math.sin(angleRad),
+export const UAPSupplyAllocationPie = () => {
+  const polarToCartesian = (cx, cy, r, angleDeg) => {
+    const angleRad = ((angleDeg - 90) * Math.PI) / 180.0;
+    return {
+      x: cx + r * Math.cos(angleRad),
+      y: cy + r * Math.sin(angleRad),
+    };
   };
-}
 
-function arcPath(cx, cy, rOuter, rInner, startAngle, endAngle) {
-  const startOuter = polarToCartesian(cx, cy, rOuter, endAngle);
-  const endOuter = polarToCartesian(cx, cy, rOuter, startAngle);
-  const startInner = polarToCartesian(cx, cy, rInner, endAngle);
-  const endInner = polarToCartesian(cx, cy, rInner, startAngle);
+  const arcPath = (cx, cy, rOuter, rInner, startAngle, endAngle) => {
+    const startOuter = polarToCartesian(cx, cy, rOuter, endAngle);
+    const endOuter = polarToCartesian(cx, cy, rOuter, startAngle);
+    const startInner = polarToCartesian(cx, cy, rInner, endAngle);
+    const endInner = polarToCartesian(cx, cy, rInner, startAngle);
 
-  const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+    const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
 
-  // Donut slice (outer arc + inner arc)
-  return [
-    `M ${startOuter.x} ${startOuter.y}`,
-    `A ${rOuter} ${rOuter} 0 ${largeArcFlag} 0 ${endOuter.x} ${endOuter.y}`,
-    `L ${endInner.x} ${endInner.y}`,
-    `A ${rInner} ${rInner} 0 ${largeArcFlag} 1 ${startInner.x} ${startInner.y}`,
-    "Z",
-  ].join(" ");
-}
+    return [
+      `M ${startOuter.x} ${startOuter.y}`,
+      `A ${rOuter} ${rOuter} 0 ${largeArcFlag} 0 ${endOuter.x} ${endOuter.y}`,
+      `L ${endInner.x} ${endInner.y}`,
+      `A ${rInner} ${rInner} 0 ${largeArcFlag} 1 ${startInner.x} ${startInner.y}`,
+      "Z",
+    ].join(" ");
+  };
 
-export function UAPSupplyAllocationPie = () => {
-  size = 260,
-  donutWidth = 46,
-  title = "UAP Supply Allocation",
-}) {
-  const data = useMemo(
-    () => [
-      { label: "Play to Earn Economy", value: 50 },
-      { label: "Liquidity and Listing", value: 25 },
-      { label: "Ecosystem Growth", value: 15 },
-      { label: "Team and Advisors", value: 5 },
-      { label: "Development Fund", value: 5 },
-    ],
-    []
-  );
+  const data = [
+    { label: "Play to Earn Economy", value: 50, color: "#16A34A" },
+    { label: "Liquidity and Listing", value: 25, color: "#0EA5E9" },
+    { label: "Ecosystem Growth", value: 15, color: "#A855F7" },
+    { label: "Team and Advisors", value: 5, color: "#F59E0B" },
+    { label: "Development Fund", value: 5, color: "#EF4444" },
+  ];
 
   const total = data.reduce((sum, d) => sum + d.value, 0);
-
-  // Muted palette that works on dark backgrounds
-  const colors = ["#16A34A", "#0EA5E9", "#A855F7", "#F59E0B", "#EF4444"];
 
   const cx = 100;
   const cy = 100;
   const rOuter = 82;
+  const donutWidth = 46;
   const rInner = Math.max(0, rOuter - donutWidth);
 
   let currentAngle = 0;
 
-  const slices = data.map((d, idx) => {
+  const slices = data.map((d) => {
     const sliceAngle = (d.value / total) * 360;
     const startAngle = currentAngle;
     const endAngle = currentAngle + sliceAngle;
@@ -62,25 +53,24 @@ export function UAPSupplyAllocationPie = () => {
 
     return {
       ...d,
-      color: colors[idx % colors.length],
-      startAngle,
-      endAngle,
       path: arcPath(cx, cy, rOuter, rInner, startAngle, endAngle),
     };
   });
 
   return (
     <div className="not-prose">
-      <div className="mb-3 text-sm font-semibold text-gray-200">{title}</div>
+      <div className="mb-3 text-sm font-semibold text-gray-200">
+        UAP Supply Allocation
+      </div>
 
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-center">
-        <div
-          className="rounded-xl border border-white/10 bg-white/5 p-4"
-          style={{ width: size }}
-          aria-label="UAP supply allocation pie chart"
-          role="img"
-        >
-          <svg viewBox="0 0 200 200" className="h-auto w-full">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
+        <div className="w-full max-w-[320px] rounded-xl border border-white/10 bg-white/5 p-4">
+          <svg
+            viewBox="0 0 200 200"
+            className="h-auto w-full"
+            role="img"
+            aria-label="UAP supply allocation pie chart"
+          >
             {slices.map((s) => (
               <path
                 key={s.label}
@@ -123,7 +113,9 @@ export function UAPSupplyAllocationPie = () => {
         </div>
 
         <div className="flex-1 rounded-xl border border-white/10 bg-white/5 p-4">
-          <div className="mb-3 text-sm font-semibold text-gray-200">Breakdown</div>
+          <div className="mb-3 text-sm font-semibold text-gray-200">
+            Breakdown
+          </div>
 
           <div className="overflow-hidden rounded-lg border border-white/10">
             <table className="w-full text-left text-sm">
@@ -159,4 +151,4 @@ export function UAPSupplyAllocationPie = () => {
       </div>
     </div>
   );
-}
+};
