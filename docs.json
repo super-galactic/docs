@@ -106,7 +106,7 @@
               "game/tokenomics/uap-token-overview",
               "game/tokenomics/supply-and-allocation",
               "game/tokenomics/token-launch-details",
-              "game/tokenomics/market-transaction-tax",
+              "game/tokenomics/trading-fees-and-taxes",
               "game/tokenomics/smart-contract-audit"
             ]
           },
