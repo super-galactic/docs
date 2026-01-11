@@ -3,9 +3,44 @@ title: "Smart Contract Audit"
 icon: "shield-check"
 ---
 
-Super Galactic smart contracts have undergone independent third party security review covering the core on-chain systems used by UAP, NFTs, and the Super Galactic Hub.
+Super Galactic smart contracts (Solidity) have undergone independent third party security review by **CertiK**, covering the on-chain systems used by UAP, Super Galactic gameplay interactions, and the Super Galactic Hub marketplace.
 
-Super Galactic smart contracts were audited by [CertiK](https://skynet.certik.com/projects/ufo-gaming?auditId=UFO#code-security).
+This audit included the contracts that power core marketplace operations (buy and sell flows, reward claiming, withdrawals, and required authorization logic), the gameplay interaction layer that creates and updates game entities and player state, and the token and NFT contracts that manage UAP utility and Super Galactic assets.
+
+### Audit Status
+
+| Item              | Status                                                       | Details                                                                        |
+| ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------------------------ |
+| Audit provider    | <Badge icon="shield-check" color="green">CertiK</Badge>      | Independent third party audit                                                  |
+| Audit timeline    | <Badge icon="calendar-check" color="green">Completed</Badge> | Started Apr 7, 2025 and delivered May 23, 2025                                 |
+| Findings handling | <Badge icon="circle-check" color="green">Addressed</Badge>   | Findings were resolved and revalidated in collaboration with the auditing team |
+| Report access     | <Badge icon="link" color="blue">Public</Badge>               | Full report and findings are available via CertiK                              |
+
+### Audit Scope
+
+The audit covered the smart contracts used across the Super Galactic ecosystem, including:
+
+- **Marketplace and Hub transaction flows**, including buy and sell execution, reward claims, and withdrawals
+- **Game interaction contracts** that support creating, updating, and querying game related entities and player state
+- **UAP token contracts**, including role based controls and token management functionality
+- **NFT and asset management contracts** used for minting and managing Super Galactic NFTs, including configurable parameters used by gameplay and Hub systems
+- **Weapon and lootbox systems**, including purchasing and gifting flows, lootbox opening and reveal logic, and upgrade related interactions where applicable
+
+### Transparency and Verification
+
+The audit report is publicly available:
+
+CertiK Audit Report\
+https://skynet.certik.com/projects/ufo-gaming?auditId=UFO#code-security
+
+### Ongoing Security Practices
+
+In addition to third party auditing, Super Galactic follows ongoing security practices aligned with the audited architecture, including:
+
+- Maintaining strict access control discipline for privileged roles and operational permissions
+- Internal testing and regression validation before material contract changes
+- Monitoring of contract activity and marketplace operations for operational anomalies
+- Conservative deployment practices and controlled change management for on-chain systems
 
 ### Audit Scope
 
@@ -17,43 +52,3 @@ The audit covered the core smart contracts powering the Super Galactic ecosystem
 - Core ownership and transaction logic
 
 The review focused on identifying vulnerabilities, logical flaws, and potential attack vectors within the contract codebase.
-
-### Audit Status
-
-- Audit completed
-- No critical unresolved issues reported
-- All identified findings reviewed and addressed where required
-
-The audited contracts are currently deployed and used within the live Super Galactic ecosystem.
-
-| Item | Status | Details |
-| --- | --- | --- |
-| Audit provider | <Badge icon="shield-check" color="green">CertiK</Badge> | Independent third party audit |
-| Audit timeline | <Badge icon="calendar-check" color="green">Completed</Badge> | Started Apr 7, 2025 and delivered May 23, 2025 |
-| Findings handling | <Badge icon="circle-check" color="green">Addressed</Badge> | Findings were resolved and revalidated in collaboration with the auditing team |
-| Deployment readiness | <Badge icon="circle-check" color="green">Audit complete</Badge> | Contracts covered by the audit are ready for deployment and live operation from a security review standpoint |
-| Report access | <Badge icon="link" color="blue">Public</Badge> | Full report and findings are available via CertiK |
-
-<Note>
-  Audit details, scope, and findings are provided in the public CertiK report linked below.
-</Note>
-
-### Transparency and Verification
-
-The audit report is publicly available:
-
-CertiK Audit Report\
-https://skynet.certik.com/projects/ufo-gaming?auditId=UFO#code-security
-
-### Ongoing Security Practices
-
-In addition to third party auditing, Super Galactic follows ongoing security practices, including:
-
-- Use of audited and battle tested contract patterns
-- Controlled contract upgrades where applicable
-- Monitoring of deployed contracts
-- Conservative deployment practices
-
-<Note>
-  This section describes smart contract security and audit status only. Gameplay systems, beta phases, minting progress, and marketplace activity are documented separately under Development Updates and Announcements.
-</Note>
