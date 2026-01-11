@@ -1,5 +1,5 @@
 ---
-title: "Market Transaction Tax"
+title: "Trading Fees and Taxes"
 icon: "percent"
 ---
 
@@ -29,3 +29,36 @@ The Market Transaction Tax provides an additional system lever to support long t
 - Enabling discretionary actions such as treasury management or burns when needed
 
 This section documents market tax behavior only. Gameplay reward and burn logic is documented separately under Game Economy.
+
+## Trading Fees and Taxes
+
+Super Galactic applies two separate charges depending on where a trade happens:
+
+- **Token sell tax (10%)** applies when **UAP is sold on Uniswap**
+- **Marketplace fee (2.5%)** applies when an **NFT sale is executed on the Super Galactic Hub marketplace**
+
+These charges are independent. A marketplace sale does not trigger the Uniswap sell tax unless the seller separately sells UAP on Uniswap.
+
+### Summary
+
+| Location | Charge | When it applies | Who pays |
+| --- | --- | --- | --- |
+| Uniswap | **10% sell tax** | When a user sells UAP | Seller |
+| Super Galactic Hub Marketplace | **2.5% marketplace fee** | When a listed item sells successfully | Seller |
+
+### Token Sell Tax (Uniswap)
+
+When UAP is sold on Uniswap, a **10% sell tax** is applied at execution. The seller receives the net amount after tax.
+
+This tax is intended to support long-term ecosystem operations and treasury management alongside the in-game burn model.
+
+### Marketplace Fee (Super Galactic Hub)
+
+When an item is sold through the Super Galactic Hub marketplace, a **2.5% marketplace fee** is applied to the sale proceeds.
+
+The fee is shown to the user before confirming a listing or sale transaction, similar to standard marketplace platforms. The seller receives the net amount after the fee is applied.
+
+### Important Notes
+
+- **In-game spending is not affected by Uniswap trading taxes or marketplace fees.** In-game spending follows the burn and Game Treasury split documented under **Game Economy → Burn Mechanisms**.
+- Fees and taxes described on this page apply only to trading and marketplace execution, not to gameplay reward generation or progression spending.
