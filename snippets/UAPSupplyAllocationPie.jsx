@@ -26,7 +26,7 @@ function arcPath(cx, cy, rOuter, rInner, startAngle, endAngle) {
   ].join(" ");
 }
 
-export function UAPSupplyAllocationPie({
+export function UAPSupplyAllocationPie = () => {
   size = 260,
   donutWidth = 46,
   title = "UAP Supply Allocation",
