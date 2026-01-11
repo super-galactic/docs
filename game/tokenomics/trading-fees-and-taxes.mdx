@@ -3,62 +3,36 @@ title: "Trading Fees and Taxes"
 icon: "percent"
 ---
 
-A Market Transaction Tax is applied to supported marketplace sell transactions involving UAP denominated assets. This mechanism applies only to market sells and does not affect in-game spending.
-
-### Tax Rates
-
-| Transaction Type | Tax Rate |
-| ---------------- | -------: |
-| Buy              | 0%       |
-| Sell             | 10%      |
-
-<Note>
-  This tax applies to supported marketplace sell flows. In-game UAP spending follows the burn and Game Treasury split documented under **Game Economy → Burn Mechanisms**.
-</Note>
-
-### How It Works
-
-When a sell transaction is executed on supported marketplace contracts, the tax is deducted automatically as part of the transaction. The seller receives the net amount after tax.
-
-### Purpose
-
-The Market Transaction Tax provides an additional system lever to support long term ecosystem balance, including:
-
-- Maintaining operational flexibility for ecosystem initiatives
-- Supporting liquidity and market stability where required
-- Enabling discretionary actions such as treasury management or burns when needed
-
-This section documents market tax behavior only. Gameplay reward and burn logic is documented separately under Game Economy.
-
-## Trading Fees and Taxes
-
-Super Galactic applies two separate charges depending on where a trade happens:
-
-- **Token sell tax (10%)** applies when **UAP is sold on Uniswap**
-- **Marketplace fee (2.5%)** applies when an **NFT sale is executed on the Super Galactic Hub marketplace**
-
-These charges are independent. A marketplace sale does not trigger the Uniswap sell tax unless the seller separately sells UAP on Uniswap.
+UAP trading and Super Galactic Hub marketplace sales apply different charges depending on where a transaction is executed. These charges are shown to the user at the point of execution.
 
 ### Summary
 
-| Location | Charge | When it applies | Who pays |
-| --- | --- | --- | --- |
-| Uniswap | **10% sell tax** | When a user sells UAP | Seller |
-| Super Galactic Hub Marketplace | **2.5% marketplace fee** | When a listed item sells successfully | Seller |
+| Location                                         | Charge                   | When it applies                       | Who pays |
+| :----------------------------------------------- | :----------------------- | :------------------------------------ | :------- |
+| Decentralized exchange (DEX, Ethereum liquidity) | **10% sell tax**         | When a user sells UAP                 | Seller   |
+| Super Galactic Hub Marketplace                   | **2.5% marketplace fee** | When a listed item sells successfully | Seller   |
 
-### Token Sell Tax (Uniswap)
+### UAP Sell Ta_x_
 
-When UAP is sold on Uniswap, a **10% sell tax** is applied at execution. The seller receives the net amount after tax.
+UAP has **no tax on buys**. A 10% sell tax applies when UAP is sold on secondary markets via decentralized exchanges. The seller receives the net amount after tax.
 
-This tax is intended to support long-term ecosystem operations and treasury management alongside the in-game burn model.
+| Transaction Type | Tax Rate |
+| :--------------- | :------- |
+| Buy              | **0%**   |
+| Sell             | **10%**  |
 
-### Marketplace Fee (Super Galactic Hub)
+<Note>
+  Trading is active on **Ethereum**, where liquidity is provided on decentralized exchanges. Users holding UAP on other supported networks must bridge back to Ethereum to trade.
+</Note>
 
-When an item is sold through the Super Galactic Hub marketplace, a **2.5% marketplace fee** is applied to the sale proceeds.
+### Super Galactic Hub Marketplace Fee
 
-The fee is shown to the user before confirming a listing or sale transaction, similar to standard marketplace platforms. The seller receives the net amount after the fee is applied.
+The Super Galactic Hub marketplace charges a 2.5% fee on successful sales executed through the marketplace. The fee is displayed before the user confirms the transaction. The seller receives the net amount after the fee is applied.
 
-### Important Notes
+### Where This Applies
 
-- **In-game spending is not affected by Uniswap trading taxes or marketplace fees.** In-game spending follows the burn and Game Treasury split documented under **Game Economy → Burn Mechanisms**.
-- Fees and taxes described on this page apply only to trading and marketplace execution, not to gameplay reward generation or progression spending.
+The UAP sell tax and marketplace fee apply to different actions and are enforced separately. In-game UAP spending is not affected by trading taxes or marketplace fees. In-game spending follows the burn and Game Treasury split documented under [**Burn Mechanisms**.](https://supergalactic.mintlify.app/game/economy/burn-mechanisms)
+
+### Purpose
+
+Trading fees and taxes provide an additional system lever to support long-term ecosystem operations, including operational flexibility, liquidity support where required, and treasury operations such as additional burns when needed.
