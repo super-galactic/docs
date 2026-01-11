@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 
-export const UAPSupplyAllocationWaffle = () => {
+export const UAPSupplyAllocation = () => {
   const data = [
     { label: "Play to Earn Economy", value: 50, color: "#34D399" },
     { label: "Liquidity and Listing", value: 25, color: "#38BDF8" },
