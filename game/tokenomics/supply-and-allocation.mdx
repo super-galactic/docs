@@ -7,44 +7,33 @@ UAP has a fixed total supply of 420,000,000,000 tokens. There is no inflation, n
 
 ### Fixed Supply Model
 
-- No additional tokens can be minted
-- Gameplay does not create new supply
-- All distribution is reallocation of existing tokens
+UAP follows a fixed supply model. No additional tokens can be minted, gameplay does not create new supply, and all distribution is a reallocation of existing tokens within the capped total supply. This preserves long-term predictability and avoids inflationary pressure as the ecosystem grows.
 
-This design preserves long-term predictability and avoids inflationary pressure as the ecosystem grows.
-
-### Play to Earn Economy Allocation (50%)
-
-50%  of the total UAP supply is allocated to support the Super Galactic Play to Earn economy, including:
-
-- Mission rewards earned through gameplay
-- Skill-based progression incentives
-- Long-term player engagement
-
-UAP enters player wallets through active gameplay rewards and is continuously balanced by in-game token sinks and automated burn mechanisms.
-
-Details on reward distribution and sinks are documented under [Game Economy](https://supergalactic.mintlify.app/game/gameplay/gameplay-overview).
-
-### Ecosystem, Liquidity, and Operations Allocation (50%)
-
-50% of the total UAP supply is allocated to liquidity, ecosystem growth, and long term operations. This allocation supports the broader infrastructure around Super Galactic without introducing any new token supply.
+### Allocation Breakdown
 
 import { UAPSupplyAllocationStackedBar } from "/snippets/UAPSupplyAllocationStackedBar.jsx";
 
 <UAPSupplyAllocationStackedBar />
 
-| Category              | Allocation (of total supply) | Purpose                                                                                                                      |
-| --------------------- | ---------------------------: | ---------------------------------------------------------------------------------------------------------------------------- |
-| Liquidity on Ethereum | 25%                          | Supports liquidity provisioning and exchange listing readiness, including DEX listings (Uniswap) and potential CEX listings. |
-| Team & Advisors       | 5%                           | Long-term contributor and advisor alignment, including vesting-based incentives for core execution and strategic support.    |
-| Ecosystem Growth      | 15%                          | Marketing, community growth, partnerships, and campaign initiatives to expand adoption and usage.                            |
-| Development Fund      | 5%                           | Ongoing product development, infrastructure, and operational continuity.                                                     |
+The largest allocation is reserved for community rewards through the Play to Earn economy.
+
+| Category                                 | Allocation | Purpose                                                                                                                                        |
+| ---------------------------------------- | ---------: | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| Community Rewards (Play to Earn Economy) | 50%        | Funds gameplay reward distribution and the long-term Play to Earn economy allocation.                                                          |
+| Liquidity and Listing                    | 25%        | Supports liquidity provisioning and listing readiness, including decentralized exchange liquidity and potential centralized exchange listings. |
+| Ecosystem Growth                         | 15%        | Marketing, community growth, partnerships, and campaigns to expand adoption and usage.                                                         |
+| Team and Advisors                        | 5%         | Long-term contributor and advisor alignment, including vesting-based incentives for sustained execution and strategic support.                 |
+| Development Fund                         | 5%         | Ongoing development, infrastructure, and operational continuity.                                                                               |
+
+<Note>
+  Allocation presentation and vesting details may be updated prior to the Token Generation Event (TGE). Any updates will be communicated through official channels.
+</Note>
 
 ### Multi-Chain Deployment
 
 UAP is deployed as a multi-chain token to support scalability, low-cost gameplay, and accessibility.
 
-- Ethereum serves as the origin chain for UAP
+- Ethereum serves as the origin chain for UAP and the primary network for secondary market trading liquidity
 - BNB Chain and Avalanche are used for gameplay-related activity
 
 From the total supply:
@@ -54,6 +43,15 @@ From the total supply:
 - The remaining supply stays on Ethereum unless bridged
 
 Bridging reallocates existing supply across chains and does not increase the total token supply.
+
+**How Players Use UAP Across Chains**
+
+Players can acquire UAP on Ethereum, then bridge to the network they use for gameplay.
+
+- Purchase UAP on Ethereum using decentralized exchange liquidity
+- Bridge UAP to BNB Chain or Avalanche, depending on where the NFT and gameplay activity is taking place
+- Use UAP for progression systems such as upgrades and breeding on the selected network
+- Bridge back to Ethereum when access to decentralized exchange liquidity is required
 
 ### Circulating Supply Dynamics
 
@@ -69,4 +67,4 @@ As activity increases, supply reduction scales with usage, reinforcing scarcity 
 
 All supply movements, bridging activity, and on-chain balances are transparent and verifiable. There are no hidden emissions, discretionary minting events, or off-protocol supply changes.
 
-This section describes total supply and allocation only. Reward mechanics, burn logic, and transaction taxes are documented separately under Game Economy and Tokenomics.
+This section describes total supply and allocation only. Reward mechanics, burn logic, and transaction taxes are documented separately under **Game Economy** and **Tokenomics**.
