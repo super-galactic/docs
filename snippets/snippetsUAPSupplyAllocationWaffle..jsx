@@ -13,24 +13,27 @@ export const UAPSupplyAllocationWaffle = () => {
   const rows = 10;
   const cols = 10;
 
-  const cells = [];
-  data.forEach((d) => {
-    for (let i = 0; i < d.value; i += 1) cells.push(d);
+  // Create flat array of cells (100 items)
+  const cells: typeof data[number][] = [];
+  data.forEach((category) => {
+    for (let i = 0; i < category.value; i++) {
+      cells.push(category);
+    }
   });
 
-  // Bottom-up fill
-  const cellAt = (r, c) => {
-    const bottomUpRow = rows - 1 - r;
-    const idx = bottomUpRow * cols + c;
-    return cells[idx];
+  // Bottom → top filling (most natural reading direction for many people)
+  const getCategoryAt = (row: number, col: number) => {
+    const bottomUpRow = rows - 1 - row;
+    const index = bottomUpRow * cols + col;
+    return cells[index] ?? null;
   };
 
-  // SVG sizing
+  // Layout calculations
   const cellSize = 18;
   const gap = 4;
   const padding = 10;
-  const width = padding * 2 + cols * cellSize + (cols - 1) * gap;
-  const height = padding * 2 + rows * cellSize + (rows - 1) * gap;
+  const svgWidth = padding * 2 + cols * cellSize + (cols - 1) * gap;
+  const svgHeight = padding * 2 + rows * cellSize + (rows - 1) * gap;
 
   return (
     <div className="not-prose">
@@ -38,92 +41,95 @@ export const UAPSupplyAllocationWaffle = () => {
         UAP Supply Allocation
       </div>
 
-      <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
-        <div className="w-full max-w-[380px] rounded-xl border border-white/10 bg-white/5 p-4">
-          <div className="mb-3 flex items-center justify-between">
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-start">
+        {/* Waffle Chart Card */}
+        <div className="w-full max-w-[380px] rounded-xl border border-white/10 bg-white/5 p-5">
+          <div className="mb-4 flex items-center justify-between">
             <div className="text-sm font-semibold text-gray-200">
-              Waffle (1 block = 1%)
+              Waffle Chart (1 block = 1%)
             </div>
-            <div className="text-xs text-gray-400">Total: 100%</div>
+            <div className="text-xs text-gray-400">100%</div>
           </div>
 
           <svg
-            viewBox={`0 0 ${width} ${height}`}
+            viewBox={`0 0 ${svgWidth} ${svgHeight}`}
             className="h-auto w-full"
             role="img"
-            aria-label="UAP supply allocation waffle chart. Each block represents 1 percent of total supply."
+            aria-label="UAP token supply allocation waffle chart"
           >
+            {/* Background rounded rect */}
             <rect
               x="0"
               y="0"
-              width={width}
-              height={height}
+              width={svgWidth}
+              height={svgHeight}
               rx="12"
-              fill="rgba(255,255,255,0.02)"
+              fill="rgba(255,255,255,0.03)"
               stroke="rgba(255,255,255,0.08)"
             />
 
-            {Array.from({ length: rows }).map((_, r) =>
-              Array.from({ length: cols }).map((_, c) => {
-                const d = cellAt(r, c);
-                const x = padding + c * (cellSize + gap);
-                const y = padding + r * (cellSize + gap);
+            {Array.from({ length: rows }, (_, row) =>
+              Array.from({ length: cols }, (_, col) => {
+                const category = getCategoryAt(row, col);
+                const x = padding + col * (cellSize + gap);
+                const y = padding + row * (cellSize + gap);
 
                 return (
                   <rect
-                    key={`${r}-${c}`}
+                    key={`${row}-${col}`}
                     x={x}
                     y={y}
                     width={cellSize}
                     height={cellSize}
-                    rx="4"
-                    fill={d ? d.color : "transparent"}
-                    stroke="rgba(255,255,255,0.10)"
+                    rx={5}
+                    fill={category?.color ?? "rgba(255,255,255,0.06)"}
+                    stroke="rgba(255,255,255,0.09)"
                   >
-                    <title>{d ? `${d.label} (1%)` : "1%"}</title>
+                    <title>
+                      {category
+                        ? `${category.label} — ${category.value}%`
+                        : "Unallocated"}
+                    </title>
                   </rect>
                 );
               })
             )}
           </svg>
-
-          <div className="mt-3 text-xs text-gray-400">
-            Percentages reflect total supply allocation.
-          </div>
         </div>
 
-        <div className="flex-1 rounded-xl border border-white/10 bg-white/5 p-4">
-          <div className="mb-3 text-sm font-semibold text-gray-200">Breakdown</div>
+        {/* Legend / Table */}
+        <div className="flex-1 rounded-xl border border-white/10 bg-white/5 p-5">
+          <div className="mb-4 text-sm font-semibold text-gray-200">
+            Allocation Breakdown
+          </div>
 
           <div className="overflow-hidden rounded-lg border border-white/10">
-            <table className="w-full text-left text-sm">
+            <table className="w-full text-sm">
               <thead className="bg-white/5 text-gray-200">
                 <tr>
-                  <th className="px-3 py-2 font-medium">Category</th>
-                  <th className="px-3 py-2 font-medium">Allocation</th>
+                  <th className="px-4 py-3 text-left font-medium">Category</th>
+                  <th className="px-4 py-3 text-right font-medium">Percent</th>
                 </tr>
               </thead>
-              <tbody>
-                {data.map((d) => (
-                  <tr key={d.label} className="border-t border-white/10">
-                    <td className="px-3 py-2 text-gray-100">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className="inline-block h-2.5 w-2.5 rounded-sm"
-                          style={{ backgroundColor: d.color }}
+              <tbody className="divide-y divide-white/10">
+                {data.map((item) => (
+                  <tr key={item.label}>
+                    <td className="px-4 py-3 text-gray-100">
+                      <div className="flex items-center gap-2.5">
+                        <div
+                          className="h-3 w-3 rounded-sm"
+                          style={{ backgroundColor: item.color }}
                         />
-                        <span>{d.label}</span>
+                        <span>{item.label}</span>
                       </div>
                     </td>
-                    <td className="px-3 py-2 text-gray-100">{d.value}%</td>
+                    <td className="px-4 py-3 text-right font-medium text-gray-100">
+                      {item.value}%
+                    </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-          </div>
-
-          <div className="mt-3 text-xs text-gray-400">
-            Percentages reflect total supply allocation.
           </div>
         </div>
       </div>
