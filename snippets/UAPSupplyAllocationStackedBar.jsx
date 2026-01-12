@@ -3,41 +3,41 @@ export const UAPSupplyAllocationStackedBar = () => {
     {
       label: "Play to Earn Economy",
       value: 50,
-      bg: "linear-gradient(90deg, #22C55E 0%, #34D399 100%)",
+      bg: "linear-gradient(90deg, #16A34A 0%, #34D399 100%)",
+      swatch: "#22C55E",
+      text: "text-black/80",
     },
     {
       label: "Liquidity and Listing",
       value: 25,
-      bg: "linear-gradient(90deg, #0284C7 0%, #38BDF8 100%)",
+      bg: "linear-gradient(90deg, #0B5ED7 0%, #2EA8FF 100%)",
+      swatch: "#2EA8FF",
+      text: "text-black/80",
     },
     {
       label: "Ecosystem Growth",
       value: 15,
-      bg: "linear-gradient(90deg, #1D4ED8 0%, #60A5FA 100%)",
+      bg: "linear-gradient(90deg, #0A3D91 0%, #3B82F6 100%)",
+      swatch: "#3B82F6",
+      text: "text-black/80",
     },
     {
       label: "Team and Advisors",
       value: 5,
-      bg: "linear-gradient(90deg, #F59E0B 0%, #FBBF24 100%)",
+      bg: "linear-gradient(90deg, #0B2A55 0%, #1D4ED8 100%)",
+      swatch: "#1D4ED8",
+      text: "text-white/90",
     },
     {
       label: "Development Fund",
       value: 5,
-      bg: "linear-gradient(90deg, #0EA5E9 0%, #22D3EE 100%)",
+      bg: "linear-gradient(90deg, #07223F 0%, #0EA5E9 100%)",
+      swatch: "#0EA5E9",
+      text: "text-white/90",
     },
   ];
 
   const total = data.reduce((sum, d) => sum + d.value, 0);
-
-  // For positioning the small labels above the bar
-  let running = 0;
-  const markers = data.map((d) => {
-    const start = (running / total) * 100;
-    const width = (d.value / total) * 100;
-    const center = start + width / 2;
-    running += d.value;
-    return { label: d.label, value: d.value, center };
-  });
 
   return (
     <div className="not-prose">
@@ -56,56 +56,37 @@ export const UAPSupplyAllocationStackedBar = () => {
           <div className="text-xs text-gray-400">Total: 100%</div>
         </div>
 
-        <div className="relative">
-          {/* Labels for small segments shown above the bar */}
-          <div className="pointer-events-none absolute -top-6 left-0 right-0 h-5">
-            {markers
-              .filter((m) => m.value < 10)
-              .map((m) => (
+        <div className="h-10 w-full overflow-hidden rounded-lg border border-white/10 bg-black/20">
+          <div className="flex h-full w-full">
+            {data.map((d, idx) => {
+              const widthPct = (d.value / total) * 100;
+
+              return (
                 <div
-                  key={m.label}
-                  className="absolute text-[11px] font-semibold text-gray-200/90"
-                  style={{ left: `${m.center}%`, transform: "translateX(-50%)" }}
+                  key={d.label}
+                  title={`${d.label}: ${d.value}%`}
+                  style={{
+                    width: `${widthPct}%`,
+                    backgroundImage: d.bg,
+                    transformOrigin: "left",
+                    transform: "scaleX(0)",
+                    animation: "uapBarIn 650ms ease forwards",
+                    animationDelay: `${idx * 90}ms`,
+                  }}
+                  className="flex h-full items-center justify-center"
                 >
-                  {m.value}%
+                  {/* All labels fit */}
+                  <span className={`px-2 text-xs font-semibold ${d.text}`}>
+                    {d.value}%
+                  </span>
                 </div>
-              ))}
-          </div>
-
-          <div className="h-10 w-full overflow-hidden rounded-lg border border-white/10 bg-black/20">
-            <div className="flex h-full w-full">
-              {data.map((d, idx) => {
-                const widthPct = (d.value / total) * 100;
-
-                return (
-                  <div
-                    key={d.label}
-                    title={`${d.label}: ${d.value}%`}
-                    style={{
-                      width: `${widthPct}%`,
-                      backgroundImage: d.bg,
-                      transformOrigin: "left",
-                      transform: "scaleX(0)",
-                      animation: "uapBarIn 700ms ease forwards",
-                      animationDelay: `${idx * 90}ms`,
-                    }}
-                    className="relative flex h-full items-center justify-center"
-                  >
-                    {/* Only show inside labels when there is enough space */}
-                    {d.value >= 10 ? (
-                      <span className="px-2 text-xs font-semibold text-black/80">
-                        {d.value}%
-                      </span>
-                    ) : null}
-                  </div>
-                );
-              })}
-            </div>
+              );
+            })}
           </div>
         </div>
 
         <div className="mt-3 text-xs text-gray-400">
-          Small segments are labeled above the bar. Hover any segment for full details.
+          Hover any segment for full details.
         </div>
       </div>
 
@@ -123,7 +104,15 @@ export const UAPSupplyAllocationStackedBar = () => {
             <tbody>
               {data.map((d) => (
                 <tr key={`${d.label}-row`} className="border-t border-white/10">
-                  <td className="px-3 py-2 text-gray-100">{d.label}</td>
+                  <td className="px-3 py-2 text-gray-100">
+                    <div className="flex items-center gap-2">
+                      <span
+                        className="inline-block h-2.5 w-2.5 rounded-sm"
+                        style={{ backgroundColor: d.swatch }}
+                      />
+                      <span>{d.label}</span>
+                    </div>
+                  </td>
                   <td className="px-3 py-2 text-gray-100">{d.value}%</td>
                 </tr>
               ))}
