@@ -5,35 +5,35 @@ export const UAPSupplyAllocationStackedBar = () => {
       value: 50,
       bg: "linear-gradient(90deg, #16A34A 0%, #34D399 100%)",
       swatch: "#22C55E",
-      text: "text-black/80",
+      textColor: "#FFFFFF",
     },
     {
       label: "Liquidity and Listing",
       value: 25,
       bg: "linear-gradient(90deg, #0B5ED7 0%, #2EA8FF 100%)",
       swatch: "#2EA8FF",
-      text: "text-black/80",
+      textColor: "#FFFFFF",
     },
     {
       label: "Ecosystem Growth",
       value: 15,
       bg: "linear-gradient(90deg, #0A3D91 0%, #3B82F6 100%)",
       swatch: "#3B82F6",
-      text: "text-black/80",
+      textColor: "#FFFFFF",
     },
     {
       label: "Team and Advisors",
       value: 5,
       bg: "linear-gradient(90deg, #0B2A55 0%, #1D4ED8 100%)",
       swatch: "#1D4ED8",
-      text: "text-white/90",
+      textColor: "#FFFFFF",
     },
     {
       label: "Development Fund",
       value: 5,
       bg: "linear-gradient(90deg, #07223F 0%, #0EA5E9 100%)",
       swatch: "#0EA5E9",
-      text: "text-white/90",
+      textColor: "#FFFFFF",
     },
   ];
 
@@ -72,11 +72,19 @@ export const UAPSupplyAllocationStackedBar = () => {
                     transform: "scaleX(0)",
                     animation: "uapBarIn 650ms ease forwards",
                     animationDelay: `${idx * 90}ms`,
+                    position: "relative",
                   }}
                   className="flex h-full items-center justify-center"
                 >
-                  {/* All labels fit */}
-                  <span className={`px-2 text-xs font-semibold ${d.text}`}>
+                  {/* clearer label styling */}
+                  <span
+                    style={{
+                      color: d.textColor,
+                      textShadow: "0 1px 8px rgba(0,0,0,0.55)",
+                      letterSpacing: "0.2px",
+                    }}
+                    className="px-2 text-xs font-semibold"
+                  >
                     {d.value}%
                   </span>
                 </div>
