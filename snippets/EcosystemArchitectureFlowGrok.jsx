@@ -1,6 +1,3 @@
-"use client";
-import React from "react";
-
 export const SuperGalacticArchitectureFlow = () => {
   const [activeFlow, setActiveFlow] = React.useState("reward");
   const [step, setStep] = React.useState(0);

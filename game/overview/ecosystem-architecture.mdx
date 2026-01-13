@@ -24,46 +24,44 @@ Each layer operates independently while remaining synchronized through defined d
 
 ### Gameplay Layer
 
-<Steps>
-  <Step title="Gameplay Layer">
-    The gameplay layer is responsible for all real time interactions.
+The gameplay layer is responsible for all real time interactions.
 
-    This includes:
+This includes:
 
-    - Combat and mission execution
-    - Player movement and abilities
-    - Match outcomes and performance tracking
-    - Local game state and responsiveness
+- Combat and mission execution
+- Player movement and abilities
+- Match outcomes and performance tracking
+- Local game state and responsiveness
 
-    This layer is optimized for speed and player experience. No blockchain interactions occur during active gameplay, ensuring low latency and uninterrupted play.
-  </Step>
-  <Step title="Application Layer">
-    The application layer acts as the coordination and synchronization layer between gameplay and on chain systems.
+This layer is optimized for speed and player experience. No blockchain interactions occur during active gameplay, ensuring low latency and uninterrupted play.
 
-    Its responsibilities include:
+### Application Layer
 
-    - Player account state
-    - Asset management and inventory
-    - Progression tracking
-    - Reward eligibility and claims
-    - Data synchronization across systems
+The application layer acts as the coordination and synchronization layer between gameplay and on chain systems.
 
-    This layer ensures that gameplay results are correctly recorded, validated, and prepared for settlement without exposing players to unnecessary technical complexity.
-  </Step>
-  <Step title="On Chain Settlement Layer">
-    The on chain layer handles ownership, verification, and economic finality.
+Its responsibilities include:
 
-    This includes:
+- Player account state
+- Asset management and inventory
+- Progression tracking
+- Reward eligibility and claims
+- Data synchronization across systems
 
-    - UAP token logic
-    - NFT ownership and metadata
-    - Supply control mechanisms
-    - Burn and sink execution
-    - Transaction verification
+This layer ensures that gameplay results are correctly recorded, validated, and prepared for settlement without exposing players to unnecessary technical complexity.
 
-    Only validated outcomes are settled on chain. This design minimizes cost, avoids unnecessary transactions, and ensures economic actions are transparent and verifiable.
-  </Step>
-</Steps>
+### On Chain Settlement Layer
+
+The on chain layer handles ownership, verification, and economic finality.
+
+This includes:
+
+- UAP token logic
+- NFT ownership and metadata
+- Supply control mechanisms
+- Burn and sink execution
+- Transaction verification
+
+Only validated outcomes are settled on chain. This design minimizes cost, avoids unnecessary transactions, and ensures economic actions are transparent and verifiable.
 
 ### Extensibility and Future Systems
 
