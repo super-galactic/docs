@@ -25,11 +25,15 @@ Players access the game client to:
 
 All combat, movement, mission logic, and skill based systems operate entirely off-chain to ensure low latency, responsiveness, and fairness. Gameplay outcomes generate progression state and upgrade eligibility, but do not execute on-chain transactions during play.
 
-When a player initiates an upgrade, the game client verifies progression requirements and presents the required UAP cost. The player then approves the UAP spend directly through their connected wallet. Once the transaction is submitted and confirmed, the updated state is synchronised back into the game client.
+    When a player initiates an upgrade, the game client verifies progression requirements and presents the required UAP cost. The player then approves the UAP spend directly through their connected wallet. Once the transaction is submitted and confirmed, the updated state is synchronised back into the game client.
 
 Character evolution and equipment changes are reflected both mechanically and visually. These updates are also mirrored in the Super Galactic Hub, including real time metadata updates and three.js based visual representations of evolving assets.
 
 The game client remains focused on playability, performance, and progression visibility. Blockchain interactions are surfaced only when required for ownership or economic finality.
+
+import { EcosystemArchitectureD } from "/snippets/EcosystemArchitectureD.jsx";
+
+<EcosystemArchitectureD />
 
 ### Application Layer: Super Galactic Hub
 
