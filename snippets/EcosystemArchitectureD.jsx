@@ -1,18 +1,23 @@
 export const EcosystemArchitectureD = () => {
   const React = require("react");
   const { useEffect, useMemo, useRef, useState } = React;
+
   const { motion, AnimatePresence } = require("framer-motion");
   const {
-    Gamepad2,
-    Trophy,
+    Swords,
+    BarChart3,
     Wrench,
+    Activity,
     User,
+    Boxes,
+    BadgeCheck,
+    FlaskConical,
     Store,
-    Bell,
-    Layers3,
-    Link2,
     Coins,
+    Layers3,
+    Flame,
     ShieldCheck,
+    Link2,
   } = require("lucide-react");
 
   const wrapRef = useRef(null);
@@ -29,11 +34,12 @@ export const EcosystemArchitectureD = () => {
         border: "border-slate-400/15",
         glow:
           "shadow-[0_0_0_1px_rgba(148,163,184,0.10),0_10px_30px_rgba(0,0,0,0.45)]",
-        chip: "bg-slate-400/10 text-slate-200",
         iconRow: [
-          { Icon: Gamepad2, label: "Combat" },
-          { Icon: Trophy, label: "Leaderboards" },
-          { Icon: Wrench, label: "Upgrades" },
+          { Icon: Swords, label: "Missions and Combat" },
+          { Icon: BarChart3, label: "Match Results and Stats" },
+          { Icon: Wrench, label: "Progression and Upgrades" },
+          { Icon: Coins, label: "Reward Earning" },
+          { Icon: Activity, label: "Gameplay Activity" },
         ],
       },
       {
@@ -43,11 +49,12 @@ export const EcosystemArchitectureD = () => {
         border: "border-blue-300/15",
         glow:
           "shadow-[0_0_0_1px_rgba(59,130,246,0.10),0_10px_30px_rgba(0,0,0,0.45)]",
-        chip: "bg-blue-400/10 text-blue-50",
         iconRow: [
-          { Icon: User, label: "Accounts" },
-          { Icon: Store, label: "Marketplace" },
-          { Icon: Bell, label: "Notifications" },
+          { Icon: User, label: "User Account" },
+          { Icon: Boxes, label: "Inventory and Assets" },
+          { Icon: BadgeCheck, label: "Validation and Claims" },
+          { Icon: FlaskConical, label: "Breeding" },
+          { Icon: Store, label: "Marketplace Transactions" },
         ],
       },
       {
@@ -57,11 +64,12 @@ export const EcosystemArchitectureD = () => {
         border: "border-blue-200/10",
         glow:
           "shadow-[0_0_0_1px_rgba(37,99,235,0.10),0_10px_30px_rgba(0,0,0,0.50)]",
-        chip: "bg-blue-300/10 text-blue-50",
         iconRow: [
-          { Icon: Layers3, label: "NFTs" },
-          { Icon: Coins, label: "UAP" },
-          { Icon: Link2, label: "Settlement" },
+          { Icon: Coins, label: "UAP Token" },
+          { Icon: Layers3, label: "NFT Ownership" },
+          { Icon: Flame, label: "Burn and Treasury Flows" },
+          { Icon: ShieldCheck, label: "Supply Controls" },
+          { Icon: Link2, label: "Transaction Verification" },
         ],
       },
     ],
@@ -93,16 +101,14 @@ export const EcosystemArchitectureD = () => {
   };
 
   const PulseTraveler = ({ runId }) => {
-    const startY = 18;
-    const endY = 430;
-
     return (
       <AnimatePresence mode="wait">
         <motion.div
           key={runId}
-          className="absolute left-1/2 top-6 -translate-x-1/2"
-          initial={{ opacity: 0, y: startY }}
-          animate={{ opacity: 1, y: endY }}
+          className="absolute left-1/2 -translate-x-1/2"
+          style={{ top: 24 }}
+          initial={{ opacity: 0, top: 24 }}
+          animate={{ opacity: 1, top: "calc(100% - 28px)" }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1.15, ease: [0.22, 1, 0.36, 1] }}
         >
