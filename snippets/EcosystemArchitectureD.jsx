@@ -1,23 +1,28 @@
 export const EcosystemArchitectureD = () => {
   const [inView, setInView] = React.useState(false);
   const [active, setActive] = React.useState(false);
-
   const wrapRef = React.useRef(null);
 
   const colors = {
-    accent: "#22C55E", // green only for validated outcome + finality glow
-    gameplayBgTop: "rgba(6, 10, 20, 0.70)", // neutral dark / slate blue
-    gameplayBgBottom: "rgba(0, 0, 0, 0.26)",
-    appBgTop: "rgba(6, 24, 68, 0.60)", // mid blue
-    appBgBottom: "rgba(0, 0, 0, 0.24)",
-    chainBgTop: "rgba(3, 12, 32, 0.75)", // deep blue
-    chainBgBottom: "rgba(0, 0, 0, 0.26)",
+    accent: "#22C55E",
     border: "rgba(255,255,255,0.10)",
+    panelOuter: "rgba(255,255,255,0.03)",
     text: "rgba(255,255,255,0.92)",
     subtext: "rgba(255,255,255,0.72)",
     chipText: "rgba(255,255,255,0.86)",
     chipBg: "rgba(0,0,0,0.18)",
     line: "rgba(255,255,255,0.18)",
+
+    // unified layer tone for all three layers
+    layerTop: "rgba(4, 14, 34, 0.78)",
+    layerBottom: "rgba(0, 0, 0, 0.28)",
+    layerRadialA: "rgba(37, 99, 235, 0.10)",
+    layerRadialB: "rgba(15, 23, 42, 0.18)",
+
+    // CTA styling (green text only)
+    ctaText: "rgba(34,197,94,0.88)",
+    ctaTextHover: "rgba(34,197,94,1)",
+    ctaBg: "rgba(0,0,0,0.22)",
   };
 
   React.useEffect(() => {
@@ -42,31 +47,9 @@ export const EcosystemArchitectureD = () => {
     setTimeout(() => setActive(false), 1400);
   };
 
-  const Layer = ({ title, subtitle, items, variant, step, delayMs, finalGlow }) => {
-    const variantMap = {
-      gameplay: {
-        top: colors.gameplayBgTop,
-        bottom: colors.gameplayBgBottom,
-        a: "rgba(148, 163, 184, 0.20)",
-        b: "rgba(56, 189, 248, 0.10)",
-      },
-      app: {
-        top: colors.appBgTop,
-        bottom: colors.appBgBottom,
-        a: "rgba(59, 130, 246, 0.16)",
-        b: "rgba(96, 165, 250, 0.10)",
-      },
-      chain: {
-        top: colors.chainBgTop,
-        bottom: colors.chainBgBottom,
-        a: "rgba(37, 99, 235, 0.12)",
-        b: "rgba(29, 78, 216, 0.10)",
-      },
-    };
-
-    const tone = variantMap[variant] || variantMap.app;
-
+  const Layer = ({ title, subtitle, items, step, delayMs, finalGlow }) => {
     const show = inView;
+
     const baseShadow = "0 10px 30px rgba(0,0,0,0.35)";
     const glowShadow =
       finalGlow && active
@@ -81,7 +64,7 @@ export const EcosystemArchitectureD = () => {
           transition: `opacity 320ms ease ${delayMs}ms, transform 320ms ease ${delayMs}ms, box-shadow 260ms ease`,
           borderRadius: 18,
           border: `1px solid ${colors.border}`,
-          background: `linear-gradient(180deg, ${tone.top} 0%, ${tone.bottom} 100%)`,
+          background: `linear-gradient(180deg, ${colors.layerTop} 0%, ${colors.layerBottom} 100%)`,
           padding: 16,
           position: "relative",
           overflow: "hidden",
@@ -93,8 +76,8 @@ export const EcosystemArchitectureD = () => {
             position: "absolute",
             inset: 0,
             opacity: 0.55,
-            background: `radial-gradient(80% 120% at 20% 0%, ${tone.a} 0%, rgba(0,0,0,0) 60%),
-                         radial-gradient(70% 120% at 80% 0%, ${tone.b} 0%, rgba(0,0,0,0) 55%)`,
+            background: `radial-gradient(80% 120% at 20% 0%, ${colors.layerRadialA} 0%, rgba(0,0,0,0) 60%),
+                         radial-gradient(70% 120% at 80% 0%, ${colors.layerRadialB} 0%, rgba(0,0,0,0) 55%)`,
             pointerEvents: "none",
           }}
         />
@@ -109,8 +92,8 @@ export const EcosystemArchitectureD = () => {
             <div
               style={{
                 fontSize: 11,
-                fontWeight: 700,
-                color: "rgba(255,255,255,0.75)",
+                fontWeight: 800,
+                color: "rgba(255,255,255,0.76)",
                 border: `1px solid ${colors.border}`,
                 background: "rgba(0,0,0,0.20)",
                 padding: "6px 10px",
@@ -169,9 +152,9 @@ export const EcosystemArchitectureD = () => {
           border: `1px solid ${colors.border}`,
           background: "rgba(0,0,0,0.24)",
           fontSize: 11,
-          fontWeight: 700,
+          fontWeight: 800,
           color: "rgba(255,255,255,0.78)",
-          boxShadow: glow ? `0 0 0 1px rgba(34,197,94,0.22), 0 0 18px rgba(34,197,94,0.28)` : "none",
+          boxShadow: glow ? "0 0 0 1px rgba(34,197,94,0.22), 0 0 18px rgba(34,197,94,0.28)" : "none",
           transition: "box-shadow 220ms ease",
         }}
       >
@@ -188,7 +171,7 @@ export const EcosystemArchitectureD = () => {
           height: 10,
           borderRadius: 999,
           background: glow ? colors.accent : "rgba(255,255,255,0.22)",
-          boxShadow: glow ? `0 0 16px rgba(34,197,94,0.50)` : "none",
+          boxShadow: glow ? "0 0 16px rgba(34,197,94,0.50)" : "none",
           transition: "all 220ms ease",
         }}
       />
@@ -201,15 +184,13 @@ export const EcosystemArchitectureD = () => {
         style={{
           borderRadius: 18,
           border: `1px solid ${colors.border}`,
-          background: "rgba(255,255,255,0.03)",
+          background: colors.panelOuter,
           padding: 16,
         }}
       >
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
           <div>
-            <div style={{ fontSize: 14, fontWeight: 800, color: colors.text }}>
-              Layered Architecture
-            </div>
+            <div style={{ fontSize: 14, fontWeight: 800, color: colors.text }}>Layered Architecture</div>
             <div style={{ marginTop: 4, fontSize: 12, color: colors.subtext }}>
               Gameplay → Coordination → Finality
             </div>
@@ -221,21 +202,40 @@ export const EcosystemArchitectureD = () => {
             style={{
               cursor: "pointer",
               fontSize: 12,
-              fontWeight: 800,
-              color: "rgba(255,255,255,0.92)",
+              fontWeight: 850,
+              color: colors.ctaText,
               border: `1px solid ${colors.border}`,
-              background: "rgba(0,0,0,0.22)",
+              background: colors.ctaBg,
               padding: "10px 12px",
               borderRadius: 12,
+              transition: "color 160ms ease, box-shadow 160ms ease, border-color 160ms ease",
+              boxShadow: "none",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = colors.ctaTextHover;
+              e.currentTarget.style.borderColor = "rgba(34,197,94,0.22)";
+              e.currentTarget.style.boxShadow = "0 0 0 1px rgba(34,197,94,0.18), 0 0 16px rgba(34,197,94,0.12)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = colors.ctaText;
+              e.currentTarget.style.borderColor = colors.border;
+              e.currentTarget.style.boxShadow = "none";
+            }}
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = "rgba(34,197,94,0.26)";
+              e.currentTarget.style.boxShadow = "0 0 0 2px rgba(34,197,94,0.18), 0 0 18px rgba(34,197,94,0.10)";
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = colors.border;
+              e.currentTarget.style.boxShadow = "none";
             }}
           >
-            Run validated outcome pulse
+            Show validation flow
           </button>
         </div>
 
         <div style={{ marginTop: 14, display: "grid", gap: 10 }}>
           <Layer
-            variant="gameplay"
             step="Gameplay"
             title="Gameplay Layer"
             subtitle="Real-time play and outcome generation"
@@ -246,7 +246,6 @@ export const EcosystemArchitectureD = () => {
           <Connector label="Coordination" glow={active} />
 
           <Layer
-            variant="app"
             step="Coordination"
             title="Application Layer (Super Galactic Hub)"
             subtitle="Coordination and orchestration"
@@ -257,7 +256,6 @@ export const EcosystemArchitectureD = () => {
           <Connector label="Finality" glow={active} />
 
           <Layer
-            variant="chain"
             step="Finality"
             title="On-Chain Finality Layer"
             subtitle="Irreversible economic and ownership state"
@@ -283,13 +281,11 @@ export const EcosystemArchitectureD = () => {
                 height: 8,
                 borderRadius: 999,
                 background: colors.accent,
-                boxShadow: `0 0 14px rgba(34,197,94,0.45)`,
+                boxShadow: "0 0 14px rgba(34,197,94,0.45)",
                 display: "inline-block",
               }}
             />
-            <span>
-              Green highlights represent a validated gameplay outcome reaching on-chain finality.
-            </span>
+            <span>Green highlights represent a validated gameplay outcome reaching on-chain finality.</span>
           </div>
 
           <div style={{ marginTop: 4, fontSize: 11, color: "rgba(255,255,255,0.62)", lineHeight: 1.55 }}>
