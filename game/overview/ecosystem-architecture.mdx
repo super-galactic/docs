@@ -25,7 +25,7 @@ Players access the game client to:
 
 All combat, movement, mission logic, and skill based systems operate entirely off-chain to ensure low latency, responsiveness, and fairness. Gameplay outcomes generate progression state and upgrade eligibility, but do not execute on-chain transactions during play.
 
-    When a player initiates an upgrade, the game client verifies progression requirements and presents the required UAP cost. The player then approves the UAP spend directly through their connected wallet. Once the transaction is submitted and confirmed, the updated state is synchronised back into the game client.
+When a player initiates an upgrade, the game client verifies progression requirements and presents the required UAP cost. The player then approves the UAP spend directly through their connected wallet. Once the transaction is submitted and confirmed, the updated state is synchronised back into the game client.
 
 Character evolution and equipment changes are reflected both mechanically and visually. These updates are also mirrored in the Super Galactic Hub, including real time metadata updates and three.js based visual representations of evolving assets.
 
@@ -52,7 +52,7 @@ The Hub abstracts blockchain complexity wherever possible, allowing players to i
 
 ### **On Chain Settlement Layer**
 
-The blockchain layer is responsible for asset ownership, economic finality, and transparent settlement.
+The layer is responsible for asset ownership, economic finality, and transparent settlement.
 
 This layer handles:
 
@@ -60,7 +60,7 @@ This layer handles:
 - Marketplace settlement and auction execution
 - UAP token balance updates
 - Upgrade settlement and UAP consumption
-- Burn execution and treasury flows
+- Burn execution and Game Treasury flows
 - Immutable record keeping of economic activity
 
 On-chain execution is limited to actions where decentralisation, auditability, and permanence provide clear value. High frequency gameplay logic and latency sensitive interactions are deliberately excluded from this layer.
