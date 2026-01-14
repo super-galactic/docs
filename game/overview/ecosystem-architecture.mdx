@@ -2,69 +2,80 @@
 title: "Ecosystem Architecture"
 ---
 
-Super Galactic is built on a modular architecture designed to support real-time gameplay, persistent progression, and a controlled on-chain economy without compromising performance or accessibility.
+Super Galactic is built on a modular, layered architecture designed to support persistent progression and a controlled on-chain economy without compromising accessibility.
 
-The system is intentionally separated into distinct layers, each responsible for a specific role. Only validated outcomes and confirmed user actions are settled on chain, keeping gameplay responsive while ensuring economic actions remain transparent and verifiable.
-
-This separation allows the game to scale, evolve, and iterate over time while maintaining clear boundaries between gameplay logic, player state, and economic settlement.
+The system is intentionally separated into three distinct layers. Each layer is responsible for a specific role and operates independently, while remaining tightly integrated through defined data flows. This separation allows the game to scale, evolve, and iterate over time while maintaining clear boundaries between gameplay logic, player state, and economic settlement.
 
 import { EcosystemArchitectureDiagram } from "/snippets/EcosystemArchitectureDiagram.jsx";
 
 <EcosystemArchitectureDiagram />
 
-### Layered System Design
+### Game Client Layer
 
-The ecosystem is structured across three layers that operate independently and synchronize through validated outcomes.
+The game client is responsible for all real time gameplay, player interaction, and progression logic.
 
-1. Gameplay Layer (Game Client)
-2. Application Layer (Super Galactic Hub)
-3. On-Chain Settlement Layer (supported networks)
+Players access the game client to:
 
-### Gameplay Layer
+- Experience the game in demo mode without requiring a wallet or asset ownership
+- Connect a wallet to access owned NFTs when entering ownership-enabled modes
+- Participate in live gameplay using Genesis characters and equipped weapons
+- Engage in competitive modes such as PvP and team-based matches
+- View progression paths, available upgrades, and character development
+- Compete on leaderboards and track gameplay activity
 
-The gameplay layer is responsible for all real time interactions.
+All combat, movement, mission logic, and skill based systems operate entirely off-chain to ensure low latency, responsiveness, and fairness. Gameplay outcomes generate progression state and upgrade eligibility, but do not execute on-chain transactions during play.
 
-This includes:
+When a player initiates an upgrade, the game client verifies progression requirements and presents the required UAP cost. The player then approves the UAP spend directly through their connected wallet. Once the transaction is submitted and confirmed, the updated state is synchronised back into the game client.
 
-- Combat and mission execution
-- Player movement and abilities
-- Match outcomes and performance tracking
-- Local game state and responsiveness
+Character evolution and equipment changes are reflected both mechanically and visually. These updates are also mirrored in the Super Galactic Hub, including real time metadata updates and three.js based visual representations of evolving assets.
 
-This layer is optimized for speed and player experience. No blockchain interactions occur during active gameplay, ensuring low latency and uninterrupted play.
+The game client remains focused on playability, performance, and progression visibility. Blockchain interactions are surfaced only when required for ownership or economic finality.
 
-### Application Layer
+### Application Layer: Super Galactic Hub
 
-The application layer acts as the coordination and synchronization layer between gameplay and on chain systems.
+The Super Galactic Hub acts as the application layer and coordination layer between gameplay systems and on-chain ownership.
 
-Its responsibilities include:
+Users interact with the Hub to:
 
-- Player account state
-- Asset management and inventory
-- Progression tracking
-- Reward eligibility and claims
-- Data synchronization across systems
+- Create and manage player accounts
+- View, mint, and manage owned NFTs
+- List, trade, and auction assets
+- Use shopping basket and marketplace features
+- Receive notifications related to assets, progression, and transactions
+- Participate in systems such as breeding
+- Claim UAP earned through gameplay
+- Review asset evolution, upgrades, and historical activity
 
-This layer ensures that gameplay results are correctly recorded, validated, and prepared for settlement without exposing players to unnecessary technical complexity.
+The Hub routes upgrade and transaction requests, indexes on-chain activity, and maintains synchronisation between gameplay events and asset state. Metadata updates generated through gameplay and upgrades are reflected consistently across the Hub and the game client.
 
-### On Chain Settlement Layer
+The Hub abstracts blockchain complexity wherever possible, allowing players to interact with ownership and economy features without needing to manage low-level on-chain details.
 
-The on chain layer handles ownership, verification, and economic finality.
+### **On Chain Settlement Layer**
 
-This includes:
+The blockchain layer is responsible for asset ownership, economic finality, and transparent settlement.
 
-- UAP token logic
-- NFT ownership and metadata
-- Supply control mechanisms
-- Burn and sink execution
-- Transaction verification
+This layer handles:
 
-Only validated outcomes are settled on chain. This design minimizes cost, avoids unnecessary transactions, and ensures economic actions are transparent and verifiable.
+- NFT ownership and transfer
+- Marketplace settlement and auction execution
+- UAP token balance updates
+- Upgrade settlement and UAP consumption
+- Burn execution and treasury flows
+- Immutable record keeping of economic activity
 
-### Extensibility and Future Systems
+On-chain execution is limited to actions where decentralisation, auditability, and permanence provide clear value. High frequency gameplay logic and latency sensitive interactions are deliberately excluded from this layer.
 
-The modular structure allows new systems to be introduced without disrupting existing gameplay.
+For launch, UAP settlement and marketplace execution operate on BNB Chain as the primary network, with the architecture remaining compatible with future multi-chain expansion.
 
-Future features such as expanded progression paths, additional asset interactions, and marketplace functionality can be integrated at the application or settlement layer while preserving core gameplay integrity.
+### Design Rationale
 
-This approach ensures that Super Galactic can evolve over time without sacrificing stability, balance, or player experience.
+This layered architecture ensures that:
+
+- Gameplay logic remains off-chain and deterministic, while ownership and economic settlement remain on-chain.
+- Progression and ownership persist beyond individual play sessions
+- Economic actions are explicit, auditable, and user-approved
+- Blockchain usage enhances durability without degrading player experience
+
+By clearly separating responsibilities across layers, Super Galactic avoids the common failure modes of early Play to Earn systems, where blockchain execution was tightly coupled to gameplay performance.
+
+The result is an architecture designed for longevity, scalability, and retention, while remaining flexible enough to support future expansion across networks and features.

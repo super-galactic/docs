@@ -24,7 +24,7 @@
   "navbar": {
     "primary": {
       "type": "button",
-      "label": "Get started",
+      "label": "Super Galactic Hub",
       "href": "https://app.ufogaming.io/get-started"
     }
   },
@@ -34,22 +34,22 @@
       {
         "anchor": "Main site",
         "icon": "globe",
-        "href": "https://ufogaming.io"
+        "href": "https://app.ufogaming.io/"
       },
       {
         "anchor": "Twitter",
         "icon": "x",
-        "href": "https://x.com/ufogaming"
+        "href": "https://x.com/SuperGalactic51"
       },
       {
         "anchor": "YouTube",
         "icon": "youtube",
-        "href": "https://www.youtube.com/@UFOGaming"
+        "href": "https://www.youtube.com/@UFOGamingOfficial"
       },
       {
         "anchor": "Telegram",
         "icon": "send",
-        "href": "https://t.me/ufogaming"
+        "href": "https://t.me/spacechat"
       }
     ],
     "tabs": [
@@ -121,7 +121,7 @@
       }
     ]
   },
-
+  
   "icons": {
     "library": "lucide"
   },
@@ -132,9 +132,9 @@
 
   "footer": {
     "socials": {
-      "x": "https://x.com/ufogaming",
-      "youtube": "https://www.youtube.com/@UFOGaming",
-      "telegram": "https://t.me/ufogaming"
+      "x": "https://x.com/SuperGalactic51",
+      "youtube": "https://www.youtube.com/@UFOGamingOfficial",
+      "telegram": "https://t.me/spacechat"
     }
   }
 }
