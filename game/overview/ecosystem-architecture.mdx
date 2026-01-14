@@ -6,9 +6,9 @@ Super Galactic is built on a modular, layered architecture designed to support p
 
 The system is intentionally separated into three distinct layers. Each layer is responsible for a specific role and operates independently, while remaining tightly integrated through defined data flows. This separation allows the game to scale, evolve, and iterate over time while maintaining clear boundaries between gameplay logic, player state, and economic settlement.
 
-import { EcosystemArchitectureDiagram } from "/snippets/EcosystemArchitectureDiagram.jsx";
+import { EcosystemArchitectureD } from "/snippets/EcosystemArchitectureD.jsx";
 
-<EcosystemArchitectureDiagram />
+<EcosystemArchitectureD />
 
 ### Game Client Layer
 
@@ -32,10 +32,6 @@ Character evolution and equipment changes are reflected both mechanically and vi
 The game client remains focused on playability, performance, and progression visibility. Blockchain interactions are surfaced only when required for ownership or economic finality.
 
 ### Application Layer: Super Galactic Hub
-
-import { EcosystemArchitectureD } from "/snippets/EcosystemArchitectureD.jsx";
-
-<EcosystemArchitectureD />
 
 The Super Galactic Hub acts as the application layer and coordination layer between gameplay systems and on-chain ownership.
 
