@@ -3,64 +3,77 @@ title: "Economy Overview"
 icon: "coins"
 ---
 
-Super Galactic operates on a closed-loop, gameplay-driven economy powered by the UAP token.
+Super Galactic operates on a closed loop, gameplay driven economy powered by the UAP token.
 
-Tokens only move into or out of circulation as a direct result of gameplay activity. There are no emissions tied to time, speculation, or passive participation. This structure is designed so increased engagement reinforces economic balance rather than diluting it.
+UAP only enters player circulation as a result of active gameplay. There are no emissions tied to time, speculation, or passive participation. Economic activity is bounded by fixed supply, explicit sinks, and automated burn enforcement.
 
-### Fixed Supply and Circulation Control
+### Fixed Supply Model
 
-UAP has a fixed, capped total supply with no ongoing minting.
+UAP has a fixed, capped total supply. Gameplay does not mint new tokens.
 
-Gameplay does not mint new tokens. Instead, existing UAP moves between players and the game, with a portion permanently removed through burn mechanisms. Player activity influences circulating supply, not total supply, based on how UAP is earned and spent.
+All UAP distributed through gameplay already exists within the total supply. Player activity determines how much of that supply becomes circulating, not how much supply exists. This ensures long term predictability and prevents inflation through participation.
 
-For full supply details and allocation, see [**Supply & Allocation**](https://supergalactic.mintlify.app/game/tokenomics/supply-and-allocation).
+### Gameplay Driven Entry
 
-### Gameplay-Driven Token Entry
+UAP enters player hands exclusively through eligible PvE gameplay. Rewards are generated from mission completion and performance outcomes. There are no idle rewards, login bonuses, or yield mechanics detached from gameplay.
 
-UAP enters player hands exclusively through active gameplay. Players earn UAP by completing PvE missions and engaging with core game systems. There are no idle rewards, login bonuses, or yield mechanics disconnected from play.
+Reward eligibility, limits, and claim behavior are defined in [Rewards System](/game/economy/rewards-system).
 
-Reward logic, eligibility, and earning limits are documented in [**Rewards System**](https://supergalactic.mintlify.app/game/economy/rewards-system).
+### Progression as Primary Demand
 
-### Progression as Sustained Token Demand
+Progression systems are the primary source of sustained UAP demand.
 
-Progression systems are the primary source of long-term UAP demand. Players spend UAP to upgrade Genesis characters and weapons, unlocking deeper progression and improved gameplay performance. These systems are designed to scale with rarity and advancement depth, increasing UAP demand as players progress further.
+Players spend UAP to upgrade characters, weapons, and other progression systems. Spending scales with advancement depth, rarity, and long term commitment. As players progress further, UAP demand increases naturally through gameplay driven decisions rather than forced sinks.
 
-All progression spending permanently consumes UAP from the player’s balance, then routes it through the burn and Game Treasury flow described below.
+Detailed progression sinks are documented in Token Sinks and Breeding Economics.
 
-Detailed progression sinks are covered in [**Token Sinks**](https://supergalactic.mintlify.app/game/economy/token-sinks).
+### Automated Burn and Treasury Routing
 
-### Automated Burn and Game Treasury Flow
+All in game UAP spending triggers an automated system level split.
 
-Every time UAP is spent in-game, a fixed system-level split is triggered automatically. A portion is permanently burned, and the remaining portion is routed to the Game Treasury. This process is usage-based, transparent, and enforced by the system. As player activity increases, total burn volume increases proportionally without relying on scheduled events or manual intervention.
+A fixed portion of spent UAP is permanently burned. The remaining portion is routed to the Game Treasury. Burn execution is enforced at the system level and does not require player action.
 
-For the exact split, see Burn Mechanisms → [**Burn and Treasury Split**](https://supergalactic.mintlify.app/game/economy/burn-mechanisms#burn-and-treasury-split)
+Burn logic and treasury behavior are defined in [Burn Mechanisms](/game/economy/burn-mechanisms).
 
-### The Gameplay Flywheel
+### Circulating Supply Dynamics
 
-Super Galactic’s economy functions as a self-reinforcing loop:
+Circulating supply is dynamic.
 
-1. Missions earn UAP through gameplay
-2. Players spend UAP on upgrades and progression
-3. Spending triggers automated burns through usage
-4. Burned supply reinforces scarcity
-5. Scarcity increases the value of progression and rewards
-6. Increased rewards and progression incentives drive more engagement and players
+It increases when players earn and claim UAP through gameplay. It decreases when players spend UAP on progression systems and burns are executed. As gameplay activity increases, both reward distribution and burn volume increase proportionally.
 
-This flywheel ties growth to participation and progression, rather than uncontrolled supply expansion.
+Total supply remains fixed at all times.
 
-import { GameplayFlywheelChart } from "/snippets/EconomyChartsV1.jsx";
+### Closed Loop Flow
 
-<GameplayFlywheelChart />
+The economy follows a repeatable causal loop:
 
-### Design Intent
+- Gameplay produces reward outcomes
+- Rewards introduce existing UAP into circulation
+- Progression spending consumes UAP
+- Spending triggers automated burns
+- Burned supply reduces circulation
+- Reduced circulation reinforces the value of progression and rewards
 
-The economy is intentionally structured to avoid common failure modes:
+This loop ties economic outcomes directly to how the game is played rather than to external incentives.
+
+### Economic Constraints
+
+The economy is explicitly constrained to avoid common failure modes:
 
 - No unlimited minting
-- No passive yield loops
+- No passive yield systems
 - No rewards without sinks
-- No reliance on speculative behaviour
+- No discretionary supply expansion
 
-Instead, it is driven by skill-based gameplay, long-term progression commitment, and rule-based supply reduction.
+Economic pressure scales with participation, and supply reduction emerges from usage rather than scheduling.
 
-The result is an economy designed to be **playable, sustainable, and economically sound**.
+### Scope and References
+
+This overview defines the economic structure only.
+
+Detailed reward rules are covered in [Rewards System](/game/economy/rewards-system).\
+Progression sinks and upgrade costs are covered in [Token Sinks](/game/economy/token-sinks) and [Breeding Economics](/game/economy/breeding-economics).\
+Burn execution and treasury routing are covered in [Burn Mechanisms](/game/economy/burn-mechanisms).\
+Supply allocation and market behavior are covered in [Tokenomics](/game/tokenomics/supply-and-allocation).
+
+This structure ensures the economy remains playable, auditable, and sustainable over long term operation.
