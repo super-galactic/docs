@@ -5,62 +5,45 @@ icon: "joystick"
 
 <video autoPlay muted loop playsInline className="w-full aspect-video rounded-xl" src="https://storage.ufogaming.io/ufogaming-videos/SuperGalacticTrailer3.mp4" />
 
-Super Galactic is a fast-paced, top-down action shooter RPG focused on skill-based combat, moment-to-moment decision making, and long-term progression.
+Super Galactic is a top-down action shooter RPG built around manual execution, loadout strategy, and progression through repeatable missions and matches.
 
-The gameplay experience is built around responsive movement, precise aiming, and tactical use of abilities and equipment. Success in matches is determined by player execution, positioning, timing, and coordination rather than automated outcomes or passive systems.
-
-Players can jump into missions or matches without complex setup, then gradually engage with deeper progression and customization systems as they become more familiar with the game.
+Combat is real time and input driven. Outcomes depend on aiming, positioning, timing, and team coordination. Gameplay does not use idle mechanics or automated resolution loops.
 
 ### Core Gameplay Loop
 
-The core gameplay loop is designed around repeatable, skill-driven play with clear progression feedback.
+- **Select a character and loadout**\
+  Choose a Genesis character and equip melee and ranged weapons based on preferred playstyle and available ratings.
+- **Enter a mission or match**\
+  Play PvE missions or competitive multiplayer modes depending on the selected mode.
+- **Execute objectives through combat**\
+  Complete objectives through player input and coordination. There are no hidden modifiers that override performance.
+- **Generate outcomes and progression state**\
+  Mission and match results produce recorded outcomes used for progression and, where applicable, rewards eligibility.
+- **Spend into upgrades**\
+  Players use progression outputs and UAP spending to upgrade characters and weapons, increasing rating and enabling more consistent performance at higher PvE difficulties.
 
-1. **Select character and loadout**\
-   Players choose a Genesis character and equip weapons based on preferred playstyle and rarity constraints.
-2. **Enter a mission or multiplayer match**\
-   Players engage in objective-driven encounters that reward positioning, timing, and decision making.
-3. **Execute combat and complete objectives**\
-   Outcomes are determined by player input and coordination rather than passive systems.
-4. **Performance generates reward outcomes**\
-   Mission completion and performance contribute to recorded outcomes used for reward eligibility.
-5. **Upgrade characters and weapons**\
-   Progression outcomes and resources enable upgrades across character components and weapons, shaping stats, attributes, and build paths over time.
-
-↺ This progression feeds back into future missions and matches, allowing players to refine builds and take on higher challenge content through repeated play.
-
-See Economy → Reward System for reward rules and claiming behaviour.
+For reward eligibility and claim flow, see Economy → Rewards System.
 
 ### Combat and Controls
 
-Combat in Super Galactic emphasizes clarity and responsiveness.
+Players control a single character with free movement, aiming, and ability usage. Weapons and abilities shape playstyle but do not replace execution.
 
-Players control a single character with full freedom of movement, aiming, and ability usage. Enemies and opposing players require active engagement, situational awareness, and adaptation rather than scripted solutions.
-
-Weapons, abilities, and equipment modify playstyle rather than replace core mechanics. Strong builds enhance effectiveness, but success still depends on player input and decision making.
-
-Combat outcomes are deterministic and do not rely on hidden modifiers or passive multipliers.
+Super Galactic does not apply hidden combat multipliers or matchmaking modifiers that influence outcomes. Performance is determined by player decisions and progression state.
 
 ### Progression Through Play
 
-Progression in Super Galactic is driven by active participation.
-
-As players complete missions and matches, progression outcomes can be invested into character development, upgrades, and customization. Progression is tied to gameplay performance and activity, reinforcing engagement rather than passive accumulation.
-
-There are no shortcuts that bypass gameplay. Advancement reflects time spent playing, learning, and improving.
+Progression is earned through gameplay activity and reinvested into upgrades. Advancement reflects mission completion, repetition, and build refinement rather than time based boosts.
 
 ### Multiplayer and Replayability
 
-Super Galactic supports both solo and multiplayer experiences.
+Super Galactic supports PvE and PvP modes. PvP is designed for competitive play and does not generate UAP rewards. PvE is the earning eligible mode and is structured around difficulty tiers and objective completion.
 
-Players can engage in PvE missions or competitive multiplayer modes, each designed to test different skills and strategies. Match variety, evolving builds, and progression paths ensure replayability over long periods of play.
+Mode rules and access differences are documented in Gameplay → Game Modes.
 
-Multiplayer modes emphasize fair competition and teamwork, while PvE content supports experimentation and progression.
+### Notes
 
-### Design Focus
-
-Gameplay systems are intentionally designed to remain readable and accessible while offering depth for experienced players.
-
-The goal is to create a game that rewards mastery without overwhelming new players, allowing Super Galactic to support both short play sessions and long term engagement.
+- Gameplay logic runs off chain for latency and responsiveness
+- On chain actions occur only when players claim rewards or approve UAP spending through the Hub
 
 <Note>
   This section explains how Super Galactic plays.\

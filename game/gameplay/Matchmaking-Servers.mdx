@@ -3,70 +3,62 @@ title: "Matchmaking & Servers"
 icon: "server"
 ---
 
-Super Galactic uses region based servers and structured matchmaking to ensure stable performance, fair competition, and responsive gameplay across all modes.
-
-Matchmaking is designed to prioritise low latency and consistent game experience rather than artificial balancing or hidden modifiers.
+Super Galactic uses region based servers and mode specific matchmaking rules to keep latency low and match behaviour predictable.
 
 ### Server Regions
 
-Super Galactic operates across multiple server regions.
+Players select a server region before entering gameplay.
 
-Players must select the **same server region** as their teammates in order to match together. Playing on the correct regional server helps minimise latency and ensures smoother combat, especially in real time multiplayer modes.
-
-Server regions are selected before entering gameplay and remain consistent across sessions unless changed by the player.
-
-Super Galactic currently supports the following server regions:
+Supported regions:
 
 - Europe
 - United States
 - Asia
 
+Party members must be on the **same server region** to enter matches together. Region selection can be changed by the player before matchmaking.
+
 ### Matchmaking Rules
 
-Matchmaking behaviour varies by game mode.
+Matchmaking behaviour depends on the selected mode.
 
-- **Single Player (PvE):** Missions are launched instantly without matchmaking. Difficulty selection and mission objectives determine challenge and reward potential.
-- **Duel (PvP):** Players are matched against other players within the same server region. Matchmaking prioritises responsiveness and availability.
-- **Team Deathmatch (TDM):** Players form teams manually by adding friends or joining invited parties. Once a team is formed, the match is created within the selected server region.
+**PvE Missions**
 
-Team Deathmatch supports team sizes from **2v2 up to 5v5**, with a maximum of **10 players per match**.
+- No matchmaking
+- Missions launch immediately
+- Difficulty selection and mission objectives define challenge and reward potential
 
-<Info>
-  There is no requirement for all players in a team to own assets. Asset ownership does not affect matchmaking eligibility.
-</Info>
+**Duel (PvP)**
+
+- Matches are created within the selected server region
+- Matchmaking prioritises low latency and availability within that region
+
+**Team Deathmatch (TDM)**
+
+- Teams are formed manually through party invites
+- Matches are created within the selected server region
+- Supported team sizes: 2v2 up to 5v5 (max 10 players)
+
+Asset ownership does not affect matchmaking eligibility.
+
+<Note>
+  Asset ownership does not affect matchmaking eligibility.
+</Note>
 
 ### Party and Team Formation
 
-Players can create parties by inviting friends or accepting friend requests.
+Parties are created through invites and friend connections. The party leader controls match creation. All members must be on the same server region before the match can start.
 
-Party leaders control match creation and server selection. All party members must be connected to the same server region before starting a match.
+### Fair Play Constraints
 
-This structure allows coordinated team play while preventing cross region latency issues.
+Match outcomes are not influenced by hidden matchmaking modifiers.
+
+- No stat scaling to force close matches
+- No reward modifiers tied to matchmaking
+- Performance is determined by player execution, coordination, and progression state
 
 ### Communication
 
-Super Galactic includes an in game text chat system that allows players to communicate directly with friends.
+Super Galactic supports in game text chat for coordination.
 
-**Text chat supports:**
-
-- Direct messaging between players on the friend list
+- Direct messages between friends
 - Coordination before and during multiplayer matches
-
-Communication is designed to support social play and team coordination without introducing additional complexity during gameplay.
-
-### Performance and Fair Play
-
-Matchmaking does not use hidden modifiers to influence outcomes.
-
-All players compete using the same underlying rules and systems. Performance is determined by player skill, coordination, progression state, and decision making rather than matchmaking manipulation.
-
-### Design Intent
-
-The matchmaking and server model is designed to:
-
-- Preserve low latency gameplay
-- Maintain consistent combat behaviour
-- Support competitive integrity
-- Allow players to form teams freely
-
-By keeping matchmaking transparent and region aware, Super Galactic ensures a predictable and fair multiplayer experience.
