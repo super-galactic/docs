@@ -3,61 +3,70 @@ title: "Mystery Lootboxes"
 icon: "package"
 ---
 
-Mystery Lootboxes are unopened weapon containers managed through the [Super Galactic Hub](https://app.ufogaming.io/). Each lootbox contains one weapon NFT, but the outcome is determined only when the lootbox is opened.
+Mystery Lootboxes are container assets managed through the [Super Galactic Hub marketplace](https://app.ufogaming.io/). Each lootbox represents an unrevealed weapon NFT. The lootbox itself is an owned asset until it is opened.
 
-For lootbox pricing tiers, supported payment options, and rarity drop rates, see [**Minting & Pricing.**](https://supergalactic.mintlify.app/game/nfts-assets/minting-and-pricing)
+This page defines the lootbox lifecycle and reveal boundary only. Weapon behavior and progression rules are defined elsewhere.
 
-### **What Is a Mystery Lootbox**
+### What a Mystery Lootbox Is
 
-A Mystery Lootbox is an owned Hub asset that represents an unrevealed weapon. Before opening, the contents are not assigned and cannot be inspected.
+A Mystery Lootbox is a Hub asset that represents a weapon that has not yet been revealed.
 
-When opened, the lootbox is consumed and a weapon NFT is revealed and assigned permanently.
+Before opening:
 
-### What’s Inside
+- The weapon is **not assigned**
+- Contents cannot be inspected
+- No weapon attributes, rarity, or perks are visible
 
-Each lootbox reveals one random weapon from a fixed pool of 10 weapon types across melee and ranged categories.
+The lootbox exists independently of the weapon it will later reveal.
 
-When revealed, the weapon NFT is assigned its core properties, including weapon type, rarity, damage type, attributes, and perks where applicable.
+### Ownership and Trading Before Opening
 
-For weapon types, damage types, perk rules, and upgrade behavior, see [**Equipment & Weapons.**](https://supergalactic.mintlify.app/game/nfts-assets/equipment-and-weapons)
+While unopened, a Mystery Lootbox remains a standalone asset in the Super Galactic Hub.
 
-### Why Players Use Lootboxes
+Unopened lootboxes can be:
 
-Weapons are core gameplay assets used to build loadouts and progress through upgrades.
+- Listed for sale at a fixed price
+- Listed via auction
+- Transferred to another wallet
+- Gifted at purchase
 
-To participate in Play to Earn PvE gameplay, players equip one melee weapon and one ranged weapon. Lootboxes provide a direct way to acquire additional weapons beyond starter equipment.
-
-### Trading Lootboxes in the Super Galactic Hub
-
-Before opening, lootboxes remain owned assets in your Hub inventory and can be traded without revealing their contents.
-
-From the Hub, you can:
-
-- List a lootbox for sale at a fixed price
-- List a lootbox via auction
-- Transfer a lootbox to another wallet
-- Open the lootbox at any time
-
-For purchase flows and gifting at purchase, see [**Minting & Pricing.**](https://supergalactic.mintlify.app/game/nfts-assets/minting-and-pricing)
+All ownership actions are recorded in Hub activity history.
 
 ### Opening and Reveal
 
-When a player chooses to open a lootbox:
+When a player opens a Mystery Lootbox:
 
-2. The minting process begins and reveals a weapon NFT
-2. All attributes, rarity, and perks are permanently locked
+- The lootbox is consumed
+- A weapon NFT is revealed
+- Weapon properties are **assigned at reveal** and permanently locked
 
-After reveal, the weapon becomes the tradable asset and can be used, upgraded, or traded on the marketplace.
+Assigned properties include weapon type, rarity, attributes, rating, and perks where applicable. Once revealed, the lootbox no longer exists and the weapon NFT becomes the owned asset.
 
-### Hub Inventory vs In-Game Visibility
+### Hub Inventory and In Game Visibility
 
-Unopened lootboxes remain in the Super Galactic Hub. Only revealed weapon NFTs appear in the game client after wallet connection.
+- Unopened lootboxes appear only in the Super Galactic Hub
+- Revealed weapon NFTs appear in the game client after wallet connection
 
-When you sign in to Super Galactic and connect the wallet used in the Hub, the game detects and displays:
+The game client detects owned weapon NFTs automatically when the associated wallet is connected.
 
-- Genesis NFTs
-- Revealed weapon NFTs
+### Activity Tracking
 
-### Activity History
+All lootbox related actions are recorded in Hub activity, including:
 
-All lootbox actions are recorded in Super Galactic Hub Activity, including purchases, transfers, listings and sales, lootbox openings, and weapon reveals.
+- Purchases
+- Transfers
+- Listings and sales
+- Lootbox openings
+- Weapon reveals
+
+This ensures full visibility of asset history.
+
+### Scope and References
+
+This page defines the lootbox container and reveal lifecycle only.
+
+- Weapon types, rarity behavior, perks, and upgrade rules are defined in [**Equipment & Weapons**](/game/nfts-assets/equipment-and-weapons)
+- Lootbox pricing tiers and rarity drop rates are defined in [**Minting & Pricing**](/game/nfts-assets/minting-and-pricing)
+- Upgrade cost scaling is defined in [**Upgrades & Progression**](/game/nfts-assets/upgrades-and-progression)
+
+Mystery Lootboxes are a distribution mechanism for weapon NFTs. They do not define weapon behavior, progression, or reward rules.

@@ -3,26 +3,30 @@ title: "Equipment & Weapons"
 icon: "sword"
 ---
 
-Weapons in Super Galactic are core gameplay assets that directly influence combat performance, progression speed, and build strategy. Unlike starter equipment, weapon NFTs are designed for long term use, upgrades, and optimisation.
+Weapons are core gameplay assets that directly affect combat performance, build composition, and progression consistency. Weapon NFTs are designed for repeated use, upgrades, and long term optimisation within the defined progression system.
 
-Weapons are acquired primarily through **Mystery Lootboxes** and integrate directly with Genesis characters in PvE gameplay.
+This page defines weapon structure, supply constraints, rarity behavior, and upgrade boundaries. 
 
-### **Weapon Categories**
+Lootbox lifecycle and reveal flow are defined in [**Mystery Lootboxes**](/game/nfts-assets/mystery-lootboxes). Pricing and rarity drop rates are defined in [**Minting & Pricing**.](/game/nfts-assets/minting-and-pricing)
 
-Super Galactic weapons are divided into two categories. To participate in Play to Earn PvE gameplay, players must equip **one weapon from each category**.
+### Weapon Categories and Loadout Rules
 
-| Category       | Description                                       | Requirement |
-| :------------- | :------------------------------------------------ | :---------- |
-| Melee Weapons  | Close range combat, burst damage, utility effects | Required    |
-| Ranged Weapons | Mid to long range combat, sustained DPS           | Required    |
+Weapons are divided into two categories.
+
+- **Melee weapons**\
+  Close range combat, burst damage, and utility effects
+- **Ranged weapons**\
+  Mid to long range combat and sustained damage output
+
+To enter earning eligible PvE gameplay, players must equip **one melee weapon and one ranged weapon**.
 
 <Note>
-  Starter weapons are provided to all players for onboarding but are non NFT and non upgradable.
+  Starter weapons are provided for onboarding. Starter weapons are non NFT and non upgradeable. Weapon NFTs are optiona
 </Note>
 
 ### **Weapon Supply and Distribution**
 
-Weapon supply is finite and tightly controlled.
+Weapon supply is fixed and controlled through lootbox distribution.
 
 | Item                       | Details                            |
 | :------------------------- | :--------------------------------- |
@@ -35,14 +39,17 @@ Weapon supply is finite and tightly controlled.
 | Drop Pool Behavior         | Weapon removed once cap is reached |
 
 <Note>
-  Once a weapon type reaches its maximum supply, it is permanently removed from the drop pool. This ensures long term scarcity and prevents over saturation.
+  Once a weapon type reaches its maximum supply, it is permanently removed from the drop pool.
 </Note>
 
-### Weapon Rarity 
+### Weapon Rarity
 
-Weapon rarity is determined at reveal when a lootbox is opened. Rarity impacts a weapon’s base stats, maximum upgrade level, perk availability, and rating potential.
+Weapon rarity assignment is determined at reveal through smart contract execution and cannot be modified afterward.
 
-For weapon rarity drop rates, see **Minting & Pricing**.
+- Base stats
+- Upgrade caps
+- Perk availability
+- Maximum rating potential
 
 ### **Upgrade Caps by Rarity**
 
@@ -71,22 +78,20 @@ This alignment allows players to build synergy between Genesis Origins and weapo
 
 ### **Weapon Perks**
 
-Weapon perks are unlocked **at the moment a Mystery Lootbox is opened**. They are randomly assigned based on weapon rarity and cannot be added later.
+Weapon perks are assigned randomly at the moment of reveal and cannot be added later.
 
-Perks only appear on **Uncommon, Rare, and Epic** weapons and scale in strength through multiple levels (I, II, III).
+- Perks appear only on Uncommon, Rare, and Epic weapons
+- Perks scale by level (I, II, III) based on rarity
+- Each weapon’s perk combination is unique
 
 | Weapon Type | Total Perks | Notes                                                |
 | :---------- | :---------- | :--------------------------------------------------- |
 | Melee       | 10          | Includes mobility, damage over time, control effects |
 | Ranged      | 11          | Includes DPS scaling, AoE, ammo and reload modifiers |
 
-<Note>
-  Perks are randomly assigned at reveal, making each weapon a unique strategic asset.
-</Note>
-
 ### **Melee Weapon Perks**
 
-Melee weapons can roll **up to 10 unique perks**, focused on mobility, survivability, and close range control.
+Melee weapons can roll up to 10 unique perks, focused on mobility, survivability, and close range control.
 
 | Perk Name                     | Description                                                    |
 | :---------------------------- | :------------------------------------------------------------- |
@@ -103,7 +108,7 @@ Melee weapons can roll **up to 10 unique perks**, focused on mobility, survivabi
 
 ### **Ranged Weapon Perks**
 
-Ranged weapons can roll **up to 11 unique perks**, focused on sustained damage, area control, and combat tempo.
+Ranged weapons can roll up to 11 unique perks, focused on sustained damage, area control, and combat tempo.
 
 | Perk Name                   | Description                                                   |
 | :-------------------------- | :------------------------------------------------------------ |
@@ -123,11 +128,20 @@ Ranged weapons can roll **up to 11 unique perks**, focused on sustained damage, 
 
 Weapons have both a rating and level.
 
-| Attribute | Description                                                           |
-| :-------- | :-------------------------------------------------------------------- |
-| Rating    | Composite score based on rarity, base stats, perks, and upgrade level |
-| Level     | Upgrade progression from Level 0 to Level 4 or 5 depending on rarity  |
+| Attribute | Description                                                                    |
+| :-------- | :----------------------------------------------------------------------------- |
+| Rating    | Is a composite value derived from rarity, base stats, perks, and upgrade level |
+| Level     | Reflects upgrade progression from Level 0 to the rarity defined cap            |
 
-Upgrading a weapon increases its stats and rating, improving combat performance over time.
+Weapon upgrades increase weapon level and modify stats and rating. Upgrade mechanics, caps, and cost scaling are defined in [**Upgrades & Progression**](/game/nfts-assets/upgrades-and-progression).
 
-For upgrade rules, cost scaling, and upgrade flow, see **Upgrades & Progression**.
+> Upgrades do not change reward caps or reward eligibility.
+
+### Scope and References
+
+This page defines weapon NFT behavior and constraints only.
+
+- Reward rules and extraction limits: Economy → [**Rewards System**](/game/economy/rewards-system)
+- Mode eligibility: Gameplay → [**Game Modes**](/game/gameplay/game-modes)
+
+Weapons affect how effectively a player performs in gameplay. They do not modify reward ceilings or economy rules.
