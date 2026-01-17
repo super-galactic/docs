@@ -43,13 +43,50 @@ Costs scale progressively with both rarity and level, ensuring that higher tier 
 
 | Rarity | Maximum Upgrade Level |
 | --- | --- |
-| <Badge color="white" className="w-[170px] justify-center">White (Common)</Badge> | Level 4 |
-| <Badge color="green" className="w-[170px] justify-center">Green (Uncommon)</Badge> | Level 4 |
-| <Badge color="blue" className="w-[170px] justify-center">Blue (Rare)</Badge> | Level 5 |
-| <Badge color="purple" className="w-[170px] justify-center">Purple (Epic)</Badge> | Level 5 |
+| <div style={{ width: 180 }}><Badge color="white">White (Common)</Badge></div> | Level 4 |
+| <div style={{ width: 180 }}><Badge color="green">Green (Uncommon)</Badge></div> | Level 4 |
+| <div style={{ width: 180 }}><Badge color="blue">Blue (Rare)</Badge></div> | Level 5 |
+| <div style={{ width: 180 }}><Badge color="purple">Purple (Epic)</Badge></div> | Level 5 |
+
+
+| Rarity | Maximum Upgrade Level |
+| --- | --- |
+| <div style={{ width: 180, display: "flex", justifyContent: "center" }}><Badge color="white">White (Common)</Badge></div> | Level 4 |
+| <div style={{ width: 180, display: "flex", justifyContent: "center" }}><Badge color="green">Green (Uncommon)</Badge></div> | Level 4 |
+| <div style={{ width: 180, display: "flex", justifyContent: "center" }}><Badge color="blue">Blue (Rare)</Badge></div> | Level 5 |
+| <div style={{ width: 180, display: "flex", justifyContent: "center" }}><Badge color="purple">Purple (Epic)</Badge></div> | Level 5 |
+
 
 
 <Badge color="green" className="inline-flex w-[170px] justify-center">Green (Uncommon)</Badge>
+
+<div className="not-prose grid gap-2">
+  <div className="grid grid-cols-2 items-center border-b border-white/10 pb-2 text-sm font-semibold">
+    <div>Rarity</div>
+    <div>Maximum Upgrade Level</div>
+  </div>
+
+  <div className="grid grid-cols-2 items-center border-b border-white/5 py-2">
+    <div className="w-[180px] flex justify-center"><Badge color="white">White (Common)</Badge></div>
+    <div>Level 4</div>
+  </div>
+
+  <div className="grid grid-cols-2 items-center border-b border-white/5 py-2">
+    <div className="w-[180px] flex justify-center"><Badge color="green">Green (Uncommon)</Badge></div>
+    <div>Level 4</div>
+  </div>
+
+  <div className="grid grid-cols-2 items-center border-b border-white/5 py-2">
+    <div className="w-[180px] flex justify-center"><Badge color="blue">Blue (Rare)</Badge></div>
+    <div>Level 5</div>
+  </div>
+
+  <div className="grid grid-cols-2 items-center py-2">
+    <div className="w-[180px] flex justify-center"><Badge color="purple">Purple (Epic)</Badge></div>
+    <div>Level 5</div>
+  </div>
+</div>
+
 
 
 For how rarity, attributes, and upgrade levels contribute to rating, see [Rarity, Attributes & Rating.](https://supergalactic.mintlify.app/game/nfts-assets/rarity-attributes-rating)
