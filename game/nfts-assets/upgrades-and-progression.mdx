@@ -3,93 +3,40 @@ title: "Upgrades & Progression"
 icon: "circle-arrow-up"
 ---
 
-Upgrades define how Genesis characters and weapon NFTs improve over time through deterministic progression rules. This page specifies what can be upgraded, how upgrades are applied, and the constraints that govern upgrade depth.
+Upgrades define how Genesis characters and weapon NFTs improve over time through deterministic progression rules. This page specifies what can be upgraded, how upgrades are applied, upgrade caps, and cost scaling behavior.
 
-### **Genesis and Weapon Upgrades**
+### Genesis and Weapon Upgrades
 
-Both Genesis characters and weapon NFTs can be upgraded using UAP.
+Upgrades apply to two asset types:
 
-**Genesis upgrades**
+- **Genesis upgrades** apply to individual body parts on a Genesis Origin UFOep
+- **Weapon upgrades** apply to melee and ranged weapon NFTs
 
-- Apply to individual body parts
-- Increase stats, rating, and visual evolution
-- Scale by rarity and level
-
-**Weapon upgrades**
-
-- Apply to melee and ranged weapons
-- Increase combat effectiveness and rating
-- Unlock higher performance at higher rarities
-
-Upgrading Genesis characters and weapons increases ratings and underlying stats, enabling more consistent performance at higher difficulty levels. These upgrades do not increase maximum rewards or multiply UAP output.
+Upgrading increases stats and rating, improving combat performance and progression consistency at higher difficulty tiers. Upgrades do not increase reward caps or multiply UAP output.
 
 ### What Can Be Upgraded
 
 - **Genesis body parts:** Head, Arms, Chest, Backpack, Legs, Ears
 - **Weapons:** Melee weapons and ranged weapons
 
-Each upgraded component contributes to overall rating and combat performance.
+Each body part is upgraded independently. Upgrading one body part does not change the upgrade state of other parts. Each weapon is upgraded independently.
+
+### Upgrade Levels
+
+- Upgrades start at **Level 0**
+- Levels increase sequentially
+- Maximum level is determined by rarity caps
 
 ### Upgrade Caps by Rarity
 
-Upgrade limits are determined by rarity:
+| Rarity                                        | Maximum Upgrade Level |
+| --------------------------------------------- | --------------------- |
+| <Badge color="white">White (Common)</Badge>   | Level 4               |
+| <Badge color="green">Green (Uncommon)</Badge> | Level 4               |
+| <Badge color="blue">Blue (Rare)</Badge>       | Level 5               |
+| <Badge color="purple">Purple (Epic)</Badge>   | Level 5               |
 
-- Common and Uncommon: up to Level 4
-- Rare and Epic: up to Level 5
-
-Costs scale progressively with both rarity and level, ensuring that higher tier progression represents meaningful investment.
-
-## Upgrade Caps by Rarity
-
-| Rarity | Maximum Upgrade Level |
-| --- | --- |
-| <div style={{ width: 180 }}><Badge color="white">White (Common)</Badge></div> | Level 4 |
-| <div style={{ width: 180 }}><Badge color="green">Green (Uncommon)</Badge></div> | Level 4 |
-| <div style={{ width: 180 }}><Badge color="blue">Blue (Rare)</Badge></div> | Level 5 |
-| <div style={{ width: 180 }}><Badge color="purple">Purple (Epic)</Badge></div> | Level 5 |
-
-
-| Rarity | Maximum Upgrade Level |
-| --- | --- |
-| <div style={{ width: 180, display: "flex", justifyContent: "center" }}><Badge color="white">White (Common)</Badge></div> | Level 4 |
-| <div style={{ width: 180, display: "flex", justifyContent: "center" }}><Badge color="green">Green (Uncommon)</Badge></div> | Level 4 |
-| <div style={{ width: 180, display: "flex", justifyContent: "center" }}><Badge color="blue">Blue (Rare)</Badge></div> | Level 5 |
-| <div style={{ width: 180, display: "flex", justifyContent: "center" }}><Badge color="purple">Purple (Epic)</Badge></div> | Level 5 |
-
-
-
-<Badge color="green" className="inline-flex w-[170px] justify-center">Green (Uncommon)</Badge>
-
-<div className="not-prose grid gap-2">
-  <div className="grid grid-cols-2 items-center border-b border-white/10 pb-2 text-sm font-semibold">
-    <div>Rarity</div>
-    <div>Maximum Upgrade Level</div>
-  </div>
-
-  <div className="grid grid-cols-2 items-center border-b border-white/5 py-2">
-    <div className="w-[180px] flex justify-center"><Badge color="white">White (Common)</Badge></div>
-    <div>Level 4</div>
-  </div>
-
-  <div className="grid grid-cols-2 items-center border-b border-white/5 py-2">
-    <div className="w-[180px] flex justify-center"><Badge color="green">Green (Uncommon)</Badge></div>
-    <div>Level 4</div>
-  </div>
-
-  <div className="grid grid-cols-2 items-center border-b border-white/5 py-2">
-    <div className="w-[180px] flex justify-center"><Badge color="blue">Blue (Rare)</Badge></div>
-    <div>Level 5</div>
-  </div>
-
-  <div className="grid grid-cols-2 items-center py-2">
-    <div className="w-[180px] flex justify-center"><Badge color="purple">Purple (Epic)</Badge></div>
-    <div>Level 5</div>
-  </div>
-</div>
-
-
-
-For how rarity, attributes, and upgrade levels contribute to rating, see [Rarity, Attributes & Rating.](https://supergalactic.mintlify.app/game/nfts-assets/rarity-attributes-rating)
+These caps apply uniformly across Genesis body parts and weapon NFTs.
 
 ### Upgrade Cost Scaling
 
@@ -104,6 +51,13 @@ Upgrade costs scale by rarity and upgrade level, applying equally to Genesis bod
 | Rare     | Level 1 → 5    | 1,500 → 100,000 |
 | Epic     | Level 1 → 5    | 2,000 → 160,000 |
 
+| Rarity | Upgrade Levels | Body Part Cost |
+| --- | --- | --- |
+| <Badge color="white">White (Common)</Badge> | Level 1 → 4 | 1,000 → 60,000 |
+| <Badge color="green">Green (Uncommon)</Badge> | Level 1 → 4 | 1,200 → 80,000 |
+| <Badge color="blue">Blue (Rare)</Badge> | Level 1 → 5 | 1,500 → 100,000 |
+| <Badge color="purple">Purple (Epic)</Badge> | Level 1 → 5 | 2,000 → 160,000 |
+
 #### Weapon Upgrade Cost Scaling
 
 | Rarity   | Upgrade Levels | Ranged Weapon Cost | Melee Weapon Cost |
@@ -113,14 +67,37 @@ Upgrade costs scale by rarity and upgrade level, applying equally to Genesis bod
 | Rare     | Level 1 → 5    | 3,000 → 200,000    | 2,250 → 150,000   |
 | Epic     | Level 1 → 5    | 4,000 → 320,000    | 3,000 → 240,000   |
 
-<Note>
-  Upgrade costs and parameters may be adjusted over time to support long-term balance and player activity. Any material changes will be communicated through official development updates.
-</Note>
+| Rarity | Upgrade Levels | Ranged Weapon Cost | Melee Weapon Cost |
+| --- | --- | --- | --- |
+| <Badge color="white">White (Common)</Badge> | Level 1 → 4 | 2,000 → 120,000 | 1,500 → 90,000 |
+| <Badge color="green">Green (Uncommon)</Badge> | Level 1 → 4 | 2,400 → 160,000 | 1,800 → 120,000 |
+| <Badge color="blue">Blue (Rare)</Badge> | Level 1 → 5 | 3,000 → 200,000 | 2,250 → 150,000 |
+| <Badge color="purple">Purple (Epic)</Badge> | Level 1 → 5 | 4,000 → 320,000 | 3,000 → 240,000 |
 
-### Economic Integration
+### Visual Progression
 
-Upgrades are a primary progression sink. Each upgrade consumes UAP and follows the burn and Game Treasury split defined in [Burn Mechanisms](https://supergalactic.mintlify.app/game/economy/burn-mechanisms), linking long-term progression directly to usage-based supply reduction.
+Progression is component based. When a body part or weapon is upgraded, the associated 3D model updates to reflect the upgrade state, even if other components remain unchanged.
 
-### Progression with Purpose
+### Configurable Cost Parameters
 
-Upgrades are the core long-term progression path. They increase performance, evolve visuals, and raise rating, while costs scale with rarity and level to keep progression decisions meaningful as players advance.
+Upgrade costs are configurable system parameters used to maintain progression pacing and player affordability relative to UAP market value.
+
+Configuration does not modify:
+
+- Upgrade caps or rarity limits
+- Reward ceilings or extraction limits
+- Burn execution and Game Treasury routing
+
+### Constraints and Boundaries
+
+- Upgrades improve combat performance and progression consistency
+- Upgrades do not increase reward caps
+- Upgrade depth is bounded by rarity caps
+- Costs scale by rarity and upgrade level
+
+### Scope and References
+
+- Rarity behavior and rating construction: **Rarity, Attributes & Rating**
+- Weapon structure and perks: **Equipment & Weapons**
+- Reward rules and extraction limits: Economy → **Rewards System**
+- UAP spending sinks and burn execution: Economy → **Token Sinks** and **Burn Mechanisms**
