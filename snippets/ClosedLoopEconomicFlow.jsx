@@ -1,4 +1,3 @@
-// ClosedLoopEconomicFlow.jsx
 export const ClosedLoopEconomicFlow = () => {
   const [currentStep, setCurrentStep] = React.useState(0); // 0..5
   const [isPlaying, setIsPlaying] = React.useState(false);
