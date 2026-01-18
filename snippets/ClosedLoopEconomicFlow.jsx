@@ -1,4 +1,3 @@
-// ClosedLoopEconomicFlow.jsx
 export const ClosedLoopEconomicFlow = () => {
   const React = require("react");
   const { useEffect, useMemo, useState } = React;
