@@ -1,29 +1,30 @@
+// PlayerUAPCirculationPath.jsx
 export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
   const colors = {
     accent: "#22C55E",
     border: "rgba(255,255,255,0.10)",
     panelOuter: "rgba(255,255,255,0.03)",
 
-    // inner panel background
-    innerBgTop: "rgba(4, 14, 34, 0.78)",
-    innerBgBottom: "rgba(0, 0, 0, 0.26)",
-    radialA: "rgba(37, 99, 235, 0.10)",
-    radialB: "rgba(15, 23, 42, 0.18)",
+    // Inner panel: more neutral (less blue), closer to your Layered Architecture feel
+    innerBgTop: "rgba(255,255,255,0.03)",
+    innerBgBottom: "rgba(0, 0, 0, 0.28)",
+    radialA: "rgba(255,255,255,0.06)",
+    radialB: "rgba(255,255,255,0.03)",
 
-    // nodes
-    nodeFill: "rgba(15,23,42,0.82)",
+    // Nodes
+    nodeFill: "rgba(15,23,42,0.78)",
     nodeStroke: "rgba(255,255,255,0.14)",
     nodeStrokeTerminal: "rgba(34,197,94,0.28)",
 
     text: "rgba(255,255,255,0.92)",
     subtext: "rgba(255,255,255,0.72)",
 
-    // connectors
+    // Connectors
     line: "rgba(255,255,255,0.22)",
     lineStrong: "rgba(255,255,255,0.28)",
     arrowHead: "rgba(226,232,240,0.90)",
 
-    // chips
+    // Chips (keep as-is, system chips)
     chipBg: "rgba(0,0,0,0.22)",
     chipBorder: "rgba(255,255,255,0.12)",
     chipText: "rgba(255,255,255,0.78)",
@@ -54,7 +55,7 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
     const nodeH = 82;
 
     const spineX = 460;
-    const topY = 120;
+    const topY = 118;
     const gap = 142;
 
     const spine = [0, 1, 2, 3].map((i) => {
@@ -72,37 +73,37 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
 
     const bottom = (n) => ({ x: n.cx, y: n.y + n.h });
     const top = (n) => ({ x: n.cx, y: n.y });
-    const right = (n) => ({ x: n.x + n.w, y: n.cy });
-    const left = (n) => ({ x: n.x, y: n.cy });
+    const rightMid = (n) => ({ x: n.x + n.w, y: n.cy });
+    const leftMid = (n) => ({ x: n.x, y: n.cy });
 
-    // Move the vertical flow line slightly right inside the node to feel like a system "bus"
-    const flowX = spineX + 70;
+    // One aligned flow lane, centered through the stack
+    const flowX = spineX + 60;
+
+    const labelLaneX = spineX + nodeW / 2 + 190;
 
     const vertical = spine.slice(0, 3).map((n, i) => ({
       d: `M ${flowX} ${bottom(n).y} L ${flowX} ${top(spine[i + 1]).y}`,
-      // Right lane label chips (prevents clipping)
       chip: {
-        x: spineX + nodeW / 2 + 190,
+        x: labelLaneX,
         y: (n.cy + spine[i + 1].cy) / 2,
       },
     }));
 
-    // Branch with right-angle routing from Token Sinks to Burn
-    const start = { x: spine[3].x + spine[3].w, y: spine[3].cy };
+    // Branch: elbow then down then into Burn
+    const start = rightMid(spine[3]);
     const elbowX = spineX + nodeW / 2 + 90;
-    const end = { x: burnNode.x, y: burnNode.cy };
+    const end = leftMid(burnNode);
 
     const branch = {
       d: `M ${start.x} ${start.y} L ${elbowX} ${start.y} L ${elbowX} ${end.y} L ${end.x} ${end.y}`,
-      // Chip sits at elbow lane, not on top of the Burn card
-      chip: { x: elbowX + 150, y: (start.y + end.y) / 2 + 18 },
-      arrowStart: start,
+      // Fix overlap: put the chip above the horizontal branch, not on top of the Burn card
+      chip: { x: elbowX + 190, y: start.y - 22 },
     };
 
-    return { W, H, spine, burnNode, vertical, branch, flowX, nodeW, nodeH, spineX };
+    return { W, H, spine, burnNode, vertical, branch, flowX, nodeW, nodeH };
   }, []);
 
-  const Chip = ({ x, y, text, w = 260, terminal = false }) => (
+  const Chip = ({ x, y, text, w = 270, terminal = false }) => (
     <g>
       <rect
         x={x - w / 2}
@@ -229,9 +230,9 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
               style={{
                 position: "absolute",
                 inset: 0,
-                opacity: 0.55,
-                background: `radial-gradient(80% 120% at 20% 0%, ${colors.radialA} 0%, rgba(0,0,0,0) 60%),
-                             radial-gradient(70% 120% at 80% 0%, ${colors.radialB} 0%, rgba(0,0,0,0) 55%)`,
+                opacity: 0.7,
+                background: `radial-gradient(80% 120% at 20% 0%, ${colors.radialA} 0%, rgba(0,0,0,0) 62%),
+                             radial-gradient(70% 120% at 80% 0%, ${colors.radialB} 0%, rgba(0,0,0,0) 58%)`,
                 pointerEvents: "none",
               }}
             />
@@ -244,12 +245,12 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
               style={{ position: "relative" }}
             >
               <defs>
-                <marker id="puapArrowHeadLane" markerWidth="10" markerHeight="10" refX="8.5" refY="5" orient="auto">
+                <marker id="puapArrowHeadLane2" markerWidth="10" markerHeight="10" refX="8.5" refY="5" orient="auto">
                   <path d="M 0 0 L 10 5 L 0 10 z" fill={colors.arrowHead} />
                 </marker>
               </defs>
 
-              {/* Vertical flow connectors */}
+              {/* Vertical flow connectors (aligned) */}
               {geo.vertical.map((v, i) => (
                 <g key={`v-${i}`}>
                   <path
@@ -258,7 +259,7 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
                     stroke={colors.line}
                     strokeWidth="2.4"
                     strokeLinecap="round"
-                    markerEnd="url(#puapArrowHeadLane)"
+                    markerEnd="url(#puapArrowHeadLane2)"
                   />
                   <Chip x={v.chip.x} y={v.chip.y} text={labels[i]} w={270} />
                 </g>
@@ -271,7 +272,7 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
                 stroke={colors.lineStrong}
                 strokeWidth="2.6"
                 strokeLinecap="round"
-                markerEnd="url(#puapArrowHeadLane)"
+                markerEnd="url(#puapArrowHeadLane2)"
               />
               <Chip x={geo.branch.chip.x} y={geo.branch.chip.y} text={labels[3]} w={280} terminal />
 
@@ -280,7 +281,7 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
                 <Node key={`n-${n.step}`} n={n} />
               ))}
 
-              {/* Subtle guide line for the flow lane (system bus) */}
+              {/* Subtle aligned flow lane guide */}
               <line
                 x1={geo.flowX}
                 y1={geo.spine[0].y + geo.nodeH - 2}
