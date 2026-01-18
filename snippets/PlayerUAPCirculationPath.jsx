@@ -1,34 +1,34 @@
+// PlayerUAPCirculationPath.jsx
 export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
   const colors = {
     accent: "#22C55E",
     border: "rgba(255,255,255,0.10)",
     panelOuter: "rgba(255,255,255,0.03)",
 
-    // background layers (closer to EcosystemArchitectureD)
+    // inner panel
     innerBgTop: "rgba(4, 14, 34, 0.78)",
     innerBgBottom: "rgba(0, 0, 0, 0.26)",
     radialA: "rgba(37, 99, 235, 0.10)",
     radialB: "rgba(15, 23, 42, 0.18)",
 
     // nodes
-    nodeFill: "rgba(15,23,42,0.78)",
-    nodeFillTerminal: "rgba(20, 30, 46, 0.82)",
     nodeStroke: "rgba(255,255,255,0.14)",
     nodeStrokeStrong: "rgba(255,255,255,0.22)",
-
     text: "rgba(255,255,255,0.92)",
     subtext: "rgba(255,255,255,0.72)",
 
     // connectors
     line: "rgba(255,255,255,0.22)",
     lineStrong: "rgba(255,255,255,0.32)",
+    arrowHead: "rgba(226,232,240,0.90)",
 
-    // chips (match doc chip language)
-    chipBg: "rgba(0,0,0,0.18)",
-    chipBorder: "rgba(255,255,255,0.10)",
-    chipText: "rgba(255,255,255,0.84)",
-    chipAccentBorder: "rgba(34,197,94,0.22)",
-    chipAccentText: "rgba(34,197,94,0.88)",
+    // chips (more grey, higher contrast)
+    chipBg: "rgba(255,255,255,0.06)",
+    chipBgStrong: "rgba(255,255,255,0.08)",
+    chipBorder: "rgba(255,255,255,0.14)",
+    chipText: "rgba(255,255,255,0.82)",
+    chipAccentBorder: "rgba(34,197,94,0.26)",
+    chipAccentText: "rgba(34,197,94,0.92)",
   };
 
   const nodes = [
@@ -53,10 +53,9 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
     const nodeW = 360;
     const nodeH = 82;
 
+    // move spine upward to use the empty top area
     const spineX = 430;
-    const topY = 140;
-
-    // More breathing room
+    const topY = 108;
     const gap = 132;
 
     const spine = [0, 1, 2, 3].map((i) => {
@@ -65,7 +64,6 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
       return { i, cx, cy, x: cx - nodeW / 2, y: cy - nodeH / 2, w: nodeW, h: nodeH };
     });
 
-    // Terminal node: right and slightly lower, but still within frame
     const burn = {
       i: 4,
       cx: spineX + 420,
@@ -79,36 +77,35 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
     const rightMid = (n) => ({ x: n.x + n.w, y: n.cy });
     const leftMid = (n) => ({ x: n.x, y: n.cy });
 
-    // Label lanes are centered between nodes
     const v = [
       {
         d: `M ${bottomOf(spine[0]).x} ${bottomOf(spine[0]).y} L ${topOf(spine[1]).x} ${topOf(spine[1]).y}`,
-        chip: { x: spineX, y: (spine[0].cy + spine[1].cy) / 2 },
+        // push chip left so it never overlaps the arrow head
+        chip: { x: spineX - 190, y: (spine[0].cy + spine[1].cy) / 2 },
       },
       {
         d: `M ${bottomOf(spine[1]).x} ${bottomOf(spine[1]).y} L ${topOf(spine[2]).x} ${topOf(spine[2]).y}`,
-        chip: { x: spineX, y: (spine[1].cy + spine[2].cy) / 2 },
+        chip: { x: spineX - 190, y: (spine[1].cy + spine[2].cy) / 2 },
       },
       {
         d: `M ${bottomOf(spine[2]).x} ${bottomOf(spine[2]).y} L ${topOf(spine[3]).x} ${topOf(spine[3]).y}`,
-        chip: { x: spineX, y: (spine[2].cy + spine[3].cy) / 2 },
+        chip: { x: spineX - 190, y: (spine[2].cy + spine[3].cy) / 2 },
       },
     ];
 
-    // Branch with right-angle routing and its own label lane
     const elbowX = spineX + 205;
     const start = rightMid(spine[3]);
     const end = leftMid(burnNode);
 
     const branch = {
       d: `M ${start.x} ${start.y} L ${elbowX} ${start.y} L ${elbowX} ${end.y} L ${end.x} ${end.y}`,
-      chip: { x: elbowX + 180, y: end.y + 24 },
+      chip: { x: elbowX + 185, y: end.y + 24 },
     };
 
     return { W, H, spine, burnNode, v, branch, nodeW, nodeH };
   }, []);
 
-  const Pill = ({ x, y, text, w = 250, accent = false }) => (
+  const Chip = ({ x, y, text, w = 240, accent = false }) => (
     <g>
       <rect
         x={x - w / 2}
@@ -116,7 +113,7 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
         width={w}
         height={26}
         rx={999}
-        fill={colors.chipBg}
+        fill={accent ? colors.chipBgStrong : colors.chipBg}
         stroke={accent ? colors.chipAccentBorder : colors.chipBorder}
       />
       <text
@@ -141,8 +138,8 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
         width={30}
         height={30}
         rx={999}
-        fill={terminal ? "rgba(34,197,94,0.10)" : "rgba(0,0,0,0.22)"}
-        stroke={terminal ? "rgba(34,197,94,0.22)" : colors.chipBorder}
+        fill={terminal ? "rgba(34,197,94,0.12)" : "rgba(0,0,0,0.24)"}
+        stroke={terminal ? "rgba(34,197,94,0.26)" : colors.chipBorder}
       />
       <text
         x={x + 15}
@@ -176,23 +173,11 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
 
         <StepBadge x={n.x + 14} y={n.y + 18} step={n.step} terminal={terminal} />
 
-        <text
-          x={n.x + 58}
-          y={n.y + 36}
-          fontSize="14"
-          fill={colors.text}
-          style={{ fontWeight: 900 }}
-        >
+        <text x={n.x + 58} y={n.y + 36} fontSize="14" fill={colors.text} style={{ fontWeight: 900 }}>
           {n.title}
         </text>
 
-        <text
-          x={n.x + 58}
-          y={n.y + 58}
-          fontSize="12"
-          fill={colors.subtext}
-          style={{ fontWeight: 650 }}
-        >
+        <text x={n.x + 58} y={n.y + 58} fontSize="12" fill={colors.subtext} style={{ fontWeight: 650 }}>
           {n.sub}
         </text>
 
@@ -204,7 +189,7 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
               width={96}
               height={26}
               rx={999}
-              fill="rgba(0,0,0,0.20)"
+              fill={colors.chipBgStrong}
               stroke={colors.chipAccentBorder}
             />
             <text
@@ -273,8 +258,8 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
                   <stop offset="100%" stopColor="rgba(0, 0, 0, 0.20)" />
                 </linearGradient>
 
-                <marker id="puapArrowHead3" markerWidth="10" markerHeight="10" refX="8.5" refY="5" orient="auto">
-                  <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(226,232,240,0.9)" />
+                <marker id="puapArrowHead4" markerWidth="10" markerHeight="10" refX="8.5" refY="5" orient="auto">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill={colors.arrowHead} />
                 </marker>
               </defs>
 
@@ -287,9 +272,9 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
                     stroke={colors.line}
                     strokeWidth="2.4"
                     strokeLinecap="round"
-                    markerEnd="url(#puapArrowHead3)"
+                    markerEnd="url(#puapArrowHead4)"
                   />
-                  <Pill x={p.chip.x} y={p.chip.y} text={edgeChips[idx]} w={260} />
+                  <Chip x={p.chip.x} y={p.chip.y} text={edgeChips[idx]} w={252} />
                 </g>
               ))}
 
@@ -299,9 +284,9 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
                 stroke={colors.lineStrong}
                 strokeWidth="2.6"
                 strokeLinecap="round"
-                markerEnd="url(#puapArrowHead3)"
+                markerEnd="url(#puapArrowHead4)"
               />
-              <Pill x={geo.branch.chip.x} y={geo.branch.chip.y} text={edgeChips[3]} w={280} accent />
+              <Chip x={geo.branch.chip.x} y={geo.branch.chip.y} text={edgeChips[3]} w={276} accent />
 
               {/* nodes */}
               {svgNodes.map((n) => (
