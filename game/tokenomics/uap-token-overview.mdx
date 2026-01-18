@@ -3,7 +3,11 @@ title: "UAP Token Overview"
 icon: "badge-dollar-sign"
 ---
 
-UAP (Unidentified Anomalous Phenomena) is Super Galactic’s in-game utility token. It is used across gameplay and Hub systems to support progression, upgrades, and other core economy actions.
+UAP (Unidentified Anomalous Phenomena) is the native utility token of Super Galactic.
+
+It functions as the primary economic medium that connects gameplay activity, progression systems, and on-chain settlement. UAP is not a governance token and does not represent ownership, voting rights, or revenue participation.
+
+UAP is deployed on the BNB Chain as the primary network for trading and liquidity.
 
 <img
   src="https://app.ufogaming.io/_next/static/media/uap-gif-new.32e02fef.gif"
@@ -18,26 +22,76 @@ UAP (Unidentified Anomalous Phenomena) is Super Galactic’s in-game utility tok
 UAP is used in two environments:
 
 1. **Game Client:** upgrading and progressing NFTs, including Genesis upgrades and weapon upgrades
-2. **Super Galactic Hub**: claiming rewards, managing assets, breeding actions, and marketplace activity, including listing NFTs, placing bids, and purchasing listed items
+2. **Super Galactic Hub:** claiming rewards, managing assets, breeding actions, and marketplace activity settled in UAP, including listing NFTs, placing bids, and purchasing listed items
 
-Gameplay usage drives progression. Hub usage handles claiming, asset management, and marketplace execution.
+Gameplay usage drives progression. Hub usage supports claiming, asset management, and marketplace execution.
 
-For how UAP loops through rewards, sinks, and supply control, see **Game Economy**.
+For closed loop context, see Economy Overview → [Closed Loop Flow](/game/economy/economy-overview#closed-loop-flow-player-circulation)
+
+### Primary Function
+
+UAP exists to support gameplay-driven economic activity.
+
+Within the game, UAP is used to:
+
+- Claim gameplay rewards
+- Access progression systems
+- Pay upgrade and advancement costs
+- Interact with defined gameplay sinks
+
+UAP only enters player circulation through active gameplay participation. Gameplay does not mint new tokens. All UAP distributed through rewards already exists within the fixed total supply.
+
+### Circulation Scope
+
+UAP operates across two distinct domains:
+
+**Player circulation**\
+UAP is held in player wallets and used directly within gameplay systems.
+
+**On-chain market activity**\
+UAP traded on decentralized exchanges or transferred between wallets.
+
+Gameplay systems interact only with player-circulating UAP. Market trading does not generate rewards, progression, or gameplay advantages.
+
+Game Treasury-held supply is outside player circulation and is created through the spend routing defined in [Burn and Game Treasury Split](/game/economy/burn-mechanisms#burn-and-game-treasury-split). For circulation definitions, see [Circulating Supply Dynamics](/game/economy/economy-overview#circulating-supply-dynamics).
+
+### What UAP Is Not Used For
+
+To avoid ambiguity, UAP is explicitly not used for:
+
+- Passive yield or staking rewards
+- Inflationary emissions tied to time or participation
+
+All economic utility is tied to gameplay interaction and player-driven decisions.
+
+### Relationship to NFTs and Assets
+
+UAP acts as the settlement token for certain in-game asset interactions but does not represent ownership of NFTs or game assets.
+
+NFT ownership, asset rarity, and marketplace mechanics are defined separately in **NFTs & Assets**. UAP facilitates transactions where applicable but does not alter asset scarcity or ownership rules.
+
+### Supply Discipline
+
+UAP has a fixed, capped total supply.
+
+[Supply & Allocation](/game/tokenomics/supply-and-allocation) pages define how supply is allocated, distributed, and introduced into circulation. Gameplay activity determines circulation levels, not total supply expansion.
+
+Burn execution and treasury routing are system-level mechanisms and are defined in [Burn Mechanisms.](/game/economy/burn-mechanisms)
 
 ### Earning and Claiming UAP
 
 UAP is earned through eligible gameplay and claimed through the Super Galactic Hub.
 
-For eligibility rules, mission limits, and cooldown mechanics, see **Game Economy → Rewards System**.
+For eligibility rules, mission limits, and cooldown mechanics, see \*\*Rewards System → [Reward Extraction Limits](/game/economy/rewards-system#reward-extraction-limits).
 
 ### Spending and Supply Control
 
 UAP spent across gameplay systems follows the automated burn and Game Treasury split.
 
-For the burn split and Game Treasury behaviour, see **Game Economy → Burn Mechanisms**.
+For burn execution and routing, see \*\*Burn Mechanisms → [Burn and Game Treasury Split](/game/economy/burn-mechanisms#burn-and-game-treasury-split).
 
 ### Relationship to Tokenomics
 
 UAP’s broader supply model, launch structure, and allocation are documented in Tokenomics.
 
-For full supply and allocation details, see **Tokenomics → Supply & Allocation**.
+For full supply and allocation details, see **Tokenomics → **[**Supply & Allocation**.](/game/tokenomics/supply-and-allocation)
