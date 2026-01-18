@@ -20,7 +20,6 @@ export const TreasurySupplyControls = () => {
 
   const colors = {
     border: "rgba(255,255,255,0.10)",
-    panel: "rgba(255,255,255,0.03)",
     panelInner: "rgba(2, 6, 23, 0.55)",
     nodeFill: "rgba(15,23,42,0.84)",
     nodeFillAlt: "rgba(20, 30, 46, 0.78)",
@@ -103,7 +102,7 @@ export const TreasurySupplyControls = () => {
       },
     };
 
-    return { W, H, left, right, dividerX, nodeW, nodeH, paths };
+    return { W, H, left, right, dividerX, paths };
   }, []);
 
   const Node = (n) => {
@@ -137,8 +136,16 @@ export const TreasurySupplyControls = () => {
 
         <div className="mt-4 overflow-hidden rounded-2xl border border-white/10" style={{ background: colors.panelInner }}>
           <svg viewBox={`0 0 ${geo.W} ${geo.H}`} className="w-full" role="img" aria-label="Treasury supply controls diagram">
+            {/* Debug marker so you can confirm it is rendering */}
+            <text x="18" y="24" fontSize="12" fill="rgba(226,232,240,0.55)">
+              Loaded
+            </text>
+
+            {/* Canvas backing */}
+            <rect x="0" y="0" width={geo.W} height={geo.H} fill="rgba(0,0,0,0.06)" />
+
             <defs>
-              <marker id="arrowHead" markerWidth="10" markerHeight="10" refX="8.5" refY="5" orient="auto">
+              <marker id="tscArrowHead" markerWidth="10" markerHeight="10" refX="8.5" refY="5" orient="auto">
                 <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(226,232,240,0.9)" />
               </marker>
             </defs>
@@ -153,16 +160,16 @@ export const TreasurySupplyControls = () => {
             </g>
 
             {/* Paths + chips */}
-            <path d={geo.paths.autoBurn.d} fill="none" stroke={colors.line} strokeWidth="2.4" strokeLinecap="round" markerEnd="url(#arrowHead)" />
+            <path d={geo.paths.autoBurn.d} fill="none" stroke={colors.line} strokeWidth="2.4" strokeLinecap="round" markerEnd="url(#tscArrowHead)" />
             {Chip(geo.paths.autoBurn.chip.x, geo.paths.autoBurn.chip.y, geo.paths.autoBurn.text)}
 
-            <path d={geo.paths.autoTreasury.d} fill="none" stroke={colors.line} strokeWidth="2.4" strokeLinecap="round" markerEnd="url(#arrowHead)" />
+            <path d={geo.paths.autoTreasury.d} fill="none" stroke={colors.line} strokeWidth="2.4" strokeLinecap="round" markerEnd="url(#tscArrowHead)" />
             {Chip(geo.paths.autoTreasury.chip.x, geo.paths.autoTreasury.chip.y, geo.paths.autoTreasury.text)}
 
-            <path d={geo.paths.manualPool.d} fill="none" stroke={colors.lineSoft} strokeWidth="2.2" strokeLinecap="round" markerEnd="url(#arrowHead)" />
+            <path d={geo.paths.manualPool.d} fill="none" stroke={colors.lineSoft} strokeWidth="2.2" strokeLinecap="round" markerEnd="url(#tscArrowHead)" />
             {Chip(geo.paths.manualPool.chip.x, geo.paths.manualPool.chip.y, geo.paths.manualPool.text)}
 
-            <path d={geo.paths.manualBurn.d} fill="none" stroke={colors.lineSoft} strokeWidth="2.2" strokeLinecap="round" markerEnd="url(#arrowHead)" />
+            <path d={geo.paths.manualBurn.d} fill="none" stroke={colors.lineSoft} strokeWidth="2.2" strokeLinecap="round" markerEnd="url(#tscArrowHead)" />
             {Chip(geo.paths.manualBurn.chip.x, geo.paths.manualBurn.chip.y, geo.paths.manualBurn.text)}
 
             {/* Nodes */}
