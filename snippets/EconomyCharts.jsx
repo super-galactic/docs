@@ -1,6 +1,3 @@
-"use client";
-import React from "react";
-
 export const GameplayFlywheelChart = () => {
   const W = 920;
   const H = 820; // more top headroom so title can live in the "red space"
