@@ -3,17 +3,26 @@ title: "Supply & Allocation"
 icon: "chart-pie"
 ---
 
-UAP has a fixed total supply of 420,000,000,000 tokens. There is no inflation, no ongoing minting, and no mechanism to increase total supply beyond this cap. All UAP used across the Super Galactic ecosystem already exists within the fixed supply.
+UAP has a fixed total supply of **420,000,000,000 tokens**.\
+There is no inflation, no ongoing minting, and no mechanism to increase total supply beyond this cap.
 
-It is used across Ethereum, BNB Chain, and Avalanche, with secondary market trading liquidity provided on Ethereum.
+All UAP used across the Super Galactic ecosystem already exists within the fixed supply.
 
 ### Fixed Supply Model
 
-No additional tokens can be minted, gameplay does not create new supply, and all distribution is a reallocation of existing tokens within the capped total supply. This preserves long-term predictability and avoids inflationary pressure as the ecosystem grows.
+The UAP supply model is immutable.
+
+- No new tokens can be minted
+- Gameplay does not create supply
+- Distribution is a reallocation of existing tokens within the fixed cap
+
+This preserves long-term predictability and prevents inflationary pressure as gameplay participation scales.
 
 ### Allocation Breakdown
 
-_The largest allocation is reserved for community rewards through the Play to Earn economy._
+The largest allocation is reserved for community rewards through the Play to Earn economy.
+
+**Allocation categories reflect reservation, not circulation.**
 
 import { UAPSupplyAllocationStackedBar } from "/snippets/UAPSupplyAllocationStackedBar.jsx";
 
@@ -27,46 +36,23 @@ import { UAPSupplyAllocationStackedBar } from "/snippets/UAPSupplyAllocationStac
 | Team and Advisors                        | Long-term contributor and advisor alignment, including vesting-based incentives for sustained execution and strategic support.                 |
 | Development Fund                         | Ongoing development, infrastructure, and operational continuity.                                                                               |
 
-<Note>
-  Allocation presentation and vesting details may be updated prior to the Token Generation Event (TGE). Any updates will be communicated through official channels.
-</Note>
+## Circulating Supply Clarification
 
-### Multi-Chain Deployment
+Allocation percentages define token reservation, not circulating supply.
 
-UAP is deployed as a multi-chain token to support scalability, low-cost gameplay, and accessibility.
-
-- Ethereum serves as the origin chain for UAP and the primary network for secondary market trading liquidity
-- BNB Chain and Avalanche are used for gameplay-related activity
-
-From the total supply:
-
-- 25% is bridged to BNB Chain
-- 25% is bridged to Avalanche
-- The remaining supply stays on Ethereum unless bridged
-
-Bridging reallocates existing supply across chains and does not increase the total token supply.
-
-### How Players Use UAP Across Chains
-
-Players can acquire UAP on Ethereum, then bridge to the network they use for gameplay.
-
-- Purchase UAP on Ethereum using decentralized exchange liquidity
-- Bridge UAP to BNB Chain or Avalanche, depending on where the NFT and gameplay activity is taking place
-- Use UAP for progression systems such as upgrades and breeding on the selected network
-- Bridge back to Ethereum to trade UAP where secondary market liquidity is provided, including UAP earned on BNB Chain or Avalanche
-
-### Circulating Supply Dynamics
-
-Circulating supply is not fixed. It dynamically adjusts based on:
-
-- Gameplay rewards entering player wallets
-- Player spending through progression systems
-- Automated burns reducing supply over time
-
-As activity increases, supply reduction scales with usage, reinforcing scarcity instead of relying on inflationary supply expansion.
+Circulating supply is dynamic and changes based on gameplay rewards, player spending, and automated burns. Circulating supply behavior is defined in **Economy Overview → Circulating Supply Dynamics**.
 
 ### Allocation Transparency
 
-All supply movements, bridging activity, and on-chain balances are transparent and verifiable. There are no hidden emissions, discretionary minting events, or off-protocol supply changes.
+All supply movements, on-chain balances are transparent and verifiable. There are no hidden emissions, discretionary minting events, or off-protocol supply changes.
 
-This section describes total supply and allocation only. Reward mechanics, burn logic, and transaction taxes are documented separately under **Game Economy** and **Tokenomics**.
+Allocation presentation and vesting details may be updated prior to the Token Generation Event. Any updates will be communicated through official channels.
+
+### References
+
+This page defines **total supply and allocation only**.
+
+- Reward mechanics are defined in **Economy → Rewards System**
+- Burn execution and routing are defined in **Economy → Burn Mechanisms**
+- Circulating supply behavior is defined in **Economy Overview → Circulating Supply Dynamics**
+- Trading behavior is defined in **Tokenomics → Trading Fees and Taxes**

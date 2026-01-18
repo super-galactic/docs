@@ -3,36 +3,65 @@ title: "Trading Fees and Taxes"
 icon: "percent"
 ---
 
-UAP trading and Super Galactic Hub marketplace sales apply different charges depending on where a transaction is executed. These charges are shown to the user at the point of execution.
+This page defines the fees and taxes that apply to UAP trading and marketplace activity. It distinguishes clearly between market transactions and in-game spending.
+
+Trading fees and taxes apply only to **market activity**.\
+In-game UAP spending is governed separately under the economy system.
 
 ### Summary
 
-| Location                                         | Charge                   | When it applies                       | Who pays |
-| :----------------------------------------------- | :----------------------- | :------------------------------------ | :------- |
-| Decentralized exchange (DEX, Ethereum liquidity) | **10% sell tax**         | When a user sells UAP                 | Seller   |
-| Super Galactic Hub Marketplace                   | **2.5% marketplace fee** | When a listed item sells successfully | Seller   |
+| Location                                | Charge               | When it applies                       | Who pays |
+| :-------------------------------------- | :------------------- | :------------------------------------ | :------- |
+| Decentralized exchange (DEX, BNB Chain) | 10% sell tax         | When UAP is sold on a DEX             | Seller   |
+| Super Galactic Hub Marketplace          | 2.5% marketplace fee | When a listed item sells successfully | Seller   |
 
 ### UAP Sell Tax
 
-UAP has **no tax on buys**. A 10% sell tax applies when UAP is sold on secondary markets via decentralized exchanges. The seller receives the net amount after tax.
+UAP has **no buy tax**.
 
-| Transaction Type | Tax Rate |
-| :--------------- | :------- |
-| Buy              | **0%**   |
-| Sell             | **10%**  |
+A **10% sell tax** applies when UAP is sold through decentralized exchange trades executed on BNB Chain.
 
-<Note>
-  Trading is active on **Ethereum**, where liquidity is provided on decentralized exchanges. Users holding UAP on other supported networks must bridge back to Ethereum to trade.
-</Note>
+- The tax applies only to sell-side DEX transactions
+- The seller receives the net amount after tax
+- Buy transactions are not taxed
+
+This tax does not apply to in-game spending or progression actions.
 
 ### Super Galactic Hub Marketplace Fee
 
-The Super Galactic Hub marketplace charges a 2.5% fee on successful sales executed through the marketplace. The fee is displayed before the user confirms the transaction. The seller receives the net amount after the fee is applied.
+The Super Galactic Hub marketplace charges a **2.5% fee** on successful asset sales executed through the marketplace.
 
-### Where This Applies
+- The fee is displayed before transaction confirmation
+- The seller receives the net proceeds after the fee is applied
+- Buyers do not pay marketplace fees
 
-The UAP sell tax and marketplace fee apply to different actions and are enforced separately. In-game UAP spending is not affected by trading taxes or marketplace fees. In-game spending follows the burn and Game Treasury split documented under [**Burn Mechanisms.**](https://supergalactic.mintlify.app/game/economy/burn-mechanisms)
+Marketplace fees apply only to asset sales within the Hub and are separate from UAP trading taxes.
+
+### Scope and Separation
+
+Trading taxes and marketplace fees apply only to **market transactions**.
+
+They do not apply to:
+
+- In-game upgrades
+- Progression spending
+- Breeding execution
+- Any gameplay-related UAP consumption
+
+All in-game UAP spending follows the automated routing defined in → Burn Mechanisms → [Burn and Game Treasury Split](/game/economy/burn-mechanisms#burn-and-game-treasury-split).
 
 ### Purpose
 
-Trading fees and taxes provide an additional system lever to support long-term ecosystem operations, including operational flexibility, liquidity support where required, and treasury operations such as additional burns when needed.
+Trading fees and taxes exist to:
+
+- Maintain clear separation between gameplay economics and market activity
+- Support operational sustainability without altering gameplay rewards
+- Avoid reliance on inflationary supply expansion
+
+They do not modify reward rates, progression mechanics, or circulating supply rules.
+
+### References
+
+- In-game spending behavior: \*\*Burn Mechanisms → [Burn and Game Treasury Split](/game/economy/burn-mechanisms#burn-and-game-treasury-split)
+- Circulating supply behavior: \*\*Economy Overview → [Circulating Supply Dynamics](/game/economy/economy-overview#circulating-supply-dynamics)
+- Launch context and liquidity venue: **Tokenomics → **[**Token Launch Details**](/game/tokenomics/token-launch-details)
