@@ -3,7 +3,7 @@ title: "Economy Overview"
 icon: "coins"
 ---
 
-Super Galactic operates on a closed loop, gameplay driven economy powered by the UAP token.
+Super Galactic operates on a closed loop within player circulation, powered by the UAP token.
 
 UAP only enters player circulation as a result of active gameplay. There are no emissions tied to time, speculation, or passive participation. Economic activity is bounded by fixed supply, explicit sinks, and automated burn enforcement.
 
@@ -33,13 +33,21 @@ All in game UAP spending triggers an automated system level split.
 
 A fixed portion of spent UAP is permanently burned. The remaining portion is routed to the Game Treasury. Burn execution is enforced at the system level and does not require player action.
 
+UAP routed to the Game Treasury is removed from player circulation and held under supply management control. Treasury actions may reintroduce UAP into the Play to Earn reward pool or burn further, based on economy operations decisions.
+
+Economy operations decisions are made by the game economy consultant using live game data and reward health indicators. These actions adjust distribution timing only and do not create new supply.
+
 Burn logic and treasury behavior are defined in [Burn Mechanisms](/game/economy/burn-mechanisms).
 
 ### Circulating Supply Dynamics
 
 Circulating supply is dynamic.
 
-It increases when players earn and claim UAP through gameplay. It decreases when players spend UAP on progression systems and burns are executed. As gameplay activity increases, both reward distribution and burn volume increase proportionally.
+- **Player circulating supply**: UAP held in player wallets and available for gameplay spending.
+- **Treasury controlled supply**: UAP held by the Game Treasury and not available for player spending.
+- **Burned supply**: UAP permanently removed from supply.
+
+Player circulating supply increases when players earn and claim UAP through gameplay. It decreases when players spend UAP on progression systems and burns are executed.
 
 Total supply remains fixed at all times.
 
@@ -53,8 +61,6 @@ The economy follows a repeatable causal loop:
 - Spending triggers automated burns
 - Burned supply reduces circulation
 - Reduced circulating supply increases UAP scarcity
-
-Treasury routing is a supply control mechanism and operates outside player circulation.
 
 This loop ties economic outcomes directly to how the game is played rather than to external incentives.
 
