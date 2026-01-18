@@ -1,5 +1,4 @@
 export const PlayerUAPCirculationPath = () => {
-  const wrapRef = React.useRef(null);
   const timerRef = React.useRef(null);
 
   const [activeStep, setActiveStep] = React.useState(-1); // -1 idle, 0..4
@@ -12,9 +11,7 @@ export const PlayerUAPCirculationPath = () => {
     text: "rgba(255,255,255,0.92)",
     subtext: "rgba(255,255,255,0.72)",
     chipText: "rgba(255,255,255,0.86)",
-    chipBg: "rgba(0,0,0,0.18)",
     line: "rgba(255,255,255,0.18)",
-    lineStrong: "rgba(255,255,255,0.24)",
 
     layerTop: "rgba(4, 14, 34, 0.78)",
     layerBottom: "rgba(0, 0, 0, 0.28)",
@@ -39,16 +36,17 @@ export const PlayerUAPCirculationPath = () => {
     labels: ["Reward issuance (capped)", "Claimable rewards", "Voluntary spend", "Automated burn execution"],
   };
 
-  const clearTimer = React.useCallback(() => {
-    if (timerRef.current) {
-      clearInterval(timerRef.current);
+  React.useEffect(() => {
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
       timerRef.current = null;
-    }
+    };
   }, []);
 
-  React.useEffect(() => {
-    return () => clearTimer();
-  }, [clearTimer]);
+  const clearTimer = () => {
+    if (timerRef.current) clearInterval(timerRef.current);
+    timerRef.current = null;
+  };
 
   const startSequence = () => {
     clearTimer();
@@ -321,7 +319,7 @@ export const PlayerUAPCirculationPath = () => {
   };
 
   return (
-    <div className="not-prose" ref={wrapRef}>
+    <div className="not-prose">
       <div
         style={{
           borderRadius: 18,
@@ -426,7 +424,6 @@ export const PlayerUAPCirculationPath = () => {
 
               <NodeCard idx={3} {...data.nodes[3]} />
 
-              {/* Increased spacing between Token Sinks and Burn */}
               <div style={{ marginTop: 30 }}>
                 <BurnBlock />
               </div>
