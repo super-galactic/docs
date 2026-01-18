@@ -3,14 +3,32 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
     accent: "#22C55E",
     border: "rgba(255,255,255,0.10)",
     panelOuter: "rgba(255,255,255,0.03)",
-    panelInnerTop: "rgba(4, 14, 34, 0.72)",
-    panelInnerBottom: "rgba(0, 0, 0, 0.22)",
+
+    // background layers (closer to EcosystemArchitectureD)
+    innerBgTop: "rgba(4, 14, 34, 0.78)",
+    innerBgBottom: "rgba(0, 0, 0, 0.26)",
+    radialA: "rgba(37, 99, 235, 0.10)",
+    radialB: "rgba(15, 23, 42, 0.18)",
+
+    // nodes
+    nodeFill: "rgba(15,23,42,0.78)",
+    nodeFillTerminal: "rgba(20, 30, 46, 0.82)",
+    nodeStroke: "rgba(255,255,255,0.14)",
+    nodeStrokeStrong: "rgba(255,255,255,0.22)",
+
     text: "rgba(255,255,255,0.92)",
     subtext: "rgba(255,255,255,0.72)",
+
+    // connectors
     line: "rgba(255,255,255,0.22)",
-    lineSoft: "rgba(255,255,255,0.14)",
+    lineStrong: "rgba(255,255,255,0.32)",
+
+    // chips (match doc chip language)
     chipBg: "rgba(0,0,0,0.18)",
+    chipBorder: "rgba(255,255,255,0.10)",
     chipText: "rgba(255,255,255,0.84)",
+    chipAccentBorder: "rgba(34,197,94,0.22)",
+    chipAccentText: "rgba(34,197,94,0.88)",
   };
 
   const nodes = [
@@ -29,15 +47,17 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
   ];
 
   const geo = React.useMemo(() => {
-    const W = 980;
-    const H = 620;
+    const W = 1040;
+    const H = 680;
 
-    const nodeW = 320;
-    const nodeH = 74;
+    const nodeW = 360;
+    const nodeH = 82;
 
-    const spineX = 420;
-    const topY = 120;
-    const gap = 108;
+    const spineX = 430;
+    const topY = 140;
+
+    // More breathing room
+    const gap = 132;
 
     const spine = [0, 1, 2, 3].map((i) => {
       const cx = spineX;
@@ -45,11 +65,11 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
       return { i, cx, cy, x: cx - nodeW / 2, y: cy - nodeH / 2, w: nodeW, h: nodeH };
     });
 
-    // Burn terminal to the right, aligned with Token Sinks level + downward offset
+    // Terminal node: right and slightly lower, but still within frame
     const burn = {
       i: 4,
-      cx: spineX + 360,
-      cy: spine[3].cy + 92,
+      cx: spineX + 420,
+      cy: spine[3].cy + 108,
     };
 
     const burnNode = { ...burn, x: burn.cx - nodeW / 2, y: burn.cy - nodeH / 2, w: nodeW, h: nodeH };
@@ -59,6 +79,7 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
     const rightMid = (n) => ({ x: n.x + n.w, y: n.cy });
     const leftMid = (n) => ({ x: n.x, y: n.cy });
 
+    // Label lanes are centered between nodes
     const v = [
       {
         d: `M ${bottomOf(spine[0]).x} ${bottomOf(spine[0]).y} L ${topOf(spine[1]).x} ${topOf(spine[1]).y}`,
@@ -74,19 +95,20 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
       },
     ];
 
-    const elbowX = spineX + 170;
+    // Branch with right-angle routing and its own label lane
+    const elbowX = spineX + 205;
     const start = rightMid(spine[3]);
     const end = leftMid(burnNode);
 
     const branch = {
       d: `M ${start.x} ${start.y} L ${elbowX} ${start.y} L ${elbowX} ${end.y} L ${end.x} ${end.y}`,
-      chip: { x: elbowX + 150, y: end.y + 18 },
+      chip: { x: elbowX + 180, y: end.y + 24 },
     };
 
-    return { W, H, spine, burnNode, v, branch, nodeW, nodeH, spineX };
+    return { W, H, spine, burnNode, v, branch, nodeW, nodeH };
   }, []);
 
-  const Pill = ({ x, y, text, w = 230, accent = false }) => (
+  const Pill = ({ x, y, text, w = 250, accent = false }) => (
     <g>
       <rect
         x={x - w / 2}
@@ -95,17 +117,49 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
         height={26}
         rx={999}
         fill={colors.chipBg}
-        stroke={accent ? "rgba(34,197,94,0.22)" : colors.border}
+        stroke={accent ? colors.chipAccentBorder : colors.chipBorder}
       />
-      <text x={x} y={y + 1} textAnchor="middle" dominantBaseline="middle" fontSize="12" fill={colors.chipText}>
+      <text
+        x={x}
+        y={y + 1}
+        textAnchor="middle"
+        dominantBaseline="middle"
+        fontSize="12"
+        fill={accent ? colors.chipAccentText : colors.chipText}
+        style={{ fontWeight: 800 }}
+      >
         {text}
       </text>
     </g>
   );
 
+  const StepBadge = ({ x, y, step, terminal }) => (
+    <g>
+      <rect
+        x={x}
+        y={y}
+        width={30}
+        height={30}
+        rx={999}
+        fill={terminal ? "rgba(34,197,94,0.10)" : "rgba(0,0,0,0.22)"}
+        stroke={terminal ? "rgba(34,197,94,0.22)" : colors.chipBorder}
+      />
+      <text
+        x={x + 15}
+        y={y + 16}
+        textAnchor="middle"
+        dominantBaseline="middle"
+        fontSize="12"
+        fill={terminal ? colors.chipAccentText : colors.text}
+        style={{ fontWeight: 900 }}
+      >
+        {step}
+      </text>
+    </g>
+  );
+
   const NodeCard = ({ n }) => {
-    const glow = n.terminal ? "0 0 0 1px rgba(255,255,255,0.10), 0 0 22px rgba(0,0,0,0.35)" : "0 10px 28px rgba(0,0,0,0.35)";
-    const rightChip = n.terminal ? "Terminal" : `Step ${n.step}`;
+    const terminal = !!n.terminal;
 
     return (
       <g>
@@ -115,57 +169,64 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
           width={n.w}
           height={n.h}
           rx="18"
-          fill={`url(#panelGrad)`}
-          stroke={colors.border}
-          strokeWidth="1.4"
-        />
-        <rect
-          x={n.x}
-          y={n.y}
-          width={n.w}
-          height={n.h}
-          rx="18"
-          fill="transparent"
-          style={{ filter: "url(#softShadow)" }}
+          fill={`url(#panelGradPUAP)`}
+          stroke={terminal ? colors.nodeStrokeStrong : colors.nodeStroke}
+          strokeWidth={terminal ? 1.8 : 1.4}
         />
 
-        {/* step rail */}
-        <rect x={n.x + 14} y={n.y + 16} width={28} height={28} rx={999} fill="rgba(0,0,0,0.22)" stroke={colors.border} />
-        <text x={n.x + 28} y={n.y + 30} textAnchor="middle" dominantBaseline="middle" fontSize="12" fill={colors.text}>
-          {n.step}
-        </text>
+        <StepBadge x={n.x + 14} y={n.y + 18} step={n.step} terminal={terminal} />
 
-        {/* title + sub */}
-        <text x={n.x + 56} y={n.y + 30} fontSize="14" fill={colors.text} style={{ fontWeight: 800 }}>
+        <text
+          x={n.x + 58}
+          y={n.y + 36}
+          fontSize="14"
+          fill={colors.text}
+          style={{ fontWeight: 900 }}
+        >
           {n.title}
         </text>
-        <text x={n.x + 56} y={n.y + 50} fontSize="12" fill={colors.subtext}>
+
+        <text
+          x={n.x + 58}
+          y={n.y + 58}
+          fontSize="12"
+          fill={colors.subtext}
+          style={{ fontWeight: 650 }}
+        >
           {n.sub}
         </text>
 
-        {/* right chip */}
-        <rect
-          x={n.x + n.w - 108}
-          y={n.y + 18}
-          width={90}
-          height={26}
-          rx={999}
-          fill="rgba(0,0,0,0.20)"
-          stroke={n.terminal ? "rgba(34,197,94,0.22)" : colors.border}
-        />
-        <text x={n.x + n.w - 63} y={n.y + 31} textAnchor="middle" dominantBaseline="middle" fontSize="11" fill={n.terminal ? "rgba(34,197,94,0.88)" : "rgba(255,255,255,0.76)"}>
-          {rightChip}
-        </text>
+        {terminal ? (
+          <g>
+            <rect
+              x={n.x + n.w - 118}
+              y={n.y + 22}
+              width={96}
+              height={26}
+              rx={999}
+              fill="rgba(0,0,0,0.20)"
+              stroke={colors.chipAccentBorder}
+            />
+            <text
+              x={n.x + n.w - 70}
+              y={n.y + 35}
+              textAnchor="middle"
+              dominantBaseline="middle"
+              fontSize="11"
+              fill={colors.chipAccentText}
+              style={{ fontWeight: 900 }}
+            >
+              Terminal
+            </text>
+          </g>
+        ) : null}
       </g>
     );
   };
 
-  // Build node objects aligned to geo for SVG rendering
   const svgNodes = React.useMemo(() => {
     const out = [];
-    geo.spine.forEach((p, idx) => {
-      out.push({ ...p, ...nodes[idx] });
-    });
+    geo.spine.forEach((p, idx) => out.push({ ...p, ...nodes[idx] }));
     out.push({ ...geo.burnNode, ...nodes[4] });
     return out;
   }, [geo, nodes]);
@@ -180,66 +241,74 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
           padding: 16,
         }}
       >
-        <div className="overflow-hidden rounded-2xl border border-white/10" style={{ background: "rgba(2,6,23,0.55)" }}>
-          <svg viewBox={`0 0 ${geo.W} ${geo.H}`} className="w-full" role="img" aria-label="Player-facing UAP circulation path diagram">
-            <defs>
-              <linearGradient id="panelGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={colors.panelInnerTop} />
-                <stop offset="100%" stopColor={colors.panelInnerBottom} />
-              </linearGradient>
-
-              <marker id="puapArrowHead2" markerWidth="10" markerHeight="10" refX="8.5" refY="5" orient="auto">
-                <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(226,232,240,0.9)" />
-              </marker>
-
-              <filter id="softShadow" x="-40%" y="-40%" width="180%" height="180%">
-                <feGaussianBlur stdDeviation="8" result="b" />
-                <feColorMatrix
-                  in="b"
-                  type="matrix"
-                  values="
-                    0 0 0 0 0
-                    0 0 0 0 0
-                    0 0 0 0 0
-                    0 0 0 0.35 0"
-                />
-                <feMerge>
-                  <feMergeNode />
-                  <feMergeNode in="SourceGraphic" />
-                </feMerge>
-              </filter>
-            </defs>
-
-            {/* connectors */}
-            {geo.v.map((p, idx) => (
-              <g key={`v-${idx}`}>
-                <path
-                  d={p.d}
-                  fill="none"
-                  stroke={colors.line}
-                  strokeWidth="2.4"
-                  strokeLinecap="round"
-                  markerEnd="url(#puapArrowHead2)"
-                />
-                <Pill x={p.chip.x} y={p.chip.y} text={edgeChips[idx]} w={240} />
-              </g>
-            ))}
-
-            <path
-              d={geo.branch.d}
-              fill="none"
-              stroke={colors.line}
-              strokeWidth="2.4"
-              strokeLinecap="round"
-              markerEnd="url(#puapArrowHead2)"
+        <div className="overflow-hidden rounded-2xl border border-white/10">
+          <div
+            style={{
+              position: "relative",
+              background: `linear-gradient(180deg, ${colors.innerBgTop} 0%, ${colors.innerBgBottom} 100%)`,
+              padding: 14,
+            }}
+          >
+            <div
+              style={{
+                position: "absolute",
+                inset: 0,
+                opacity: 0.55,
+                background: `radial-gradient(80% 120% at 20% 0%, ${colors.radialA} 0%, rgba(0,0,0,0) 60%),
+                             radial-gradient(70% 120% at 80% 0%, ${colors.radialB} 0%, rgba(0,0,0,0) 55%)`,
+                pointerEvents: "none",
+              }}
             />
-            <Pill x={geo.branch.chip.x} y={geo.branch.chip.y} text={edgeChips[3]} w={260} accent />
 
-            {/* nodes */}
-            {svgNodes.map((n) => (
-              <NodeCard key={`card-${n.i}`} n={n} />
-            ))}
-          </svg>
+            <svg
+              viewBox={`0 0 ${geo.W} ${geo.H}`}
+              className="w-full"
+              role="img"
+              aria-label="Player-facing UAP circulation path diagram"
+              style={{ position: "relative" }}
+            >
+              <defs>
+                <linearGradient id="panelGradPUAP" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor="rgba(2, 6, 23, 0.18)" />
+                  <stop offset="100%" stopColor="rgba(0, 0, 0, 0.20)" />
+                </linearGradient>
+
+                <marker id="puapArrowHead3" markerWidth="10" markerHeight="10" refX="8.5" refY="5" orient="auto">
+                  <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(226,232,240,0.9)" />
+                </marker>
+              </defs>
+
+              {/* connectors */}
+              {geo.v.map((p, idx) => (
+                <g key={`v-${idx}`}>
+                  <path
+                    d={p.d}
+                    fill="none"
+                    stroke={colors.line}
+                    strokeWidth="2.4"
+                    strokeLinecap="round"
+                    markerEnd="url(#puapArrowHead3)"
+                  />
+                  <Pill x={p.chip.x} y={p.chip.y} text={edgeChips[idx]} w={260} />
+                </g>
+              ))}
+
+              <path
+                d={geo.branch.d}
+                fill="none"
+                stroke={colors.lineStrong}
+                strokeWidth="2.6"
+                strokeLinecap="round"
+                markerEnd="url(#puapArrowHead3)"
+              />
+              <Pill x={geo.branch.chip.x} y={geo.branch.chip.y} text={edgeChips[3]} w={280} accent />
+
+              {/* nodes */}
+              {svgNodes.map((n) => (
+                <NodeCard key={`card-${n.i}`} n={n} />
+              ))}
+            </svg>
+          </div>
         </div>
 
         {showCaption ? (
