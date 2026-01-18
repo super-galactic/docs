@@ -7,16 +7,15 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
     panelOuter: "rgba(255,255,255,0.03)",
     text: "rgba(255,255,255,0.92)",
     subtext: "rgba(255,255,255,0.72)",
+    chipText: "rgba(255,255,255,0.86)",
+    chipBg: "rgba(0,0,0,0.18)",
+    line: "rgba(255,255,255,0.18)",
+    lineStrong: "rgba(255,255,255,0.24)",
 
     layerTop: "rgba(4, 14, 34, 0.78)",
     layerBottom: "rgba(0, 0, 0, 0.28)",
     layerRadialA: "rgba(37, 99, 235, 0.10)",
     layerRadialB: "rgba(15, 23, 42, 0.18)",
-
-    chipText: "rgba(255,255,255,0.82)",
-    chipBg: "rgba(0,0,0,0.18)",
-    line: "rgba(255,255,255,0.18)",
-    lineStrong: "rgba(255,255,255,0.24)",
   };
 
   const data = {
@@ -95,7 +94,7 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
         }}
       />
 
-      <div style={{ position: "relative", display: "flex", alignItems: "flex-start", justifyContent: "space-between", gap: 12 }}>
+      <div style={{ position: "relative", display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 12 }}>
         <div style={{ display: "flex", gap: 12, alignItems: "flex-start" }}>
           <StepBadge step={step} terminal={terminal} />
           <div>
@@ -170,28 +169,36 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
   );
 
   const BranchToBurn = ({ label }) => {
-    // Responsive behavior:
-    // - md+: Burn sits to the right with an elbow connector
-    // - <md: Burn stacks below with a simple vertical connector
     return (
-      <div className="grid gap-10 md:grid-cols-2 md:items-start">
+      <div className="grid gap-10 md:grid-cols-[1fr,1.55fr] md:items-start">
         <div />
 
         <div className="md:relative">
-          {/* md+ elbow connector */}
-          <div className="hidden md:block" style={{ position: "absolute", left: -130, top: 22, width: 130, height: 120 }}>
-            <svg width="130" height="120" viewBox="0 0 130 120" style={{ overflow: "visible" }}>
+          {/* md+ elbow connector: centered into the Burn card */}
+          <div
+            className="hidden md:block"
+            style={{
+              position: "absolute",
+              left: -170,
+              top: 44,
+              width: 170,
+              height: 160,
+              pointerEvents: "none",
+            }}
+          >
+            <svg width="170" height="160" viewBox="0 0 170 160" style={{ overflow: "visible" }}>
               <path
-                d="M 0 22 L 70 22 L 70 92 L 130 92"
+                d="M 0 34 L 98 34 L 98 112 L 170 112"
                 fill="none"
                 stroke={colors.lineStrong}
                 strokeWidth="2.6"
                 strokeLinecap="round"
               />
-              <path d="M 130 92 L 116 84 L 116 100 Z" fill="rgba(226,232,240,0.92)" />
+              <path d="M 170 112 L 156 104 L 156 120 Z" fill="rgba(226,232,240,0.92)" />
             </svg>
 
-            <div style={{ position: "absolute", left: 12, top: -14 }}>
+            {/* label sits above the horizontal run, away from the card */}
+            <div style={{ position: "absolute", left: 8, top: -6, transform: "translateY(-100%)" }}>
               <Chip text={label} terminal />
             </div>
           </div>
@@ -223,7 +230,6 @@ export const PlayerUAPCirculationPath = ({ showCaption = true }) => {
           padding: 16,
         }}
       >
-        {/* Optional internal header row, same pattern as Layered Architecture */}
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
           <div>
             <div style={{ fontSize: 14, fontWeight: 800, color: colors.text }}>{data.title}</div>
