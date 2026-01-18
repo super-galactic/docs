@@ -1,4 +1,5 @@
-export const PlayerUAPCirculationPath = ({ showCaption = false }) => {
+export const PlayerUAPCirculationPath = () => {
+  const wrapRef = React.useRef(null);
   const timerRef = React.useRef(null);
 
   const [activeStep, setActiveStep] = React.useState(-1); // -1 idle, 0..4
@@ -11,6 +12,7 @@ export const PlayerUAPCirculationPath = ({ showCaption = false }) => {
     text: "rgba(255,255,255,0.92)",
     subtext: "rgba(255,255,255,0.72)",
     chipText: "rgba(255,255,255,0.86)",
+    chipBg: "rgba(0,0,0,0.18)",
     line: "rgba(255,255,255,0.18)",
     lineStrong: "rgba(255,255,255,0.24)",
 
@@ -37,18 +39,18 @@ export const PlayerUAPCirculationPath = ({ showCaption = false }) => {
     labels: ["Reward issuance (capped)", "Claimable rewards", "Voluntary spend", "Automated burn execution"],
   };
 
-  const clearTimer = () => {
+  const clearTimer = React.useCallback(() => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
       timerRef.current = null;
     }
-  };
+  }, []);
 
   React.useEffect(() => {
     return () => clearTimer();
-  }, []);
+  }, [clearTimer]);
 
-  const play = () => {
+  const startSequence = () => {
     clearTimer();
     setIsPlaying(true);
     setActiveStep(0);
@@ -59,7 +61,7 @@ export const PlayerUAPCirculationPath = ({ showCaption = false }) => {
         if (next >= 5) {
           clearTimer();
           setIsPlaying(false);
-          return 4;
+          return 4; // stop on Burn
         }
         return next;
       });
@@ -77,7 +79,8 @@ export const PlayerUAPCirculationPath = ({ showCaption = false }) => {
     return isActive ? 1 : 0.42;
   };
 
-  const glow = (isActive) => (isActive ? "0 0 0 1px rgba(34,197,94,0.22), 0 0 18px rgba(34,197,94,0.18)" : "none");
+  const glow = (isActive) =>
+    isActive ? "0 0 0 1px rgba(34,197,94,0.22), 0 0 18px rgba(34,197,94,0.18)" : "none";
 
   const StepBadge = ({ step, terminal, isActive }) => (
     <div
@@ -254,13 +257,11 @@ export const PlayerUAPCirculationPath = ({ showCaption = false }) => {
         <div />
 
         <div style={{ position: "relative" }}>
-          {/* Centered label above burn */}
-          <div style={{ display: "flex", justifyContent: "center", marginBottom: 10 }}>
+          <div style={{ display: "flex", justifyContent: "center", marginBottom: 12 }}>
             <Chip text={data.labels[3]} terminal isActive={burnActive} />
           </div>
 
-          {/* More spacing between Token Sinks and Burn */}
-          <div style={{ marginBottom: 6 }}>
+          <div style={{ marginBottom: 12 }}>
             <div
               style={{
                 position: "relative",
@@ -319,63 +320,6 @@ export const PlayerUAPCirculationPath = ({ showCaption = false }) => {
     );
   };
 
-  const CtaButton = () => (
-    <button
-      type="button"
-      onClick={play}
-      aria-label="Play circulation sequence"
-      style={{
-        cursor: "pointer",
-        fontSize: 12,
-        fontWeight: 850,
-        color: colors.ctaText,
-        border: `1px solid ${colors.border}`,
-        background: colors.ctaBg,
-        padding: "10px 12px",
-        borderRadius: 12,
-        transition: "color 160ms ease, box-shadow 160ms ease, border-color 160ms ease",
-        boxShadow: "none",
-        whiteSpace: "nowrap",
-        display: "inline-flex",
-        alignItems: "center",
-        gap: 10,
-      }}
-      onMouseEnter={(e) => {
-        e.currentTarget.style.color = colors.ctaTextHover;
-        e.currentTarget.style.borderColor = "rgba(34,197,94,0.22)";
-        e.currentTarget.style.boxShadow = "0 0 0 1px rgba(34,197,94,0.18), 0 0 16px rgba(34,197,94,0.12)";
-      }}
-      onMouseLeave={(e) => {
-        e.currentTarget.style.color = colors.ctaText;
-        e.currentTarget.style.borderColor = colors.border;
-        e.currentTarget.style.boxShadow = "none";
-      }}
-      onFocus={(e) => {
-        e.currentTarget.style.borderColor = "rgba(34,197,94,0.26)";
-        e.currentTarget.style.boxShadow = "0 0 0 2px rgba(34,197,94,0.18), 0 0 18px rgba(34,197,94,0.10)";
-      }}
-      onBlur={(e) => {
-        e.currentTarget.style.borderColor = colors.border;
-        e.currentTarget.style.boxShadow = "none";
-      }}
-    >
-      Run circulation sequence
-      <span
-        style={{
-          fontSize: 11,
-          fontWeight: 800,
-          color: "rgba(255,255,255,0.70)",
-          border: `1px solid ${colors.border}`,
-          background: "rgba(0,0,0,0.18)",
-          padding: "4px 8px",
-          borderRadius: 999,
-        }}
-      >
-        {isPlaying ? "Playing" : activeStep >= 0 ? `Step ${Math.min(activeStep + 1, 5)} of 5` : "Idle"}
-      </span>
-    </button>
-  );
-
   return (
     <div className="not-prose" ref={wrapRef}>
       <div
@@ -392,7 +336,60 @@ export const PlayerUAPCirculationPath = ({ showCaption = false }) => {
             <div style={{ marginTop: 4, fontSize: 12, color: colors.subtext }}>{data.subtitle}</div>
           </div>
 
-          {CtaButton()}
+          <button
+            type="button"
+            onClick={startSequence}
+            aria-label="Run circulation sequence"
+            style={{
+              cursor: "pointer",
+              fontSize: 12,
+              fontWeight: 850,
+              color: colors.ctaText,
+              border: `1px solid ${colors.border}`,
+              background: colors.ctaBg,
+              padding: "10px 12px",
+              borderRadius: 12,
+              transition: "color 160ms ease, box-shadow 160ms ease, border-color 160ms ease",
+              boxShadow: "none",
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 10,
+              whiteSpace: "nowrap",
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.color = colors.ctaTextHover;
+              e.currentTarget.style.borderColor = "rgba(34,197,94,0.22)";
+              e.currentTarget.style.boxShadow = "0 0 0 1px rgba(34,197,94,0.18), 0 0 16px rgba(34,197,94,0.12)";
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.color = colors.ctaText;
+              e.currentTarget.style.borderColor = colors.border;
+              e.currentTarget.style.boxShadow = "none";
+            }}
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = "rgba(34,197,94,0.26)";
+              e.currentTarget.style.boxShadow = "0 0 0 2px rgba(34,197,94,0.18), 0 0 18px rgba(34,197,94,0.10)";
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = colors.border;
+              e.currentTarget.style.boxShadow = "none";
+            }}
+          >
+            Run circulation sequence
+            <span
+              style={{
+                fontSize: 11,
+                fontWeight: 800,
+                color: "rgba(255,255,255,0.70)",
+                border: `1px solid ${colors.border}`,
+                background: "rgba(0,0,0,0.18)",
+                padding: "4px 8px",
+                borderRadius: 999,
+              }}
+            >
+              {isPlaying ? "Playing" : activeStep >= 0 ? `Step ${Math.min(activeStep + 1, 5)} of 5` : "Idle"}
+            </span>
+          </button>
         </div>
 
         <div style={{ marginTop: 14 }}>
@@ -429,8 +426,8 @@ export const PlayerUAPCirculationPath = ({ showCaption = false }) => {
 
               <NodeCard idx={3} {...data.nodes[3]} />
 
-              {/* Increase spacing before Burn to prevent crowding */}
-              <div style={{ marginTop: 26 }}>
+              {/* Increased spacing between Token Sinks and Burn */}
+              <div style={{ marginTop: 30 }}>
                 <BurnBlock />
               </div>
             </div>
