@@ -1,5 +1,5 @@
 export const UAPCirculationLoop = () => {
-  const [currentStep, setCurrentStep] = React.useState(0); // 0..5 (node-focused)
+  const [currentStep, setCurrentStep] = React.useState(0); // 0..5
   const [isPlaying, setIsPlaying] = React.useState(false);
   const [pulseOn, setPulseOn] = React.useState(false);
   const timerRef = React.useRef(null);
@@ -15,7 +15,7 @@ export const UAPCirculationLoop = () => {
     "UAP Scarcity",
   ];
 
-  const arrows = [
+  const arrowLabels = [
     "Reward issuance (capped)",
     "Claimable rewards",
     "Voluntary spend",
@@ -68,139 +68,81 @@ export const UAPCirculationLoop = () => {
   };
 
   const geo = React.useMemo(() => {
-    // Broken arc layout: first five nodes on a 260 degree arc, Scarcity detached below-right.
-    const W = 940;
+    const W = 960;
     const H = 600;
-
-    const cx = 460;
-    const cy = 285;
-    const R = 210;
 
     const nodeW = 210;
     const nodeH = 58;
 
-    const arcCount = 5;
-    const startDeg = -140;
-    const sweepDeg = 260;
+    // Fixed horseshoe positions tuned for node size and label clearance
+    const P = [
+      { cx: 310, cy: 185 }, // Gameplay Activity
+      { cx: 505, cy: 125 }, // Reward Generation
+      { cx: 675, cy: 220 }, // Player Wallet
+      { cx: 640, cy: 370 }, // Token Sinks
+      { cx: 420, cy: 385 }, // Burn and Game Treasury
+      { cx: 730, cy: 440 }, // UAP Scarcity (terminal, detached)
+    ].map((p, i) => ({
+      i,
+      ...p,
+      x: p.cx - nodeW / 2,
+      y: p.cy - nodeH / 2,
+      w: nodeW,
+      h: nodeH,
+    }));
 
-    const arcNodes = Array.from({ length: arcCount }).map((_, i) => {
-      const deg = startDeg + (sweepDeg * i) / (arcCount - 1);
-      const angle = (deg * Math.PI) / 180;
-      const x = cx + R * Math.cos(angle);
-      const y = cy + R * Math.sin(angle);
-      return { i, angle, cx: x, cy: y };
-    });
-
-    const scarcity = {
-      i: 5,
-      // detached terminal node
-      cx: cx + 210,
-      cy: cy + 220,
-      angle: 0,
-    };
-
-    const positions = [
-      ...arcNodes.map((p) => ({
-        ...p,
-        x: p.cx - nodeW / 2,
-        y: p.cy - nodeH / 2,
-        w: nodeW,
-        h: nodeH,
-      })),
+    // Routed connectors (no “full circle”, no intersecting geometry)
+    const paths = [
+      // 0 -> 1
       {
-        ...scarcity,
-        x: scarcity.cx - nodeW / 2,
-        y: scarcity.cy - nodeH / 2,
-        w: nodeW,
-        h: nodeH,
+        d: `M ${P[0].cx + 105} ${P[0].cy - 8} Q ${P[0].cx + 150} ${
+          P[0].cy - 70
+        } ${P[1].cx - 105} ${P[1].cy + 4}`,
+        label: { x: 410, y: 120 },
+      },
+      // 1 -> 2
+      {
+        d: `M ${P[1].cx + 90} ${P[1].cy + 14} Q ${P[1].cx + 170} ${
+          P[1].cy + 70
+        } ${P[2].cx - 105} ${P[2].cy - 6}`,
+        label: { x: 615, y: 165 },
+      },
+      // 2 -> 3
+      {
+        d: `M ${P[2].cx - 25} ${P[2].cy + 36} Q ${P[2].cx - 10} ${
+          P[2].cy + 120
+        } ${P[3].cx + 70} ${P[3].cy - 34}`,
+        label: { x: 700, y: 315 },
+      },
+      // 3 -> 4
+      {
+        d: `M ${P[3].cx - 105} ${P[3].cy + 12} Q ${P[3].cx - 190} ${
+          P[3].cy + 70
+        } ${P[4].cx + 90} ${P[4].cy + 12}`,
+        label: { x: 520, y: 435 },
+      },
+      // 4 -> 5 (terminal lane)
+      {
+        d: `M ${P[4].cx + 110} ${P[4].cy + 8} Q ${P[4].cx + 210} ${
+          P[4].cy + 55
+        } ${P[5].cx - 115} ${P[5].cy - 10}`,
+        label: { x: 700, y: 500 }, // handled as chip near terminal
       },
     ];
 
-    const quadPoint = (p0, p1, pc, t) => {
-      const x =
-        (1 - t) * (1 - t) * p0.x + 2 * (1 - t) * t * pc.x + t * t * p1.x;
-      const y =
-        (1 - t) * (1 - t) * p0.y + 2 * (1 - t) * t * pc.y + t * t * p1.y;
-      return { x, y };
-    };
-
-    const makeArrow = (from, to, mode) => {
-      // mode controls curvature direction: "outer" follows arc, "down" routes to terminal
-      const p0 = { x: from.cx, y: from.cy };
-      const p1 = { x: to.cx, y: to.cy };
-
-      let control;
-      if (mode === "outer") {
-        // control point slightly outside the arc for readability
-        const mid = { x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 };
-        const vX = mid.x - cx;
-        const vY = mid.y - cy;
-        const vLen = Math.max(1, Math.hypot(vX, vY));
-        control = { x: mid.x + (vX / vLen) * 46, y: mid.y + (vY / vLen) * 46 };
-      } else {
-        // route downward to Scarcity, keep it clearly terminal
-        const mid = { x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 };
-        control = { x: mid.x + 28, y: mid.y + 68 };
-      }
-
-      const d = `M ${p0.x.toFixed(2)} ${p0.y.toFixed(2)} Q ${control.x.toFixed(
-        2
-      )} ${control.y.toFixed(2)} ${p1.x.toFixed(2)} ${p1.y.toFixed(2)}`;
-
-      const labelPt = quadPoint(p0, p1, control, 0.5);
-
-      // label offset away from node centers
-      const vX = labelPt.x - cx;
-      const vY = labelPt.y - cy;
-      const vLen = Math.max(1, Math.hypot(vX, vY));
-      const label = {
-        x: labelPt.x + (vX / vLen) * 14,
-        y: labelPt.y + (vY / vLen) * 14,
-      };
-
-      return { d, label };
-    };
-
-    const arrowsGeo = [
-      makeArrow(positions[0], positions[1], "outer"),
-      makeArrow(positions[1], positions[2], "outer"),
-      makeArrow(positions[2], positions[3], "outer"),
-      makeArrow(positions[3], positions[4], "outer"),
-      makeArrow(positions[4], positions[5], "down"),
-    ];
-
-    // A subtle baseline guide for the arc only (not a full ring)
-    const guideArc = (() => {
-      const a0 = positions[0];
-      const a4 = positions[4];
-      const p0 = { x: a0.cx, y: a0.cy };
-      const p1 = { x: a4.cx, y: a4.cy };
-      const mid = { x: (p0.x + p1.x) / 2, y: (p0.y + p1.y) / 2 };
-      const vX = mid.x - cx;
-      const vY = mid.y - cy;
-      const vLen = Math.max(1, Math.hypot(vX, vY));
-      const control = { x: mid.x + (vX / vLen) * 92, y: mid.y + (vY / vLen) * 92 };
-      return `M ${p0.x.toFixed(2)} ${p0.y.toFixed(2)} Q ${control.x.toFixed(
-        2
-      )} ${control.y.toFixed(2)} ${p1.x.toFixed(2)} ${p1.y.toFixed(2)}`;
-    })();
-
-    return { W, H, positions, arrowsGeo, guideArc };
+    return { W, H, P, paths };
   }, []);
 
-  const baseNodeOpacity = 0.44;
-  const baseArrowOpacity = 0.28;
+  const baseNodeOpacity = 0.46;
+  const baseArrowOpacity = 0.30;
 
-  const activeArrowIndex = Math.min(currentStep, 4); // step 5 highlights arrow 5 (index 4)
+  const activeArrowIndex = Math.min(currentStep, 4);
 
   return (
     <div className="not-prose w-full">
       <div className="rounded-2xl border border-white/10 bg-slate-950/70 p-4 shadow-[0_0_0_1px_rgba(255,255,255,0.04)]">
         <div className="flex items-center justify-between gap-3">
-          <div className="text-lg font-semibold text-slate-100 select-none">
-            UAP Circulation Loop
-          </div>
-
+          <div className="text-lg font-semibold text-slate-100">UAP Circulation Loop</div>
           <button
             type="button"
             aria-label="Play UAP circulation loop"
@@ -237,95 +179,71 @@ export const UAPCirculationLoop = () => {
                 </feMerge>
               </filter>
 
-              <marker
-                id="arrowHead"
-                markerWidth="10"
-                markerHeight="10"
-                refX="8.5"
-                refY="5"
-                orient="auto"
-              >
+              <marker id="arrowHead" markerWidth="10" markerHeight="10" refX="8.5" refY="5" orient="auto">
                 <path d="M 0 0 L 10 5 L 0 10 z" fill="rgba(226,232,240,0.9)" />
               </marker>
             </defs>
 
-            {/* Broken arc guide (subtle) */}
-            <path
-              d={geo.guideArc}
-              fill="none"
-              stroke="rgba(255,255,255,0.06)"
-              strokeWidth="2"
-            />
-
-            {/* Arrows (5 total) */}
-            {geo.arrowsGeo.map((a, i) => {
+            {/* Connectors */}
+            {geo.paths.map((p, i) => {
               const active = i === activeArrowIndex;
               const opacity = active ? 1 : baseArrowOpacity;
 
-              const stroke = active
-                ? "rgba(226,232,240,0.95)"
-                : "rgba(226,232,240,0.35)";
-              const strokeWidth = active ? 3.2 : 2;
-
-              // label handling: keep final label readable by giving it a small backing chip
-              const label = arrows[i];
-              const isFinal = i === 4;
-
               return (
-                <g key={`arrow-${i}`}>
+                <g key={`path-${i}`} opacity={opacity}>
                   <path
-                    d={a.d}
+                    d={p.d}
                     fill="none"
-                    stroke={stroke}
-                    strokeWidth={strokeWidth}
-                    opacity={opacity}
-                    markerEnd="url(#arrowHead)"
+                    stroke={active ? "rgba(226,232,240,0.95)" : "rgba(226,232,240,0.35)"}
+                    strokeWidth={active ? 3.2 : 2}
                     strokeLinecap="round"
+                    markerEnd="url(#arrowHead)"
                     style={{ transition: "stroke 180ms ease, stroke-width 180ms ease, opacity 180ms ease" }}
                   />
 
-                  {isFinal ? (
-                    <g opacity={opacity}>
-                      <rect
-                        x={a.label.x - 150}
-                        y={a.label.y - 13}
-                        width={300}
-                        height={26}
-                        rx={999}
-                        fill="rgba(0,0,0,0.28)"
-                        stroke="rgba(255,255,255,0.10)"
-                      />
-                      <text
-                        x={a.label.x}
-                        y={a.label.y + 1}
-                        textAnchor="middle"
-                        dominantBaseline="middle"
-                        fontSize="12"
-                        fill={active ? "rgba(226,232,240,0.92)" : "rgba(226,232,240,0.70)"}
-                      >
-                        {label}
-                      </text>
-                    </g>
-                  ) : (
+                  {/* Standard labels as compact text */}
+                  {i < 4 ? (
                     <text
-                      x={a.label.x}
-                      y={a.label.y}
+                      x={p.label.x}
+                      y={p.label.y}
                       textAnchor="middle"
                       dominantBaseline="middle"
                       fontSize="12"
-                      opacity={opacity}
                       fill={active ? "rgba(226,232,240,0.90)" : "rgba(226,232,240,0.60)"}
-                      style={{ transition: "opacity 180ms ease, fill 180ms ease" }}
+                      style={{ transition: "fill 180ms ease" }}
                     >
-                      {label}
+                      {arrowLabels[i]}
                     </text>
-                  )}
+                  ) : null}
                 </g>
               );
             })}
 
+            {/* Terminal label chip for the long final text */}
+            <g opacity={activeArrowIndex === 4 ? 1 : baseArrowOpacity}>
+              <rect
+                x={560}
+                y={492}
+                width={360}
+                height={28}
+                rx={999}
+                fill="rgba(0,0,0,0.28)"
+                stroke="rgba(255,255,255,0.10)"
+              />
+              <text
+                x={740}
+                y={506}
+                textAnchor="middle"
+                dominantBaseline="middle"
+                fontSize="12"
+                fill={activeArrowIndex === 4 ? "rgba(226,232,240,0.90)" : "rgba(226,232,240,0.70)"}
+              >
+                {arrowLabels[4]}
+              </text>
+            </g>
+
             {/* Nodes */}
-            {geo.positions.map((n) => {
+            {geo.P.map((n) => {
               const active = n.i === currentStep;
               const opacity = active ? 1 : baseNodeOpacity;
 
@@ -333,7 +251,7 @@ export const UAPCirculationLoop = () => {
 
               const scale = active && pulseOn ? 1.02 : 1.0;
 
-              const border = active
+              const stroke = active
                 ? "rgba(226,232,240,0.86)"
                 : isScarcity
                 ? "rgba(226,232,240,0.34)"
@@ -351,11 +269,7 @@ export const UAPCirculationLoop = () => {
                 <g
                   key={`node-${n.i}`}
                   onClick={() => onNodeClick(n.i)}
-                  style={{
-                    cursor: "pointer",
-                    opacity,
-                    transition: "opacity 180ms ease",
-                  }}
+                  style={{ cursor: "pointer", opacity, transition: "opacity 180ms ease" }}
                 >
                   <g
                     transform={`translate(${n.cx} ${n.cy}) scale(${scale}) translate(${-n.cx} ${-n.cy})`}
@@ -372,17 +286,12 @@ export const UAPCirculationLoop = () => {
                       rx="14"
                       ry="14"
                       fill={fill}
-                      stroke={border}
+                      stroke={stroke}
                       strokeWidth={strokeWidth}
-                      style={{
-                        transition: "fill 180ms ease, stroke 180ms ease, stroke-width 180ms ease",
-                      }}
+                      style={{ transition: "fill 180ms ease, stroke 180ms ease, stroke-width 180ms ease" }}
                     />
                     <foreignObject x={n.x} y={n.y} width={n.w} height={n.h}>
-                      <div
-                        className="flex h-full w-full items-center justify-center text-sm font-medium text-slate-100 text-center px-3"
-                        style={{ lineHeight: 1.15 }}
-                      >
+                      <div className="flex h-full w-full items-center justify-center text-sm font-medium text-slate-100 text-center px-3">
                         {nodes[n.i]}
                       </div>
                     </foreignObject>
