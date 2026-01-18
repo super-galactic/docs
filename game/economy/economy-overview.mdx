@@ -43,7 +43,7 @@ It increases when players earn and claim UAP through gameplay. It decreases when
 
 Total supply remains fixed at all times.
 
-### Closed Loop Flow
+### Closed Loop Flow (Player Circulation)
 
 The economy follows a repeatable causal loop:
 
@@ -54,11 +54,13 @@ The economy follows a repeatable causal loop:
 - Burned supply reduces circulation
 - Reduced circulating supply increases UAP scarcity
 
+Treasury routing is a supply control mechanism and operates outside player circulation.
+
 This loop ties economic outcomes directly to how the game is played rather than to external incentives.
 
-import { UAPCirculationLoop } from "/snippets/UAPCirculationLoop.jsx";
+import { PlayerUAPCirculationPath } from "/snippets/PlayerUAPCirculationPath.jsx";
 
-<UAPCirculationLoop />
+<PlayerUAPCirculationPath />
 
 ### Economic Constraints
 
