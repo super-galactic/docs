@@ -1,5 +1,4 @@
 export const PlayerUAPCirculationPath = ({ showCaption = false }) => {
-  const wrapRef = React.useRef(null);
   const timerRef = React.useRef(null);
 
   const [activeStep, setActiveStep] = React.useState(-1); // -1 idle, 0..4
@@ -12,7 +11,6 @@ export const PlayerUAPCirculationPath = ({ showCaption = false }) => {
     text: "rgba(255,255,255,0.92)",
     subtext: "rgba(255,255,255,0.72)",
     chipText: "rgba(255,255,255,0.86)",
-    chipBg: "rgba(0,0,0,0.18)",
     line: "rgba(255,255,255,0.18)",
     lineStrong: "rgba(255,255,255,0.24)",
 
@@ -21,8 +19,9 @@ export const PlayerUAPCirculationPath = ({ showCaption = false }) => {
     layerRadialA: "rgba(37, 99, 235, 0.10)",
     layerRadialB: "rgba(15, 23, 42, 0.18)",
 
-    ctaText: "rgba(255,255,255,0.78)",
-    ctaBg: "rgba(0,0,0,0.20)",
+    ctaText: "rgba(34,197,94,0.88)",
+    ctaTextHover: "rgba(34,197,94,1)",
+    ctaBg: "rgba(0,0,0,0.22)",
   };
 
   const data = {
@@ -60,7 +59,7 @@ export const PlayerUAPCirculationPath = ({ showCaption = false }) => {
         if (next >= 5) {
           clearTimer();
           setIsPlaying(false);
-          return 4; // stop on Burn
+          return 4;
         }
         return next;
       });
@@ -73,13 +72,12 @@ export const PlayerUAPCirculationPath = ({ showCaption = false }) => {
     setActiveStep(idx);
   };
 
-  const dimIfNeeded = (isActive) => {
+  const dim = (isActive) => {
     if (activeStep === -1) return 1;
     return isActive ? 1 : 0.42;
   };
 
-  const glowIfActive = (isActive) =>
-    isActive ? "0 0 0 1px rgba(34,197,94,0.22), 0 0 18px rgba(34,197,94,0.18)" : "none";
+  const glow = (isActive) => (isActive ? "0 0 0 1px rgba(34,197,94,0.22), 0 0 18px rgba(34,197,94,0.18)" : "none");
 
   const StepBadge = ({ step, terminal, isActive }) => (
     <div
@@ -94,10 +92,10 @@ export const PlayerUAPCirculationPath = ({ showCaption = false }) => {
         color: terminal ? "rgba(34,197,94,0.92)" : colors.text,
         border: `1px solid ${terminal ? "rgba(34,197,94,0.26)" : colors.border}`,
         background: terminal ? "rgba(34,197,94,0.10)" : "rgba(0,0,0,0.22)",
-        boxShadow: glowIfActive(isActive),
+        boxShadow: glow(isActive),
         transform: isActive ? "scale(1.02)" : "scale(1)",
         transition: "box-shadow 200ms ease, transform 200ms ease, opacity 200ms ease",
-        opacity: dimIfNeeded(isActive),
+        opacity: dim(isActive),
         flex: "0 0 auto",
       }}
     >
@@ -116,9 +114,9 @@ export const PlayerUAPCirculationPath = ({ showCaption = false }) => {
         padding: "6px 10px",
         borderRadius: 12,
         whiteSpace: "nowrap",
-        boxShadow: glowIfActive(isActive),
+        boxShadow: glow(isActive),
         transition: "box-shadow 200ms ease, opacity 200ms ease",
-        opacity: dimIfNeeded(isActive),
+        opacity: dim(isActive),
       }}
     >
       {text}
@@ -143,8 +141,8 @@ export const PlayerUAPCirculationPath = ({ showCaption = false }) => {
           padding: 16,
           position: "relative",
           overflow: "hidden",
-          opacity: dimIfNeeded(isActive),
-          boxShadow: glowIfActive(isActive),
+          opacity: dim(isActive),
+          boxShadow: glow(isActive),
           transform: isActive ? "scale(1.01)" : "scale(1)",
           transition: "opacity 200ms ease, box-shadow 200ms ease, transform 200ms ease",
         }}
@@ -180,7 +178,7 @@ export const PlayerUAPCirculationPath = ({ showCaption = false }) => {
                 padding: "6px 10px",
                 borderRadius: 12,
                 whiteSpace: "nowrap",
-                opacity: dimIfNeeded(isActive),
+                opacity: dim(isActive),
                 transition: "opacity 200ms ease",
               }}
             >
@@ -216,8 +214,8 @@ export const PlayerUAPCirculationPath = ({ showCaption = false }) => {
               width: 2,
               background: isActive ? "rgba(34,197,94,0.22)" : colors.line,
               borderRadius: 999,
-              boxShadow: glowIfActive(isActive),
-              opacity: dimIfNeeded(isActive),
+              boxShadow: glow(isActive),
+              opacity: dim(isActive),
               transition: "background 200ms ease, box-shadow 200ms ease, opacity 200ms ease",
             }}
           />
@@ -232,7 +230,7 @@ export const PlayerUAPCirculationPath = ({ showCaption = false }) => {
               borderLeft: "9px solid transparent",
               borderRight: "9px solid transparent",
               borderTop: `14px solid rgba(226,232,240,0.92)`,
-              opacity: dimIfNeeded(isActive),
+              opacity: dim(isActive),
               filter: isActive ? "drop-shadow(0 0 10px rgba(34,197,94,0.18))" : "none",
               transition: "opacity 200ms ease, filter 200ms ease",
             }}
@@ -250,56 +248,19 @@ export const PlayerUAPCirculationPath = ({ showCaption = false }) => {
 
   const BurnBlock = () => {
     const burnActive = activeStep === 4;
-    const burnConnectorActive = activeStep === 4; // final step highlights incoming connector + burn
 
     return (
       <div className="grid gap-10 md:grid-cols-[1fr,1.55fr] md:items-start">
         <div />
 
         <div style={{ position: "relative" }}>
-          {/* Centered chip above Burn (fixes the hanging green label) */}
+          {/* Centered label above burn */}
           <div style={{ display: "flex", justifyContent: "center", marginBottom: 10 }}>
-            <Chip text={data.labels[3]} terminal isActive={burnConnectorActive} />
+            <Chip text={data.labels[3]} terminal isActive={burnActive} />
           </div>
 
-          {/* Elbow connector (md+) */}
-          <div
-            className="hidden md:block"
-            style={{
-              position: "absolute",
-              left: -210,
-              top: 46,
-              width: 210,
-              height: 150,
-              pointerEvents: "none",
-            }}
-          >
-            <svg width="210" height="150" viewBox="0 0 210 150" style={{ overflow: "visible" }}>
-              <path
-                d="M 0 34 L 118 34 L 118 112 L 210 112"
-                fill="none"
-                stroke={burnConnectorActive ? "rgba(34,197,94,0.22)" : colors.lineStrong}
-                strokeWidth="2.6"
-                strokeLinecap="round"
-                style={{
-                  opacity: dimIfNeeded(burnConnectorActive),
-                  filter: burnConnectorActive ? "drop-shadow(0 0 10px rgba(34,197,94,0.18))" : "none",
-                  transition: "opacity 200ms ease, filter 200ms ease, stroke 200ms ease",
-                }}
-              />
-              <path
-                d="M 210 112 L 196 104 L 196 120 Z"
-                fill="rgba(226,232,240,0.92)"
-                style={{
-                  opacity: dimIfNeeded(burnConnectorActive),
-                  transition: "opacity 200ms ease",
-                }}
-              />
-            </svg>
-          </div>
-
-          {/* Vertical arrow into Burn (requested) */}
-          <div style={{ marginBottom: 10 }}>
+          {/* More spacing between Token Sinks and Burn */}
+          <div style={{ marginBottom: 6 }}>
             <div
               style={{
                 position: "relative",
@@ -318,10 +279,10 @@ export const PlayerUAPCirculationPath = ({ showCaption = false }) => {
                     top: 6,
                     bottom: 6,
                     width: 2,
-                    background: burnConnectorActive ? "rgba(34,197,94,0.22)" : colors.line,
+                    background: burnActive ? "rgba(34,197,94,0.22)" : colors.line,
                     borderRadius: 999,
-                    boxShadow: glowIfActive(burnConnectorActive),
-                    opacity: dimIfNeeded(burnConnectorActive),
+                    boxShadow: glow(burnActive),
+                    opacity: dim(burnActive),
                     transition: "background 200ms ease, box-shadow 200ms ease, opacity 200ms ease",
                   }}
                 />
@@ -336,8 +297,8 @@ export const PlayerUAPCirculationPath = ({ showCaption = false }) => {
                     borderLeft: "9px solid transparent",
                     borderRight: "9px solid transparent",
                     borderTop: `14px solid rgba(226,232,240,0.92)`,
-                    opacity: dimIfNeeded(burnConnectorActive),
-                    filter: burnConnectorActive ? "drop-shadow(0 0 10px rgba(34,197,94,0.18))" : "none",
+                    opacity: dim(burnActive),
+                    filter: burnActive ? "drop-shadow(0 0 10px rgba(34,197,94,0.18))" : "none",
                     transition: "opacity 200ms ease, filter 200ms ease",
                   }}
                 />
@@ -358,6 +319,63 @@ export const PlayerUAPCirculationPath = ({ showCaption = false }) => {
     );
   };
 
+  const CtaButton = () => (
+    <button
+      type="button"
+      onClick={play}
+      aria-label="Play circulation sequence"
+      style={{
+        cursor: "pointer",
+        fontSize: 12,
+        fontWeight: 850,
+        color: colors.ctaText,
+        border: `1px solid ${colors.border}`,
+        background: colors.ctaBg,
+        padding: "10px 12px",
+        borderRadius: 12,
+        transition: "color 160ms ease, box-shadow 160ms ease, border-color 160ms ease",
+        boxShadow: "none",
+        whiteSpace: "nowrap",
+        display: "inline-flex",
+        alignItems: "center",
+        gap: 10,
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.color = colors.ctaTextHover;
+        e.currentTarget.style.borderColor = "rgba(34,197,94,0.22)";
+        e.currentTarget.style.boxShadow = "0 0 0 1px rgba(34,197,94,0.18), 0 0 16px rgba(34,197,94,0.12)";
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.color = colors.ctaText;
+        e.currentTarget.style.borderColor = colors.border;
+        e.currentTarget.style.boxShadow = "none";
+      }}
+      onFocus={(e) => {
+        e.currentTarget.style.borderColor = "rgba(34,197,94,0.26)";
+        e.currentTarget.style.boxShadow = "0 0 0 2px rgba(34,197,94,0.18), 0 0 18px rgba(34,197,94,0.10)";
+      }}
+      onBlur={(e) => {
+        e.currentTarget.style.borderColor = colors.border;
+        e.currentTarget.style.boxShadow = "none";
+      }}
+    >
+      Run circulation sequence
+      <span
+        style={{
+          fontSize: 11,
+          fontWeight: 800,
+          color: "rgba(255,255,255,0.70)",
+          border: `1px solid ${colors.border}`,
+          background: "rgba(0,0,0,0.18)",
+          padding: "4px 8px",
+          borderRadius: 999,
+        }}
+      >
+        {isPlaying ? "Playing" : activeStep >= 0 ? `Step ${Math.min(activeStep + 1, 5)} of 5` : "Idle"}
+      </span>
+    </button>
+  );
+
   return (
     <div className="not-prose" ref={wrapRef}>
       <div
@@ -374,24 +392,7 @@ export const PlayerUAPCirculationPath = ({ showCaption = false }) => {
             <div style={{ marginTop: 4, fontSize: 12, color: colors.subtext }}>{data.subtitle}</div>
           </div>
 
-          <button
-            type="button"
-            onClick={play}
-            aria-label="Play player circulation sequence"
-            style={{
-              cursor: "pointer",
-              fontSize: 11,
-              fontWeight: 800,
-              color: colors.ctaText,
-              border: `1px solid ${colors.border}`,
-              background: colors.ctaBg,
-              padding: "8px 10px",
-              borderRadius: 12,
-              whiteSpace: "nowrap",
-            }}
-          >
-            Player circulation
-          </button>
+          {CtaButton()}
         </div>
 
         <div style={{ marginTop: 14 }}>
@@ -428,7 +429,8 @@ export const PlayerUAPCirculationPath = ({ showCaption = false }) => {
 
               <NodeCard idx={3} {...data.nodes[3]} />
 
-              <div style={{ marginTop: 14 }}>
+              {/* Increase spacing before Burn to prevent crowding */}
+              <div style={{ marginTop: 26 }}>
                 <BurnBlock />
               </div>
             </div>
