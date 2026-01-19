@@ -12,9 +12,9 @@ export const UAPLifecycleStateChartD = () => {
     subtext: "rgba(255,255,255,0.70)",
     faint: "rgba(255,255,255,0.55)",
     grid: "rgba(255,255,255,0.10)",
-    gridActive: "rgba(34,197,94,0.22)",
-    bandA: "rgba(0,0,0,0.14)",
-    bandB: "rgba(0,0,0,0.08)",
+    gridActive: "rgba(34,197,94,0.24)",
+    bandA: "rgba(0,0,0,0.16)",
+    bandB: "rgba(0,0,0,0.10)",
     ctaText: "rgba(34,197,94,0.88)",
     ctaTextHover: "rgba(34,197,94,1)",
     ctaBg: "rgba(0,0,0,0.22)",
@@ -37,8 +37,6 @@ export const UAPLifecycleStateChartD = () => {
     { key: "burned", label: "Burned Total" },
   ];
 
-  // Touchpoints are state interactions, not quantities.
-  // Each marker indicates that a bucket is touched in that lifecycle stage.
   const touchpoints = [
     { bucket: "circulation", stage: "eligibility" },
     { bucket: "circulation", stage: "claim" },
@@ -57,6 +55,9 @@ export const UAPLifecycleStateChartD = () => {
     { bucket: "treasury", stage: "accounting" },
     { bucket: "burned", stage: "accounting" },
   ];
+
+  const hasTouch = (bucketKey, stageKey) =>
+    touchpoints.some((t) => t.bucket === bucketKey && t.stage === stageKey);
 
   React.useEffect(() => {
     const el = wrapRef.current;
@@ -95,11 +96,6 @@ export const UAPLifecycleStateChartD = () => {
     schedule(() => setActiveCol(-1), stages.length * stepMs + 60);
   };
 
-  const activeStageKey = activeCol >= 0 ? stages[activeCol].key : null;
-
-  const hasTouchpoint = (bucketKey, stageKey) =>
-    touchpoints.some((t) => t.bucket === bucketKey && t.stage === stageKey);
-
   const Marker = ({ active }) => (
     <span
       style={{
@@ -111,31 +107,13 @@ export const UAPLifecycleStateChartD = () => {
         height: active ? 12 : 10,
         borderRadius: 999,
         background: active ? colors.accent : "rgba(255,255,255,0.26)",
-        boxShadow: active ? "0 0 18px rgba(34,197,94,0.48)" : "none",
+        boxShadow: active ? "0 0 18px rgba(34,197,94,0.52)" : "none",
         transition: "all 180ms ease",
       }}
     />
   );
 
-  const Metric = ({ label, value, pulse }) => (
-    <div
-      style={{
-        borderRadius: 14,
-        border: `1px solid ${pulse ? "rgba(34,197,94,0.22)" : colors.border}`,
-        background: "rgba(0,0,0,0.18)",
-        padding: 12,
-        transition: "box-shadow 220ms ease, border-color 220ms ease",
-        boxShadow: pulse ? "0 0 0 1px rgba(34,197,94,0.14), 0 0 18px rgba(34,197,94,0.12)" : "none",
-      }}
-    >
-      <div style={{ fontSize: 11, fontWeight: 800, color: colors.faint }}>{label}</div>
-      <div style={{ marginTop: 6, fontSize: 14, fontWeight: 900, color: colors.text }}>{value}</div>
-    </div>
-  );
-
-  const pulseAccounting = activeStageKey === "accounting";
-
-  const colTemplate = `260px repeat(${stages.length}, minmax(92px, 1fr))`;
+  const colTemplate = `220px repeat(${stages.length}, minmax(110px, 1fr))`;
 
   return (
     <div className="not-prose" ref={wrapRef}>
@@ -154,7 +132,7 @@ export const UAPLifecycleStateChartD = () => {
           <div>
             <div style={{ fontSize: 14, fontWeight: 900, color: colors.text }}>UAP Lifecycle State Chart</div>
             <div style={{ marginTop: 4, fontSize: 12, color: colors.subtext }}>
-              Analytical view of state touchpoints. No projections.
+              Discrete stage touchpoints across supply buckets. No projections.
             </div>
           </div>
 
@@ -197,138 +175,151 @@ export const UAPLifecycleStateChartD = () => {
           </button>
         </div>
 
-        <div style={{ marginTop: 14, display: "grid", gridTemplateColumns: "1fr 320px", gap: 12 }}>
-          {/* Chart plane */}
-          <div
-            style={{
-              borderRadius: 16,
-              border: `1px solid ${colors.border}`,
-              background: "rgba(0,0,0,0.10)",
-              overflow: "hidden",
-            }}
-          >
-            {/* Stage header row */}
-            <div style={{ display: "grid", gridTemplateColumns: colTemplate }}>
-              <div style={{ padding: "12px 12px", fontSize: 11, fontWeight: 900, color: colors.faint }}>
-                Supply buckets (Y)
+        {/* CHART PLANE */}
+        <div
+          style={{
+            marginTop: 14,
+            borderRadius: 16,
+            border: `1px solid ${colors.border}`,
+            background: "rgba(0,0,0,0.08)",
+            overflow: "hidden",
+          }}
+        >
+          {/* Axis header */}
+          <div style={{ display: "grid", gridTemplateColumns: colTemplate }}>
+            <div style={{ padding: "12px 12px", fontSize: 11, fontWeight: 900, color: colors.faint }}>
+              Y: Supply buckets
+            </div>
+
+            {stages.map((s, i) => {
+              const isActive = activeCol === i;
+              return (
+                <div
+                  key={s.key}
+                  style={{
+                    padding: "12px 10px",
+                    textAlign: "center",
+                    fontSize: 11,
+                    fontWeight: 900,
+                    color: isActive ? "rgba(34,197,94,0.92)" : colors.faint,
+                    borderLeft: `1px solid ${isActive ? colors.gridActive : colors.grid}`,
+                    background: isActive ? "rgba(34,197,94,0.06)" : "transparent",
+                    transition: "all 200ms ease",
+                  }}
+                >
+                  {s.label}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Bands */}
+          {buckets.map((b, bi) => (
+            <div
+              key={b.key}
+              style={{
+                display: "grid",
+                gridTemplateColumns: colTemplate,
+                alignItems: "stretch",
+                background: bi % 2 === 0 ? colors.bandA : colors.bandB,
+                borderTop: `1px solid ${colors.border}`,
+              }}
+            >
+              <div style={{ padding: "16px 12px", display: "flex", alignItems: "center" }}>
+                <div style={{ fontSize: 12, fontWeight: 850, color: colors.text }}>{b.label}</div>
               </div>
 
-              {stages.map((s, i) => {
-                const isActive = activeCol === i;
+              {stages.map((s, si) => {
+                const isActiveCol = activeCol === si;
+                const touched = hasTouch(b.key, s.key);
+                const markerActive = isActiveCol && touched;
+
                 return (
                   <div
-                    key={s.key}
+                    key={`${b.key}-${s.key}`}
                     style={{
-                      padding: "12px 10px",
-                      textAlign: "center",
-                      fontSize: 11,
-                      fontWeight: 900,
-                      color: isActive ? "rgba(34,197,94,0.92)" : colors.faint,
-                      borderLeft: `1px solid ${isActive ? colors.gridActive : colors.grid}`,
-                      background: isActive ? "rgba(34,197,94,0.06)" : "transparent",
+                      position: "relative",
+                      minHeight: 62,
+                      borderLeft: `1px solid ${isActiveCol ? colors.gridActive : colors.grid}`,
+                      background: isActiveCol ? "rgba(34,197,94,0.03)" : "transparent",
                       transition: "all 200ms ease",
                     }}
                   >
-                    {s.label}
+                    {touched ? <Marker active={markerActive} /> : null}
+
+                    {isActiveCol ? (
+                      <div
+                        style={{
+                          position: "absolute",
+                          inset: 0,
+                          background:
+                            "radial-gradient(80% 70% at 50% 50%, rgba(34,197,94,0.08) 0%, rgba(0,0,0,0) 70%)",
+                          pointerEvents: "none",
+                        }}
+                      />
+                    ) : null}
                   </div>
                 );
               })}
             </div>
+          ))}
 
-            {/* Bands */}
-            <div style={{ display: "grid", gap: 0 }}>
-              {buckets.map((b, bi) => (
-                <div
-                  key={b.key}
-                  style={{
-                    display: "grid",
-                    gridTemplateColumns: colTemplate,
-                    alignItems: "stretch",
-                    background: bi % 2 === 0 ? colors.bandA : colors.bandB,
-                    borderTop: `1px solid ${colors.border}`,
-                  }}
-                >
-                  <div style={{ padding: "14px 12px", display: "flex", alignItems: "center" }}>
-                    <div style={{ fontSize: 12, fontWeight: 850, color: colors.text }}>{b.label}</div>
-                  </div>
-
-                  {stages.map((s, si) => {
-                    const isActiveCol = activeCol === si;
-                    const touched = hasTouchpoint(b.key, s.key);
-                    const markerIsActive = isActiveCol && touched;
-
-                    return (
-                      <div
-                        key={`${b.key}-${s.key}`}
-                        style={{
-                          position: "relative",
-                          minHeight: 56,
-                          borderLeft: `1px solid ${isActiveCol ? colors.gridActive : colors.grid}`,
-                          background: isActiveCol ? "rgba(34,197,94,0.03)" : "transparent",
-                          transition: "all 200ms ease",
-                        }}
-                      >
-                        {touched ? <Marker active={markerIsActive} /> : null}
-
-                        {/* Active column glow sweep as a soft band, not an arrow */}
-                        {isActiveCol ? (
-                          <div
-                            style={{
-                              position: "absolute",
-                              inset: 0,
-                              background:
-                                "radial-gradient(80% 70% at 50% 50%, rgba(34,197,94,0.08) 0%, rgba(0,0,0,0) 70%)",
-                              pointerEvents: "none",
-                            }}
-                          />
-                        ) : null}
-                      </div>
-                    );
-                  })}
-                </div>
-              ))}
-            </div>
-
-            {/* X label row */}
-            <div
-              style={{
-                borderTop: `1px solid ${colors.border}`,
-                padding: "10px 12px",
-                fontSize: 11,
-                color: "rgba(255,255,255,0.62)",
-              }}
-            >
-              Lifecycle stages (X) progress left to right. Markers indicate which buckets are touched at each stage.
-            </div>
-          </div>
-
-          {/* Accounting panel */}
+          {/* X axis label */}
           <div
             style={{
-              borderRadius: 16,
-              border: `1px solid ${colors.border}`,
-              background: "rgba(0,0,0,0.12)",
-              padding: 12,
+              borderTop: `1px solid ${colors.border}`,
+              padding: "10px 12px",
+              fontSize: 11,
+              color: "rgba(255,255,255,0.62)",
             }}
           >
-            <div style={{ fontSize: 12, fontWeight: 900, color: colors.text }}>Supply Accounting</div>
-            <div style={{ marginTop: 4, fontSize: 11, color: colors.subtext }}>
-              Snapshot labels only. Values are not projected here.
-            </div>
-
-            <div style={{ marginTop: 12, display: "grid", gap: 10 }}>
-              <Metric label="Total Supply" value="Fixed cap" pulse={false} />
-              <Metric label="Undistributed Pool" value="Supply pool balance" pulse={pulseAccounting} />
-              <Metric label="Circulating Supply" value="Player-held balance" pulse={pulseAccounting} />
-              <Metric label="Burned Total" value="Cumulative burns" pulse={pulseAccounting} />
-              <Metric label="Game Treasury" value="Treasury balance" pulse={pulseAccounting} />
-            </div>
-
-            <div style={{ marginTop: 12, fontSize: 11, color: "rgba(255,255,255,0.62)", lineHeight: 1.55 }}>
-              This chart describes gated reward entry, fixed supply distribution, and deterministic routing touchpoints. It
-              does not represent projected emissions, price behaviour, or future supply outcomes.
-            </div>
+            X: Lifecycle stages progress left to right. Markers indicate state touchpoints only.
           </div>
+        </div>
+
+        {/* Compact accounting footer */}
+        <div
+          style={{
+            marginTop: 12,
+            borderRadius: 16,
+            border: `1px solid ${colors.border}`,
+            background: "rgba(0,0,0,0.10)",
+            padding: 12,
+            display: "grid",
+            gridTemplateColumns: "repeat(5, minmax(140px, 1fr))",
+            gap: 10,
+          }}
+        >
+          {[
+            ["Total supply", "Fixed cap"],
+            ["Undistributed pool", "Supply pool balance"],
+            ["Circulating supply", "Player-held balance"],
+            ["Burned total", "Cumulative burns"],
+            ["Game treasury", "Treasury balance"],
+          ].map(([k, v]) => {
+            const pulse = activeCol >= 0 && stages[activeCol].key === "accounting";
+            return (
+              <div
+                key={k}
+                style={{
+                  borderRadius: 14,
+                  border: `1px solid ${pulse ? "rgba(34,197,94,0.22)" : colors.border}`,
+                  background: "rgba(0,0,0,0.14)",
+                  padding: 12,
+                  boxShadow: pulse ? "0 0 0 1px rgba(34,197,94,0.14), 0 0 18px rgba(34,197,94,0.12)" : "none",
+                  transition: "all 220ms ease",
+                }}
+              >
+                <div style={{ fontSize: 11, fontWeight: 900, color: colors.faint }}>{k}</div>
+                <div style={{ marginTop: 6, fontSize: 13, fontWeight: 900, color: colors.text }}>{v}</div>
+              </div>
+            );
+          })}
+        </div>
+
+        <div style={{ marginTop: 10, fontSize: 11, color: "rgba(255,255,255,0.62)", lineHeight: 1.55 }}>
+          This chart illustrates gated reward entry, fixed supply distribution, and deterministic routing touchpoints. It
+          does not represent projected emissions, price behaviour, or future supply outcomes.
         </div>
       </div>
     </div>
