@@ -82,10 +82,6 @@ export const UAPSupplyAllocationStackedBar = () => {
         }
       `}</style>
 
-      <div className="mb-2 text-sm text-gray-300">
-        Allocation categories reflect reservation, not circulation.
-      </div>
-
       <div className="rounded-xl border border-white/10 bg-white/5 p-4">
         <div className="mb-3 flex items-center justify-between">
           <div className="text-sm font-semibold text-gray-200">
