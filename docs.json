@@ -93,6 +93,7 @@
           {
             "group": "NFTs & Assets",
             "pages": [
+              "game/nfts-assets/super-galactic-hub",
               "game/nfts-assets/the-originals",
               "game/nfts-assets/mystery-lootboxes",
               "game/nfts-assets/equipment-and-weapons",
