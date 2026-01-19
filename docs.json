@@ -2,10 +2,14 @@
   "$schema": "https://mintlify.com/docs.json",
   "theme": "maple",
   "name": "Super Galactic",
+  "redirects": [
+    { "source": "/", "destination": "/game/overview/introduction" }
+  ],
 
   "appearance": {
     "default": "dark",
     "toggle": false
+
   },
 
   "colors": {
