@@ -3,9 +3,9 @@ title: "Renting System"
 icon: "handshake"
 ---
 
-The Renting System allows Genesis NFT owners to rent out Genesis usage rights to other players. This enables new players to access Play to Earn PvE gameplay without owning a Genesis upfront, while owners earn rental fees from renters based on listed terms.
+The Renting System enables temporary delegation of Genesis NFT usage rights without transferring ownership. Rental terms are defined at listing and enforced for the duration of the rental period
 
-Rentals are handled through the [Super Galactic Hub](https://app.ufogaming.io/) and enforced on chain using the ERC-4907 rental standard, which supports temporary usage rights with automatic ownership reversion.
+Rentals are handled through the [Super Galactic Hub](https://app.ufogaming.io/) and enforced on-chain using the ERC-4907 rental standard, which supports temporary usage rights with automatic ownership reversion.
 
 <Note>
   The Renting System is a planned feature and is scheduled to follow the Breeding System release. For timing and rollout details, see Roadmap.
@@ -18,6 +18,8 @@ Genesis owners can list a Genesis NFT for rent in the Super Galactic Hub with tw
 - Rental price (the upfront fee paid by the renter)
 - Rental duration (the time window the renter can use the Genesis)
 
+Ownership is never transferred. Only usage rights are granted for a fixed term.
+
 When a renter accepts a listing:
 
 1. The renter pays the rental fee for the listed duration
@@ -25,7 +27,7 @@ When a renter accepts a listing:
 3. The renter can use the Genesis to access earning eligible PvE gameplay during the active rental window
 4. When the rental period ends, usage rights expire automatically and revert to the owner
 
-Ownership is never transferred. Only usage rights are granted for a fixed term.
+Rental does not mint new NFTs and does not create additional Genesis supply.
 
 ### Rental Pricing Signals (Optional)
 
@@ -33,19 +35,19 @@ Rental pricing is market-driven and typically reflects the Genesis strength and 
 
 Higher rating and stronger progression can increase rental demand because it supports more consistent performance in earning eligible PvE missions.
 
-### Key Benefits
+### Rental Roles and Constraints
 
 **For Genesis owners**
 
-- List a Genesis NFT for rent while retaining full ownership
-- Earn rental fees from renters based on the listed price and duration
-- Usage rights expire automatically and revert back at the end of the term
+- Retain full ownership at all times
+- Define rental price and duration at listing
+- Usage rights expire automatically at term end
 
 **For renters**
 
-- Access earning eligible PvE gameplay without owning a Genesis upfront
-- Use a rented Genesis for a defined rental window with no ownership transfer
-- Earn UAP through eligible gameplay during the active rental period (subject to system limits)
+- Receive time-limited usage rights only
+- Access earning-eligible PvE during the rental window
+- Rental does not convey ownership or asset controlWhen the rental expires, usage rights revert automatically to the owner
 
 For earning rules and mission limits, see **Rewards System**.
 
@@ -61,10 +63,4 @@ Once a rental expires, usage rights revert automatically with no manual action r
 
 <Note>
   The rental contract enforces rental terms on chain.
-
-  When the rental expires, usage rights revert automatically to the owner. Ownership is never transferred.
 </Note>
-
-### Designed for Accessibility and Growth
-
-The Renting System expands player participation while preserving Genesis scarcity. By allowing more players to enter the ecosystem, it increases overall activity and long-term engagement.
