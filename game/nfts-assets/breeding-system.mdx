@@ -7,6 +7,8 @@ The Breeding System is a core NFT progression feature in Super Galactic. It enab
 
 Breeding is executed through the [**Super Galactic Hub**](https://app.ufogaming.io/) and produces Alpha and Beta offspring only.
 
+Breeding does not increase Genesis Origin supply and does not introduce new first-generation assets.
+
 ### **Breeding Overview**
 
 Breeding allows eligible parent NFTs to produce new playable UFOep with inherited traits. Offspring inherit a combination of identity and gameplay characteristics from both parents, creating variation across visuals, composition, and combat profile.
@@ -24,6 +26,8 @@ This system helps owners expand their playable roster and evolve their collectio
 
 Super Galactic playable UFOeps are grouped into three NFT classes. These classes define generation, scarcity, and what a character can produce through breeding.
 
+The following table defines the maximum number of breeding actions permitted per NFT.
+
 | Class                 | Description                                                 |
 | :-------------------- | :---------------------------------------------------------- |
 | Genesis Origin UFOeps | First generation, fixed supply, foundation of the ecosystem |
@@ -36,6 +40,8 @@ Genesis Origin UFOeps cannot be bred to create additional Genesis Origin NFTs. B
 
 Offspring class is determined by the parent pairing. This makes outcomes predictable at the class level while inheritance controls variation at the trait level.
 
+The following table defines all valid parent combinations and their resulting offspring class.
+
 | Parent A       | Parent B       | Offspring Result |
 | :------------- | :------------- | :--------------- |
 | Genesis Origin | Genesis Origin | Alpha            |
@@ -45,17 +51,21 @@ Offspring class is determined by the parent pairing. This makes outcomes predict
 | Alpha          | Beta           | Beta             |
 | Beta           | Beta           | Beta             |
 
-These rules enforce a clear generational flow and prevent uncontrolled creation of first generation supply.
+These rules enforce a clear generational flow and prevent uncontrolled creation of first generation supply. Breeding outcomes are deterministic at the class level and probabilistic only at the trait level.
 
 ### **Breeding Limits and Costs**
 
 Breeding is intentionally capped and cost-scaled to preserve long-term balance and scarcity.
+
+Breeding costs increase monotonically with each attempt and are paid exclusively in UAP.
 
 - Each playable UFOep NFT can be bred up to **7 times**
 - Breeding costs increase with each attempt
 - Breeding requires **UAP only**
 
 This cap applies to **Genesis Origin, Alpha, and Beta** NFTs. Cost scaling is designed to make early attempts accessible while ensuring repeated breeding remains a meaningful commitment.
+
+Breeding limits apply per NFT and do not reset. No system action can increase the total number of allowed breeding attempts.
 
 ### Genetic Inheritance
 
@@ -93,7 +103,7 @@ For upgrade mechanics, upgrade caps, and cost scaling, see [Upgrades & Progressi
 
 ### Economic Integration
 
-Breeding consumes UAP and follows the burn and Game Treasury split defined in Burn Mechanisms. This page does not restate burn execution logic.
+Breeding consumes UAP and follows the burn and Game Treasury split defined in [Burn Mechanisms](/game/economy/burn-mechanisms). This page does not restate burn execution logic.
 
 For the economic role and reinvestment loop of breeding, see [Breeding Economics](https://supergalactic.mintlify.app/game/economy/breeding-economics)
 
