@@ -7,7 +7,7 @@
   ],
 
   "appearance": {
-    "default": "light",
+    "default": "dark",
     "toggle": true
 
   },
