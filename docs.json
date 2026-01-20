@@ -1,6 +1,6 @@
 {
   "$schema": "https://mintlify.com/docs.json",
-  "theme": "palm",
+  "theme": "mint",
   "name": "Super Galactic",
   "redirects": [
     { "source": "/", "destination": "/game/overview/introduction" }
