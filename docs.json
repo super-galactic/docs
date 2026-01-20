@@ -129,10 +129,6 @@
     "library": "lucide"
   },
 
-  "contextual": {
-    "options": ["copy", "view", "chatgpt", "claude", "perplexity", "mcp", "cursor", "vscode"]
-  },
-
   "footer": {
     "text": "Powered by Super Galactic © 2021–2026",
     "socials": {
